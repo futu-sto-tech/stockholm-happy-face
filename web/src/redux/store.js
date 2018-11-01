@@ -1,0 +1,13 @@
+import { createStore, applyMiddleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunkMiddleware from "redux-thunk";
+
+import reducer, { initialState as initialStateObj } from "./reducer";
+
+export const initStore = (initialState = initialStateObj) => {
+  return createStore(
+    reducer,
+    initialState,
+    composeWithDevTools(applyMiddleware(thunkMiddleware))
+  );
+};

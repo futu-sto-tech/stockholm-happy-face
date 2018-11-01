@@ -1,0 +1,7 @@
+# Secrets
+.env
+firebase-admin-cert.json
+
+# Node.js
+node_modules/
+.next/
