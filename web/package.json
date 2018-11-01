@@ -15,25 +15,24 @@
     "butter-toast": "^3.1.2",
     "dotenv": "^6.1.0",
     "emoji-mart": "git+https://github.com/missive/emoji-mart.git",
-    "firebase": "^5.5.4",
-    "next": "^7.0.1",
+    "firebase": "^5.5.6",
+    "moment": "^2.22.2",
+    "next": "^7.0.2",
     "next-redux-wrapper": "^2.0.0",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-redux": "^5.0.7",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-redux": "^5.1.0",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.5",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.0.0-beta.11.3",
+    "styled-components": "^4.0.3",
     "styled-media-query": "^2.0.2",
-    "styled-reset": "^1.6.0",
-    "unstated": "^2.1.1",
-    "unstated-debug": "^0.3.2"
+    "styled-reset": "^1.6.0"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.8.0",
-    "eslint": "^5.7.0",
+    "eslint": "^5.8.0",
     "jest": "^23.6.0"
   }
 }
