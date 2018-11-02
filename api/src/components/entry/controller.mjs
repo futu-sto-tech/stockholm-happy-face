@@ -1,16 +1,16 @@
 import moment from 'moment'
 
 import { firestore } from '../../firebase'
-import Response from './models'
+import Entry from './models'
 
-export default class ResponseController {
+export default class EntryController {
   constructor() {
     this.userCollection = firestore.collection('users')
-    this.collection = firestore.collection('responses')
+    this.collection = firestore.collection('entries')
   }
 
   static convert(data) {
-    return new Response(
+    return new Entry(
       data.link,
       data.text,
       data.userName,
@@ -20,14 +20,14 @@ export default class ResponseController {
     )
   }
 
-  async response(id) {
+  async entry(id) {
     const doc = await this.collection.doc(id).get()
-    const responseData = doc.data()
-    const responseObj = ResponseController.convert({ id: doc.id, ...responseData })
-    return responseObj
+    const entryData = doc.data()
+    const entryObj = EntryController.convert({ id: doc.id, ...entryData })
+    return entryObj
   }
 
-  async responses({ userName, fromDate, toDate }) {
+  async entries({ userName, fromDate, toDate }) {
     let query = this.collection
 
     if (userName) {
@@ -41,15 +41,15 @@ export default class ResponseController {
     }
 
     const snapshot = await query.get()
-    let responseObjs = []
+    let entryObjs = []
     snapshot.forEach(doc =>
-      responseObjs.push(ResponseController.convert({ id: doc.id, ...doc.data() })))
+      entryObjs.push(EntryController.convert({ id: doc.id, ...doc.data() })))
 
-    return responseObjs
+    return entryObjs
   }
 
-  async newResponse(userObj, link = null, text = null) {
-    const newResponse = new Response(
+  async newEntry(userObj, link = null, text = null) {
+    const newEntry = new Entry(
       link,
       text,
       userObj.name,
@@ -57,17 +57,17 @@ export default class ResponseController {
       null,
       +moment()
     )
-    const newData = newResponse.toDynamo()
-    newData.userRef = this.userCollection.doc(newResponse.user.id)
+    const newData = newEntry.toDynamo()
+    newData.userRef = this.userCollection.doc(newEntry.user.id)
     const docRef = await this.collection.add(newData)
 
-    const responseObj = await this.response(docRef.id)
-    return responseObj
+    const entryObj = await this.entry(docRef.id)
+    return entryObj
   }
 
-  async deleteResponse(id) {
-    const responseObj = await this.response(id)
+  async deleteEntry(id) {
+    const entryObj = await this.entry(id)
     await this.collection.doc(id).delete()
-    return responseObj
+    return entryObj
   }
 }

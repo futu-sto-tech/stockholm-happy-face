@@ -1,24 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 
-import SmileyCard from "../components/SmileyCard";
-import Button from "../components/Button";
+import SmileyCard from "./SmileyCard";
+import Button from "./Button";
 
 const StyledSmileyCard = styled(SmileyCard)``;
 
-const CurrentResponse = ({ response, handleDelete, loading, className }) => (
+const CurrentEntry = ({ entry, handleDelete, loading, className }) => (
   <div className={className}>
-    <StyledSmileyCard response={response} />
+    <StyledSmileyCard entry={entry} />
     <Button onClick={handleDelete} loading={loading}>
       Delete
     </Button>
   </div>
 );
 
-const StyledCurrentResponse = styled(CurrentResponse)`
+const StyledCurrentEntry = styled(CurrentEntry)`
   ${StyledSmileyCard} {
     margin-bottom: ${props => props.theme.spacing.small};
   }
 `;
 
-export default StyledCurrentResponse;
+export default StyledCurrentEntry;

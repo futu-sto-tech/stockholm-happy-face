@@ -22,23 +22,23 @@ const SmileyCard = styled.div`
   border-radius: ${props => props.theme.borderRadius.small};
 `;
 
-const SmileyCardWrapper = ({ className, response }) => {
-  const weekStart = response.createdAt.startOf("isoWeek").format("YYYY-MM-DD");
-  const weekEnd = response.createdAt.endOf("isoWeek").format("YYYY-MM-DD");
+const SmileyCardWrapper = ({ className, entry }) => {
+  const weekStart = entry.createdAt.startOf("isoWeek").format("YYYY-MM-DD");
+  const weekEnd = entry.createdAt.endOf("isoWeek").format("YYYY-MM-DD");
 
   return (
     <SmileyCard className={className}>
       <Header>
         <NameLabel>
-          {response.user.name}, week {response.week} ({weekStart} - {weekEnd})
+          {entry.user.name}, week {entry.week} ({weekStart} - {weekEnd})
         </NameLabel>
       </Header>
 
       <Content>
-        {response.text ? (
-          <TextContent>{response.text}</TextContent>
+        {entry.text ? (
+          <TextContent>{entry.text}</TextContent>
         ) : (
-          <LinkContent src={response.link} />
+          <LinkContent src={entry.link} />
         )}
       </Content>
     </SmileyCard>

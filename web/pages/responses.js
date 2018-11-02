@@ -2,27 +2,24 @@ import React from "react";
 import { connect } from "react-redux";
 import { compose } from "recompose";
 
-import {
-  getUserResponses,
-  checkCurrentUser
-} from "../src/redux/actionCreators";
+import { getUserEntries, checkCurrentUser } from "../src/redux/actionCreators";
 import withAuth from "../src/containers/withAuth";
 import SmileyItem from "../src/components/SmileyItem";
 
-class ResponsesPage extends React.Component {
+class EntriesPage extends React.Component {
   componentDidMount() {
-    this.props.getUserResponses();
+    this.props.getUserEntries();
   }
 
   render() {
-    const { currentUser, isLoading, responses } = this.props;
+    const { currentUser, isLoading, entries } = this.props;
     return (
       <div>
         <div>{(currentUser || {}).name}</div>
         {isLoading ? (
           <div>Loading..!</div>
         ) : (
-          responses.map((item, index) => (
+          entries.map((item, index) => (
             <SmileyItem key={index} week={item.week}>
               {item.text || item.link}
             </SmileyItem>
@@ -35,17 +32,17 @@ class ResponsesPage extends React.Component {
 
 const mapStateToProps = ({
   currentUser,
-  isLoadingUserResponses,
-  userResponses
+  isLoadingUserEntries,
+  userEntries
 }) => ({
   currentUser,
-  isLoading: isLoadingUserResponses,
-  responses: userResponses
+  isLoading: isLoadingUserEntries,
+  entries: userEntries
 });
 
 const mapDispatchToProps = {
   checkCurrentUser,
-  getUserResponses
+  getUserEntries
 };
 
 export default compose(
@@ -54,4 +51,4 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   )
-)(ResponsesPage);
+)(EntriesPage);

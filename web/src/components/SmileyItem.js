@@ -1,32 +1,29 @@
 import styled from "styled-components";
 
-const Label = styled.div`
+const Header = styled.div`
+  border-bottom: 2px solid ${props => props.theme.colors.background};
   color: #fff;
+  padding: ${props => props.theme.spacing.medium};
 `;
 
-const Indicator = styled.div`
-  width: 16px;
-  height: 16px;
-  border-radius: 10px;
-  background-color: red;
-  border: 2px solid #000;
-`;
-
-const Card = styled.div`
-  background-color: ${props => props.theme.colors.card};
+const Content = styled.div`
+  padding: ${props => props.theme.spacing.medium};
+  text-align: center;
+  font-size: 50px;
 `;
 
 const SmileyItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background-color: ${props => props.theme.colors.card};
+  border-radius: ${props => props.theme.borderRadius.medium};
+
+  margin: ${props => `0 ${props.theme.spacing.medium}`};
+  margin-bottom: ${props => props.theme.spacing.medium};
 `;
 
 const SmileyItemWrapper = ({ className, week, children }) => (
   <SmileyItem className={className}>
-    <Label>{week}</Label>
-    <Indicator />
-    <Card>{children}</Card>
+    <Header>{week}</Header>
+    <Content>{children}</Content>
   </SmileyItem>
 );
 

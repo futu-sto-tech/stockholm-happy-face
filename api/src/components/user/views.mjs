@@ -20,8 +20,8 @@ export const getUserByEmail = async (req, res) => {
   if (!userObj) return res.status(404).json({ message: "User not found" })
 
   const data = userObj.toJSON()
-  if (userObj.currentResponse) {
-    data.currentResponse = userObj.currentResponse.toJSON()
+  if (userObj.currentEntry) {
+    data.currentEntry = userObj.currentEntry.toJSON()
   }
   res.json({ user: data })
 }

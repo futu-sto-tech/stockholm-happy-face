@@ -2,13 +2,13 @@ import * as actionTypes from "./actionTypes";
 
 export const initialState = {
   currentUser: null,
-  userResponses: [],
+  userEntries: [],
   isLoadingCurrentUser: false,
   isLoadingSignIn: false,
-  isLoadingNewResponse: false,
-  isLoadingUserResponses: false,
+  isLoadingNewEntry: false,
+  isLoadingUserEntries: false,
   checkedAuthState: false,
-  isDeletingCurrentResponse: false,
+  isDeletingCurrentEntry: false,
   isUpdatingUser: false,
   error: null
 };
@@ -48,57 +48,57 @@ const reducer = (state = initialState, action) => {
         error: action.error
       };
 
-    case actionTypes.POST_RESPONSE:
-      return { ...state, isLoadingNewResponse: true };
+    case actionTypes.POST_ENTRY:
+      return { ...state, isLoadingNewEntry: true };
 
-    case actionTypes.POST_RESPONSE_SUCCESS:
+    case actionTypes.POST_ENTRY_SUCCESS:
       return {
         ...state,
-        isLoadingNewResponse: false,
-        currentUser: { ...state.currentUser, currentResponse: action.response }
+        isLoadingNewEntry: false,
+        currentUser: { ...state.currentUser, currentEntry: action.entry }
       };
 
-    case actionTypes.POST_RESPONSE_FAIL:
-      return { ...state, isLoadingNewResponse: false, error: action.error };
+    case actionTypes.POST_ENTRY_FAIL:
+      return { ...state, isLoadingNewEntry: false, error: action.error };
 
-    case actionTypes.GET_USER_RESPONSES:
-      return { ...state, isLoadingUserResponses: true };
+    case actionTypes.GET_USER_ENTRIES:
+      return { ...state, isLoadingUserEntries: true };
 
-    case actionTypes.GET_USER_RESPONSES_SUCCESS:
+    case actionTypes.GET_USER_ENTRIES_SUCCESS:
       return {
         ...state,
-        isLoadingUserResponses: false,
-        userResponses: action.responses
+        isLoadingUserEntries: false,
+        userEntries: action.entries
       };
 
-    case actionTypes.GET_USER_RESPONSES_FAIL:
+    case actionTypes.GET_USER_ENTRIES_FAIL:
       return {
         ...state,
-        isLoadingUserResponses: false,
+        isLoadingUserEntries: false,
         error: action.error,
-        userResponses: []
+        userEntries: []
       };
 
-    case actionTypes.DELETE_CURRENT_RESPONSE:
+    case actionTypes.DELETE_CURRENT_ENTRY:
       return {
         ...state,
-        isDeletingCurrentResponse: true
+        isDeletingCurrentEntry: true
       };
 
-    case actionTypes.DELETE_CURRENT_RESPONSE_SUCCESS:
+    case actionTypes.DELETE_CURRENT_ENTRY_SUCCESS:
       return {
         ...state,
-        isDeletingCurrentResponse: false,
+        isDeletingCurrentEntry: false,
         currentUser: {
           ...state.currentUser,
-          currentResponse: null
+          currentEntry: null
         }
       };
 
-    case actionTypes.DELETE_CURRENT_RESPONSE_FAIL:
+    case actionTypes.DELETE_CURRENT_ENTRY_FAIL:
       return {
         ...state,
-        isDeletingCurrentResponse: false,
+        isDeletingCurrentEntry: false,
         error: action.error
       };
 

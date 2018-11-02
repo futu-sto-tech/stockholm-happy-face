@@ -4,13 +4,13 @@ import moment from "moment";
 
 import { signIn } from "../auth";
 import User from "../models/user";
-import Response from "../models/response";
+import Entry from "../models/entry";
 import * as actionTypes from "./actionTypes";
 
 const RESOURCES = {
   users: "http://localhost:3000/api/v1/users",
   userByEmail: "http://localhost:3000/api/v1/users/email",
-  responses: "http://localhost:3000/api/v1/responses"
+  entries: "http://localhost:3000/api/v1/entries"
 };
 
 export const signInUser = () => {
@@ -32,11 +32,11 @@ export const signInUser = () => {
         params: { email: tmpUserObj.email }
       });
     } catch (error) {
-      if (!error.response) {
+      if (!error.entry) {
         ButterToast.raise({ content: "Couldn't reach the server..." });
         return dispatch(signInUserFail(error.message));
       }
-      if (error.response.status === 404) {
+      if (error.entry.status === 404) {
         ButterToast.raise({
           content: `Creating new user: ${tmpUserObj.email}`
         });
@@ -47,7 +47,7 @@ export const signInUser = () => {
             avatar: tmpUserObj.avatar
           });
         } catch (error) {
-          if (error.response.status === 400) {
+          if (error.entry.status === 400) {
             ButterToast.raise({
               content: "Creating new user failed, try another email!"
             });
@@ -83,23 +83,23 @@ export const signInUserFail = error => ({
   error
 });
 
-export const saveResponse = content => {
+export const saveEntry = content => {
   return async (dispatch, getState) => {
-    dispatch(postResponse());
+    dispatch(postEntry());
 
     const currentUser = getState().currentUser;
     let response;
     try {
-      response = await axios.post(RESOURCES.responses, {
+      response = await axios.post(RESOURCES.entries, {
         userId: currentUser.id,
         [content.includes("http") ? "link" : "text"]: content
       });
     } catch (error) {
-      return dispatch(postResponseError(error.message));
+      return dispatch(postEntryError(error.message));
     }
 
-    const resData = response.data.response;
-    const responseObj = new Response(
+    const resData = response.data.entry;
+    const entryObj = new Entry(
       resData.user,
       resData.text,
       resData.link,
@@ -109,40 +109,40 @@ export const saveResponse = content => {
     );
 
     ButterToast.raise({
-      content: `New response saved for week ${responseObj.week}`
+      content: `New entry saved for week ${entryObj.week}`
     });
-    dispatch(postResponseSuccess(responseObj));
+    dispatch(postEntrySuccess(entryObj));
   };
 };
 
-export const postResponse = () => ({ type: actionTypes.POST_RESPONSE });
+export const postEntry = () => ({ type: actionTypes.POST_ENTRY });
 
-export const postResponseSuccess = response => ({
-  type: actionTypes.POST_RESPONSE_SUCCESS,
-  response
+export const postEntrySuccess = entry => ({
+  type: actionTypes.POST_ENTRY_SUCCESS,
+  entry
 });
 
-export const postResponseError = error => ({
-  type: actionTypes.POST_RESPONSE_FAIL,
+export const postEntryError = error => ({
+  type: actionTypes.POST_ENTRY_FAIL,
   error
 });
 
-export const getUserResponses = () => {
+export const getUserEntries = () => {
   return async (dispatch, getState) => {
-    dispatch(fetchUserResponses());
+    dispatch(fetchUserEntries());
 
     let axiosResponse;
     try {
-      axiosResponse = await axios.get(RESOURCES.responses, {
+      axiosResponse = await axios.get(RESOURCES.entries, {
         params: { userName: getState().currentUser.name }
       });
     } catch (error) {
-      return dispatch(fetchUserResponsesError(error.message));
+      return dispatch(fetchUserEntriesError(error.message));
     }
 
-    const responses = axiosResponse.data.responses.map(
+    const entries = axiosResponse.data.entries.map(
       data =>
-        new Response(
+        new Entry(
           data.user,
           data.text,
           data.link,
@@ -150,21 +150,21 @@ export const getUserResponses = () => {
           data.week
         )
     );
-    dispatch(fetchUserResponsesSuccess(responses));
+    dispatch(fetchUserEntriesSuccess(entries));
   };
 };
 
-export const fetchUserResponses = () => ({
-  type: actionTypes.GET_USER_RESPONSES
+export const fetchUserEntries = () => ({
+  type: actionTypes.GET_USER_ENTRIES
 });
 
-export const fetchUserResponsesSuccess = responses => ({
-  type: actionTypes.GET_USER_RESPONSES_SUCCESS,
-  responses
+export const fetchUserEntriesSuccess = entries => ({
+  type: actionTypes.GET_USER_ENTRIES_SUCCESS,
+  entries
 });
 
-export const fetchUserResponsesError = error => ({
-  type: actionTypes.GET_USER_RESPONSES_FAIL,
+export const fetchUserEntriesError = error => ({
+  type: actionTypes.GET_USER_ENTRIES_FAIL,
   error
 });
 
@@ -183,15 +183,15 @@ export const checkCurrentUser = userObj => {
     userObj.id = response.data.user.id;
     userObj.nickname = response.data.user.nickname;
 
-    const currentResponse = response.data.user.currentResponse;
-    if (currentResponse) {
-      userObj.currentResponse = new Response(
+    const currentEntry = response.data.user.currentEntry;
+    if (currentEntry) {
+      userObj.currentEntry = new Entry(
         userObj,
-        currentResponse.text,
-        currentResponse.link,
-        moment(currentResponse.createdAt),
-        currentResponse.week,
-        currentResponse.id
+        currentEntry.text,
+        currentEntry.link,
+        moment(currentEntry.createdAt),
+        currentEntry.week,
+        currentEntry.id
       );
     }
     ButterToast.raise({
@@ -214,35 +214,35 @@ export const invalidCurrentUser = () => ({
   type: actionTypes.CURRENT_USER_VOID
 });
 
-export const deleteCurrentResponse = () => {
+export const deleteCurrentEntry = () => {
   return async (dispatch, getState) => {
-    dispatch(requestDeleteCurrentResponse());
+    dispatch(requestDeleteCurrentEntry());
 
     let response;
     try {
-      const responseId = getState().currentUser.currentResponse.id;
-      response = await axios.delete(`${RESOURCES.responses}/${responseId}`);
+      const entryId = getState().currentUser.currentEntry.id;
+      response = await axios.delete(`${RESOURCES.entries}/${entryId}`);
     } catch (error) {
-      return dispatch(failDeleteCurrentResponse(error.message));
+      return dispatch(failDeleteCurrentEntry(error.message));
     }
 
     ButterToast.raise({
-      content: `${response.data.response.id}: deleted`
+      content: `${response.data.entry.id}: deleted`
     });
-    return dispatch(succeedDeleteCurrentResponse());
+    return dispatch(succeedDeleteCurrentEntry());
   };
 };
 
-export const requestDeleteCurrentResponse = () => ({
-  type: actionTypes.DELETE_CURRENT_RESPONSE
+export const requestDeleteCurrentEntry = () => ({
+  type: actionTypes.DELETE_CURRENT_ENTRY
 });
 
-export const succeedDeleteCurrentResponse = () => ({
-  type: actionTypes.DELETE_CURRENT_RESPONSE_SUCCESS
+export const succeedDeleteCurrentEntry = () => ({
+  type: actionTypes.DELETE_CURRENT_ENTRY_SUCCESS
 });
 
-export const failDeleteCurrentResponse = error => ({
-  type: actionTypes.DELETE_CURRENT_RESPONSE_FAIL,
+export const failDeleteCurrentEntry = error => ({
+  type: actionTypes.DELETE_CURRENT_ENTRY_FAIL,
   error
 });
 

@@ -4,7 +4,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 
 import { PORT } from './config'
-import { getResponse, getResponses, postResponse, deleteResponse, getLatestWeek } from './components/response'
+import { getEntry, getEntries, postEntry, deleteEntry, getLatestWeek } from './components/entry'
 import { getUsers, getUser, getUserByEmail, postUser, putUser } from './components/user'
 
 const API_PREFIX = '/api/v1'
@@ -16,10 +16,10 @@ server.use(morgan("combined", { immediate: true }));
 server.use(morgan("combined"));
 
 server.get(`${API_PREFIX}/week/latest`, getLatestWeek)
-server.get(`${API_PREFIX}/responses`, getResponses)
-server.get(`${API_PREFIX}/responses/:id`, getResponse)
-server.post(`${API_PREFIX}/responses`, postResponse)
-server.delete(`${API_PREFIX}/responses/:id`, deleteResponse)
+server.get(`${API_PREFIX}/entries`, getEntries)
+server.get(`${API_PREFIX}/entries/:id`, getEntry)
+server.post(`${API_PREFIX}/entries`, postEntry)
+server.delete(`${API_PREFIX}/entries/:id`, deleteEntry)
 server.get(`${API_PREFIX}/users`, getUsers)
 server.get(`${API_PREFIX}/users/email`, getUserByEmail)
 server.get(`${API_PREFIX}/users/:id`, getUser)

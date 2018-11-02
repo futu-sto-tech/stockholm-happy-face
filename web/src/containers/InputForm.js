@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { saveResponse } from "../redux/actionCreators";
+import { saveEntry } from "../redux/actionCreators";
 import InputForm from "../components/InputForm";
 
 class InputFormContainer extends React.Component {
@@ -12,7 +12,7 @@ class InputFormContainer extends React.Component {
       <>
         <InputForm
           content={this.state.content}
-          onSave={() => this.props.saveResponse(this.state.content)}
+          onSave={() => this.props.saveEntry(this.state.content)}
           onChangeValue={newValue => this.setState({ content: newValue })}
           loading={this.props.isLoading}
         />
@@ -21,11 +21,11 @@ class InputFormContainer extends React.Component {
   }
 }
 
-const mapStateToProps = ({ isLoadingNewResponse }) => ({
-  isLoading: isLoadingNewResponse
+const mapStateToProps = ({ isLoadingNewEntry }) => ({
+  isLoading: isLoadingNewEntry
 });
 
-const mapDispatchToProps = { saveResponse };
+const mapDispatchToProps = { saveEntry };
 
 export default connect(
   mapStateToProps,

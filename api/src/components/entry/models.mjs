@@ -1,10 +1,10 @@
-export default class Response {
+export default class Entry {
   /**
    * @param {string} link - URL to linked image/gif
    * @param {string} text - String of smileys
-   * @param {string} userName - Name of submitting response
+   * @param {string} userName - Name of submitting entry
    * @param {string} userId - User ID
-   * @param {string} [id] - Response database ID
+   * @param {string} [id] - Database ID
    * @param {moment} [createdAt] - Date of creation
    */
   constructor(link, text, userName, userId, id = null, createdAt = null) {

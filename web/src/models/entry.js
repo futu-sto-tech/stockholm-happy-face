@@ -1,4 +1,4 @@
-export default class Response {
+export default class Entry {
   constructor(user, text, link, createdAt, week, id = null) {
     this.user = user;
     this.text = text;

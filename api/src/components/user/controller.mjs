@@ -3,13 +3,13 @@ import moment from 'moment'
 import { firestore } from '../../firebase'
 import { COMPANY_DOMAIN } from '../../config'
 import { UNAUTHORIZED_ACCESS, USER_ALREADY_EXISTS } from '../../errors'
-import { ResponseController } from '../response'
+import { EntryController } from '../entry'
 import User, { UserRole } from './models'
 
 export default class UserController {
   constructor() {
     this.collection = firestore.collection('users')
-    this.responseController = new ResponseController()
+    this.entryController = new EntryController()
   }
 
   static convertUser(data) {  
@@ -53,23 +53,23 @@ export default class UserController {
 
     const userObj = users.length > 0 && UserController.convertUser(users[0])
     if (userObj) {
-      const currentResponse = await this.weeklyResponse(userObj)
-      userObj.currentResponse = currentResponse
+      const currentEntry = await this.weeklyEntry(userObj)
+      userObj.currentEntry = currentEntry
     }
 
     return userObj
   }
 
-  async weeklyResponse(userObj) {
+  async weeklyEntry(userObj) {
     const fromDate = moment().startOf('isoWeek')
     const toDate = moment().endOf('isoWeek')
 
-    const responseObjs = await this.responseController.responses({
+    const entryObjs = await this.entryController.entries({
       userName: userObj.name,
       fromDate,
       toDate
     })
-    return responseObjs.length && responseObjs[0]
+    return entryObjs.length && entryObjs[0]
   }
 
   async newUser(name, email, avatar) {
