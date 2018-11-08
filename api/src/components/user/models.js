@@ -1,14 +1,14 @@
-import moment from 'moment'
+const moment = require("moment");
 
-export const UserRole = Object.freeze({
-  STANDARD: 'STANDARD',
-  ADMIN: 'ADMIN'
-})
+const UserRole = Object.freeze({
+  STANDARD: "STANDARD",
+  ADMIN: "ADMIN"
+});
 
 /**
  * User class.
  */
-export default class User {
+class User {
   /**
    * @param {string} name - User name
    * @param {string} email - Company email
@@ -18,15 +18,23 @@ export default class User {
    * @param {moment} [createdAt] - Date of creation
    * @param {string} [nickname] - Custom nickname
    */
-  constructor(name, email, role, avatar, id = null, createdAt = null, nickname = null) {
-    this.name = name
-    this.email = email
-    this.role = role
-    this.avatar = avatar
+  constructor(
+    name,
+    email,
+    role,
+    avatar,
+    id = null,
+    createdAt = null,
+    nickname = null
+  ) {
+    this.name = name;
+    this.email = email;
+    this.role = role;
+    this.avatar = avatar;
 
-    this.id = id
-    this.createdAt = createdAt
-    this.nickname = nickname
+    this.id = id;
+    this.createdAt = createdAt;
+    this.nickname = nickname;
   }
 
   /**
@@ -41,7 +49,7 @@ export default class User {
       avatar: this.avatar,
       createdAt: this.createdAt,
       nickname: this.nickname
-    }
+    };
   }
 
   toDynamo() {
@@ -52,6 +60,8 @@ export default class User {
       avatar: this.avatar,
       createdAt: +this.createdAt,
       nickname: this.nickname
-    }
+    };
   }
 }
+
+module.exports = { User, UserRole };

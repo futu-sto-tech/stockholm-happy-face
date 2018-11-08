@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --experimental-modules src/server.mjs",
-    "start": "NODE_ENV=production node --experimental-modules src/server.mjs"
+    "dev": "nodemon src/server.js",
+    "start": "NODE_ENV=production node src/server.js"
   },
   "author": "",
   "license": "ISC",

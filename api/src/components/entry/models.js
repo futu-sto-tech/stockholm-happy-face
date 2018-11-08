@@ -1,4 +1,4 @@
-export default class Entry {
+class Entry {
   /**
    * @param {string} link - URL to linked image/gif
    * @param {string} text - String of smileys
@@ -36,6 +36,8 @@ export default class Entry {
       userId: this.user.id,
       userName: this.user.name,
       createdAt: +this.createdAt
-    }
+    };
   }
 }
+
+module.exports = { Entry };
