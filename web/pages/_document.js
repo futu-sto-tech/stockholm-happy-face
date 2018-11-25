@@ -14,7 +14,24 @@ export default class MyDocument extends Document {
   render() {
     return (
       <html>
-        <Head>{this.props.styleTags}</Head>
+        <Head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+          {/* Apple Meta Tags */}
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-touch-fullscreen" content="yes" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+          />
+          <meta name="format-detection" content="telephone=no" />
+
+          {/* Chrome Meta Tags */}
+          <meta name="theme-color" content="#242424" />
+
+          {this.props.styleTags}
+        </Head>
         <body>
           <Main />
           <NextScript />

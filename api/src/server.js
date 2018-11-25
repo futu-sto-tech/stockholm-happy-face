@@ -18,6 +18,7 @@ const {
   postUser,
   putUser
 } = require("./components/user/views");
+const { getSearchGif } = require("./components/gif/views");
 
 const API_PREFIX = "/api/v1";
 
@@ -37,6 +38,7 @@ server.get(`${API_PREFIX}/users/email`, getUserByEmail);
 server.get(`${API_PREFIX}/users/:id`, getUser);
 server.post(`${API_PREFIX}/users`, postUser);
 server.put(`${API_PREFIX}/users/:id`, putUser);
+server.get(`${API_PREFIX}/gif/search`, getSearchGif);
 
 server.listen(PORT, error => {
   if (error) throw error;

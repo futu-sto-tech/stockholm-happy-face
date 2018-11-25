@@ -10,7 +10,8 @@ import * as actionTypes from "./actionTypes";
 const RESOURCES = {
   users: "http://localhost:3000/api/v1/users",
   userByEmail: "http://localhost:3000/api/v1/users/email",
-  entries: "http://localhost:3000/api/v1/entries"
+  entries: "http://localhost:3000/api/v1/entries",
+  gifSearch: "http://localhost:3000/api/v1/gif/search"
 };
 
 export const signInUser = () => {
@@ -280,9 +281,7 @@ export const updateCurrentUser = ({ nickname }) => {
   };
 };
 
-export const updateUser = () => ({
-  type: actionTypes.UPDATE_USER
-});
+export const updateUser = () => ({ type: actionTypes.UPDATE_USER });
 
 export const updateUserSuccess = userObj => ({
   type: actionTypes.UPDATE_USER_SUCCESS,
@@ -293,3 +292,54 @@ export const updateUserFail = error => ({
   type: actionTypes.UPDATE_USER_FAIL,
   error
 });
+
+const searchGifsSuccess = gifs => ({
+  type: actionTypes.SEARCH_GIFS_SUCCESS,
+  gifs
+});
+
+const searchGifsFail = error => ({
+  type: actionTypes.SEARCH_GIFS_FAIL,
+  error
+});
+
+const searchGifsStart = () => ({ type: actionTypes.SEARCH_GIFS });
+
+export const searchGifs = query => {
+  return async dispatch => {
+    dispatch(searchGifsStart());
+
+    let response;
+    try {
+      response = await axios.get(RESOURCES.gifSearch, { params: { query } });
+    } catch (error) {
+      ButterToast.raise({ content: `Failed to search for gifs... 🤔` });
+      return dispatch(searchGifsFail(error.message));
+    }
+
+    dispatch(searchGifsSuccess(response.data.images));
+  };
+};
+
+export const selectGif = gif => ({
+  type: actionTypes.SELECT_GIF,
+  gif
+});
+
+export const randomizeEmojiSelection = () => {
+  return dispatch => dispatch({ type: actionTypes.GET_RANDOM_EMOJIS });
+};
+
+export const toggleEmojiSelection = emoji => {
+  return (dispatch, getState) => {
+    const selectedEmojis = getState().emojis.filter(
+      prevEmoji => prevEmoji.selected
+    );
+    if (selectedEmojis.length === 3 && !selectedEmojis.includes(emoji)) {
+      ButterToast.raise({ content: `You can only select 3 emojis` });
+      return;
+    }
+
+    return dispatch({ type: actionTypes.TOGGLE_EMOJI, emoji });
+  };
+};

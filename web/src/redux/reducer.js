@@ -1,4 +1,5 @@
 import * as actionTypes from "./actionTypes";
+import randomEmojis from "../emojis";
 
 export const initialState = {
   currentUser: null,
@@ -10,7 +11,10 @@ export const initialState = {
   checkedAuthState: false,
   isDeletingCurrentEntry: false,
   isUpdatingUser: false,
-  error: null
+  isSearchingGifs: false,
+  gifs: [],
+  error: null,
+  emojis: randomEmojis(24).map(emoji => ({ value: emoji, selected: false }))
 };
 
 const reducer = (state = initialState, action) => {
@@ -55,7 +59,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoadingNewEntry: false,
-        currentUser: { ...state.currentUser, currentEntry: action.entry }
+        currentUser: { ...state.currentUser, currentEntry: action.entry },
+        gifs: []
       };
 
     case actionTypes.POST_ENTRY_FAIL:
@@ -120,6 +125,53 @@ const reducer = (state = initialState, action) => {
         ...state,
         isUpdatingUser: false,
         error: action.error
+      };
+
+    case actionTypes.SEARCH_GIFS:
+      return {
+        ...state,
+        isSearchingGifs: true,
+        gifs: []
+      };
+
+    case actionTypes.SEARCH_GIFS_SUCCESS:
+      return {
+        ...state,
+        isSearchingGifs: false,
+        gifs: action.gifs
+      };
+
+    case actionTypes.SEARCH_GIFS_FAIL:
+      return {
+        ...state,
+        isSearchingGifs: false,
+        error: action.error
+      };
+
+    case actionTypes.SELECT_GIF:
+      return {
+        ...state,
+        gifs: state.gifs.map(gif => ({ ...gif, selected: gif === action.gif }))
+      };
+
+    case actionTypes.GET_RANDOM_EMOJIS:
+      return {
+        ...state,
+        emojis: randomEmojis(24).map(emoji => ({
+          value: emoji,
+          selected: false
+        }))
+      };
+
+    case actionTypes.TOGGLE_EMOJI:
+      return {
+        ...state,
+        emojis: state.emojis.map(emoji => {
+          if (emoji === action.emoji) {
+            return { ...emoji, selected: !emoji.selected };
+          }
+          return emoji;
+        })
       };
 
     default:

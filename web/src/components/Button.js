@@ -2,7 +2,13 @@ import styled from "styled-components";
 
 import Loader from "./Loader";
 
-const Button = styled.button`
+const Button = ({ children, loading, ...props }) => (
+  <button disabled={loading} {...props}>
+    {loading ? <Loader /> : children}
+  </button>
+);
+
+const StyledButton = styled(Button)`
   width: 100%;
   background-color: rgb(46, 204, 113);
   border-radius: ${props => props.theme.borderRadius.small};
@@ -17,8 +23,4 @@ const Button = styled.button`
   justify-content: center;
 `;
 
-export default ({ children, loading, ...props }) => (
-  <Button disabled={loading} {...props}>
-    {loading ? <Loader /> : children}
-  </Button>
-);
+export default StyledButton;

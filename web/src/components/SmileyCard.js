@@ -1,20 +1,55 @@
 import styled from "styled-components";
+import media from "styled-media-query";
 
 const NameLabel = styled.h3``;
+
+const WeekLabel = styled.div`
+  > .dates {
+    display: none;
+    font-size: 14px;
+  }
+
+  &:hover {
+    > .dates {
+      display: block;
+    }
+
+    > .week {
+      display: none;
+    }
+  }
+`;
 
 const Header = styled.div`
   padding: ${props => props.theme.spacing.medium};
   border-bottom: 2px solid ${props => props.theme.colors.background};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Content = styled.div`
   padding: ${props => props.theme.spacing.large};
-  font-size: 100px;
   text-align: center;
+  font-size: 80px;
+
+  ${media.greaterThan("medium")`
+    font-size: 100px;
+  `};
+
+  > video {
+    max-width: 100%;
+    height: auto;
+  }
 `;
 
 const TextContent = styled.p``;
 const LinkContent = styled.img``;
+const VideoContent = ({ src }) => (
+  <video autoPlay loop>
+    <source src={src} type="video/mp4" />
+  </video>
+);
 
 const SmileyCard = styled.div`
   color: ${props => props.theme.colors.text};
@@ -29,14 +64,20 @@ const SmileyCardWrapper = ({ className, entry }) => {
   return (
     <SmileyCard className={className}>
       <Header>
-        <NameLabel>
-          {entry.user.name}, week {entry.week} ({weekStart} - {weekEnd})
-        </NameLabel>
+        <NameLabel>{entry.user.name}</NameLabel>
+        <WeekLabel>
+          <div className="week">Week {entry.week}</div>
+          <div className="dates">
+            {weekStart} - {weekEnd}
+          </div>
+        </WeekLabel>
       </Header>
 
       <Content>
         {entry.text ? (
           <TextContent>{entry.text}</TextContent>
+        ) : entry.link.endsWith("mp4") ? (
+          <VideoContent src={entry.link} />
         ) : (
           <LinkContent src={entry.link} />
         )}

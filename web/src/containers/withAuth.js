@@ -11,7 +11,13 @@ import NicknameFormContainer from "../containers/NicknameForm";
 
 const withAuth = Component => {
   class WithAuth extends React.Component {
+    static getInitialProps({ query }) {
+      return { query };
+    }
+
     componentDidMount() {
+      if (this.props.currentUser) return;
+
       firebase.auth().onAuthStateChanged(authUser => {
         if (authUser) {
           const { displayName, email, photoURL } = authUser;

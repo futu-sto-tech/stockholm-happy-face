@@ -3,8 +3,7 @@
     "node": true
   },
   "parserOptions": {
-    "ecmaVersion": 9,
-    "sourceType": "module"
+    "ecmaVersion": 9
   },
   "rules": {
     "quotes": [2, "backtick", "single"]
