@@ -9,7 +9,7 @@ export const initialState = {
   isLoadingNewEntry: false,
   isLoadingUserEntries: false,
   checkedAuthState: false,
-  isDeletingCurrentEntry: false,
+  isDeletingEntry: false,
   isUpdatingUser: false,
   isSearchingGifs: false,
   gifs: [],
@@ -84,26 +84,32 @@ const reducer = (state = initialState, action) => {
         userEntries: []
       };
 
-    case actionTypes.DELETE_CURRENT_ENTRY:
+    case actionTypes.DELETE_ENTRY:
       return {
         ...state,
-        isDeletingCurrentEntry: true
+        isDeletingEntry: true
       };
 
-    case actionTypes.DELETE_CURRENT_ENTRY_SUCCESS:
+    case actionTypes.DELETE_ENTRY_SUCCESS:
       return {
         ...state,
-        isDeletingCurrentEntry: false,
+        isDeletingEntry: false,
+        userEntries: state.userEntries.filter(
+          entry => entry.id !== action.entryId
+        ),
         currentUser: {
           ...state.currentUser,
-          currentEntry: null
+          currentEntry:
+            state.currentUser.currentEntry.id === action.entryId
+              ? null
+              : state.currentUser.currentEntry
         }
       };
 
-    case actionTypes.DELETE_CURRENT_ENTRY_FAIL:
+    case actionTypes.DELETE_ENTRY_FAIL:
       return {
         ...state,
-        isDeletingCurrentEntry: false,
+        isDeletingEntry: false,
         error: action.error
       };
 

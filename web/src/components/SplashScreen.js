@@ -3,7 +3,7 @@ import styled from "styled-components";
 const SplashScreen = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #000;
+  background-color: ${props => props.theme.colors.card};
 
   display: flex;
   align-items: center;

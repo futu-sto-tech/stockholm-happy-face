@@ -17,7 +17,7 @@ const BASE_LINKS = [
 ];
 
 const NavbarContainer = ({ user, router }) => {
-  if (!user) return <Navbar />;
+  if (!user) return null;
 
   const linksWithSelected = BASE_LINKS.map(link => ({
     ...link,

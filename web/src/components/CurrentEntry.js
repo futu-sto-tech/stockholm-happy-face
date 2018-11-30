@@ -2,16 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 import SmileyCard from "./SmileyCard";
-import Button from "./Button";
 
 const StyledSmileyCard = styled(SmileyCard)``;
 
 const CurrentEntry = ({ entry, handleDelete, loading, className }) => (
   <div className={className}>
-    <StyledSmileyCard entry={entry} />
-    <Button onClick={handleDelete} loading={loading}>
-      Delete
-    </Button>
+    <StyledSmileyCard entry={entry} onDelete={handleDelete} loading={loading} />
   </div>
 );
 

@@ -20,6 +20,7 @@ const EmojiGrid = styled.div`
 
 const EmojiInput = styled.div`
   text-align: center;
+  cursor: pointer;
   font-size: 56px;
   padding: ${props => props.theme.spacing.small};
   border-radius: ${props => props.theme.borderRadius.small};
@@ -40,6 +41,11 @@ class EmojiForm extends React.Component {
     this.props.onSave();
   };
 
+  handleRandomize = async event => {
+    event.preventDefault();
+    this.props.onRandomize();
+  };
+
   render() {
     return (
       <form onSubmit={this.handleSubmit} className={this.props.className}>
@@ -54,13 +60,22 @@ class EmojiForm extends React.Component {
             </EmojiInput>
           ))}
         </EmojiGrid>
-        <Button>Save</Button>
+        <div className="buttons">
+          <Button onClick={this.handleRandomize}>Randomize</Button>
+          <Button type="submit">Save</Button>
+        </div>
       </form>
     );
   }
 }
 
 const StyledEmojiForm = styled(EmojiForm)`
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: ${props => props.theme.spacing.medium};
+  }
+
   ${TextField} {
     margin-bottom: ${props => props.theme.spacing.small};
   }

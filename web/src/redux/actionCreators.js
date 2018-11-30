@@ -148,7 +148,8 @@ export const getUserEntries = () => {
           data.text,
           data.link,
           moment(data.createdAt),
-          data.week
+          data.week,
+          data.id
         )
     );
     dispatch(fetchUserEntriesSuccess(entries));
@@ -215,35 +216,35 @@ export const invalidCurrentUser = () => ({
   type: actionTypes.CURRENT_USER_VOID
 });
 
-export const deleteCurrentEntry = () => {
-  return async (dispatch, getState) => {
-    dispatch(requestDeleteCurrentEntry());
+export const deleteEntry = entry => {
+  return async dispatch => {
+    dispatch(requestDeleteEntry());
 
     let response;
     try {
-      const entryId = getState().currentUser.currentEntry.id;
-      response = await axios.delete(`${RESOURCES.entries}/${entryId}`);
+      response = await axios.delete(`${RESOURCES.entries}/${entry.id}`);
     } catch (error) {
-      return dispatch(failDeleteCurrentEntry(error.message));
+      return dispatch(failDeleteEntry(error.message));
     }
 
     ButterToast.raise({
       content: `${response.data.entry.id}: deleted`
     });
-    return dispatch(succeedDeleteCurrentEntry());
+    return dispatch(succeedDeleteEntry(response.data.entry.id));
   };
 };
 
-export const requestDeleteCurrentEntry = () => ({
-  type: actionTypes.DELETE_CURRENT_ENTRY
+export const requestDeleteEntry = () => ({
+  type: actionTypes.DELETE_ENTRY
 });
 
-export const succeedDeleteCurrentEntry = () => ({
-  type: actionTypes.DELETE_CURRENT_ENTRY_SUCCESS
+export const succeedDeleteEntry = entryId => ({
+  type: actionTypes.DELETE_ENTRY_SUCCESS,
+  entryId
 });
 
-export const failDeleteCurrentEntry = error => ({
-  type: actionTypes.DELETE_CURRENT_ENTRY_FAIL,
+export const failDeleteEntry = error => ({
+  type: actionTypes.DELETE_ENTRY_FAIL,
   error
 });
 

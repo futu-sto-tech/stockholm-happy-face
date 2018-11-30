@@ -32,6 +32,7 @@ const StyledTextField = styled(TextField)`
   background-color: #1a1a1a;
   border: 2px solid #1a1a1a;
   border-radius: ${props => props.theme.borderRadius.small};
+  box-shadow: inset 0 3px 4px -2px rgba(0, 0, 0, 0.3);
 
   &:focus-within {
     border-color: rgb(46, 204, 113);

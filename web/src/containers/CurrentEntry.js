@@ -1,23 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { deleteCurrentEntry } from "../redux/actionCreators";
+import { deleteEntry } from "../redux/actionCreators";
 import StyledCurrentEntry from "../components/CurrentEntry";
 
-const CurrentEntryContainer = ({ entry, deleteCurrentEntry, isLoading }) => (
+const CurrentEntryContainer = ({ entry, deleteEntry, isLoading }) => (
   <StyledCurrentEntry
     entry={entry}
-    handleDelete={deleteCurrentEntry}
+    handleDelete={() => deleteEntry(entry)}
     loading={isLoading}
   />
 );
 
-const mapStateToProps = ({ isDeletingCurrentEntry, currentUser }) => ({
-  isLoading: isDeletingCurrentEntry,
+const mapStateToProps = ({ isDeletingEntry, currentUser }) => ({
+  isLoading: isDeletingEntry,
   entry: currentUser.currentEntry
 });
 
-const mapDispatchToProps = { deleteCurrentEntry };
+const mapDispatchToProps = { deleteEntry };
 
 export default connect(
   mapStateToProps,

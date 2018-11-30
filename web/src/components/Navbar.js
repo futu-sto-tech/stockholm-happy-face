@@ -29,6 +29,7 @@ const Navbar = ({ items = [], ...props }) => (
 
 const StyledNavbar = styled(Navbar)`
   background-color: ${props => props.theme.colors.card};
+  border-radius: ${props => props.theme.borderRadius.small};
   padding: ${props => props.theme.spacing.medium} 0;
   overflow-x: auto;
   display: flex;

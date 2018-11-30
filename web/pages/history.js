@@ -6,7 +6,7 @@ import moment from "moment";
 import {
   getUserEntries,
   checkCurrentUser,
-  postEntryError
+  deleteEntry
 } from "../src/redux/actionCreators";
 import withAuth from "../src/containers/withAuth";
 import MainLayout from "../src/components/MainLayout";
@@ -17,7 +17,7 @@ import Entry from "../src/models/entry";
 
 class EntriesPage extends React.Component {
   state = {
-    weeks: [...Array(moment().weeks() + 1).keys()].reverse()
+    weeks: [...Array(moment().weeks() + 1).keys()].slice(1).reverse()
   };
 
   componentDidMount() {
@@ -38,7 +38,15 @@ class EntriesPage extends React.Component {
           <Loader />
         ) : (
           <HistoryList items={items}>
-            {item => <SmileyCard entry={item} />}
+            {item => (
+              <SmileyCard
+                entry={item}
+                onDelete={
+                  item.text !== "📭" && (() => this.props.deleteEntry(item))
+                }
+                loading={this.props.isDeleting}
+              />
+            )}
           </HistoryList>
         )}
       </MainLayout>
@@ -49,16 +57,19 @@ class EntriesPage extends React.Component {
 const mapStateToProps = ({
   currentUser,
   isLoadingUserEntries,
-  userEntries
+  userEntries,
+  isDeletingEntry
 }) => ({
   currentUser,
   isLoading: isLoadingUserEntries,
-  entries: userEntries
+  entries: userEntries,
+  isDeleting: isDeletingEntry
 });
 
 const mapDispatchToProps = {
   checkCurrentUser,
-  getUserEntries
+  getUserEntries,
+  deleteEntry
 };
 
 export default compose(

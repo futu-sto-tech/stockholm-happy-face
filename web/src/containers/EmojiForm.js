@@ -17,6 +17,7 @@ const EmojiFormContainer = props => (
       await props.saveEntry(selectedEmoji.map(emoji => emoji.value).join(" "));
       await props.randomizeEmojiSelection();
     }}
+    onRandomize={props.randomizeEmojiSelection}
   />
 );
 

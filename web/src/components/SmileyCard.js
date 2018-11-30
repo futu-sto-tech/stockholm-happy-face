@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import media from "styled-media-query";
 
+import Button from "./Button";
+
 const NameLabel = styled.h3``;
 
 const WeekLabel = styled.div`
@@ -22,20 +24,18 @@ const WeekLabel = styled.div`
 
 const Header = styled.div`
   padding: ${props => props.theme.spacing.medium};
-  border-bottom: 2px solid ${props => props.theme.colors.background};
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
 const Content = styled.div`
-  padding: ${props => props.theme.spacing.large};
-  text-align: center;
-  font-size: 80px;
-
-  ${media.greaterThan("medium")`
-    font-size: 100px;
-  `};
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  border-radius: ${props =>
+    `0 0 ${props.theme.borderRadius.small} ${props.theme.borderRadius.small}`};
+  overflow: hidden;
 
   > video {
     max-width: 100%;
@@ -43,7 +43,15 @@ const Content = styled.div`
   }
 `;
 
-const TextContent = styled.p``;
+const TextContent = styled.p`
+  text-align: center;
+  font-size: 80px;
+  padding: ${props => props.theme.spacing.large};
+
+  ${media.greaterThan("medium")`
+    font-size: 100px;
+  `};
+`;
 const LinkContent = styled.img``;
 const VideoContent = ({ src }) => (
   <video autoPlay loop>
@@ -57,7 +65,7 @@ const SmileyCard = styled.div`
   border-radius: ${props => props.theme.borderRadius.small};
 `;
 
-const SmileyCardWrapper = ({ className, entry }) => {
+const SmileyCardWrapper = ({ className, entry, onDelete, loading }) => {
   const weekStart = entry.createdAt.startOf("isoWeek").format("YYYY-MM-DD");
   const weekEnd = entry.createdAt.endOf("isoWeek").format("YYYY-MM-DD");
 
@@ -82,8 +90,38 @@ const SmileyCardWrapper = ({ className, entry }) => {
           <LinkContent src={entry.link} />
         )}
       </Content>
+
+      {onDelete && (
+        <div className="delete-button">
+          <Button shadow onClick={onDelete} loading={loading}>
+            Delete
+          </Button>
+        </div>
+      )}
     </SmileyCard>
   );
 };
 
-export default SmileyCardWrapper;
+const StyledSmileyCardWrapper = styled(SmileyCardWrapper)`
+  position: relative;
+
+  .delete-button {
+    display: none;
+
+    position: absolute;
+    bottom: ${props => props.theme.spacing.small};
+    left: ${props => props.theme.spacing.small};
+    right: ${props => props.theme.spacing.small};
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 320px;
+  }
+
+  &:hover {
+    .delete-button {
+      display: block;
+    }
+  }
+`;
+
+export default StyledSmileyCardWrapper;

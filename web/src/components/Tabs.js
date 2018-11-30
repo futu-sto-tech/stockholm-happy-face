@@ -27,7 +27,6 @@ const StyledTabs = styled(Tabs)`
     justify-content: center;
     background-color: ${props => props.theme.colors.card};
     border-radius: ${props => props.theme.borderRadius.small};
-    box-shadow: inset 0 3px 4px -2px rgba(0, 0, 0, 0.3);
 
     color: rgb(70, 70, 70);
     text-decoration: none;
