@@ -14,7 +14,10 @@ export const initialState = {
   isSearchingGifs: false,
   gifs: [],
   error: null,
-  emojis: randomEmojis(24).map(emoji => ({ value: emoji, selected: false }))
+  emojis: randomEmojis(24).map(emoji => ({ value: emoji, selected: false })),
+  isLoadingUsers: false,
+  users: [],
+  selectedUserIndex: 0
 };
 
 const reducer = (state = initialState, action) => {
@@ -178,6 +181,44 @@ const reducer = (state = initialState, action) => {
           }
           return emoji;
         })
+      };
+
+    case actionTypes.GET_WEEKLY_ENTRIES:
+      return {
+        ...state,
+        isLoadingUsers: true
+      };
+
+    case actionTypes.GET_WEEKLY_ENTRIES_FAIL:
+      return {
+        ...state,
+        isLoadingUsers: false,
+        error: action.error
+      };
+
+    case actionTypes.GET_WEEKLY_ENTRIES_SUCCESS:
+      return {
+        ...state,
+        users: action.users,
+        isLoadingUsers: false
+      };
+
+    case actionTypes.NEXT_USER:
+      return {
+        ...state,
+        selectedUserIndex:
+          state.selectedUserIndex === state.users.length - 1
+            ? 0
+            : state.selectedUserIndex + 1
+      };
+
+    case actionTypes.PREV_USER:
+      return {
+        ...state,
+        selectedUserIndex:
+          state.selectedUserIndex === 0
+            ? state.users.length - 1
+            : state.selectedUserIndex - 1
       };
 
     default:

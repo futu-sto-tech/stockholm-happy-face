@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 const { EntryController } = require("./controller");
 const { UserController } = require("../user/controller");
 
@@ -30,9 +32,28 @@ exports.deleteEntry = async (req, res) => {
 };
 
 exports.getLatestWeek = async (req, res) => {
-  const startOfWeek = moment()
-    .week()
-    .day("Monday")
-    .startOf("day");
-  const endOfWeek = moment(startOfWeek).add("7", "days");
+  const startOfWeek = moment().startOf("week");
+  const endOfWeek = moment().endOf("week");
+
+  const entriesPromise = controller.entries({
+    fromDate: startOfWeek,
+    toDate: endOfWeek
+  });
+  const usersPromise = userController.users();
+
+  const [entries, users] = await Promise.all([entriesPromise, usersPromise]);
+
+  const entryMap = entries.reduce((obj, item) => {
+    const jsonItem = item.toJSON();
+    obj[jsonItem.user.id] = jsonItem;
+    return obj;
+  }, {});
+
+  const jsonUsers = users.map(user => {
+    const jsonUser = user.toJSON();
+    jsonUser.entry = entryMap[jsonUser.id];
+    return jsonUser;
+  });
+
+  res.json({ users: jsonUsers });
 };

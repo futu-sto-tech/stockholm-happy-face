@@ -11,6 +11,7 @@ const RESOURCES = {
   users: "http://localhost:3000/api/v1/users",
   userByEmail: "http://localhost:3000/api/v1/users/email",
   entries: "http://localhost:3000/api/v1/entries",
+  entriesLastWeek: "http://localhost:3000/api/v1/week/latest",
   gifSearch: "http://localhost:3000/api/v1/gif/search"
 };
 
@@ -344,3 +345,52 @@ export const toggleEmojiSelection = emoji => {
     return dispatch({ type: actionTypes.TOGGLE_EMOJI, emoji });
   };
 };
+
+export const nextUser = () => ({ type: actionTypes.NEXT_USER });
+export const prevUser = () => ({ type: actionTypes.PREV_USER });
+
+export const getWeeklyEntries = () => {
+  return async dispatch => {
+    dispatch(fetchWeeklyEntries());
+
+    let response;
+    try {
+      response = await axios.get(RESOURCES.entriesLastWeek);
+    } catch (error) {
+      ButterToast.raise({ content: `Unable to load present view... 🤔` });
+      return dispatch(fetchWeeklyEntriesFail(error.message));
+    }
+
+    const userObjs = response.data.users.map(user => {
+      const { id, name, nickname, email, avatar } = user;
+      const userObj = new User(name, email, avatar, nickname);
+      userObj.id = id;
+
+      if (user.entry) {
+        userObj.entry = new Entry(
+          user.entry.user,
+          user.entry.text,
+          user.entry.link,
+          moment(user.entry.createdAt),
+          user.entry.week,
+          user.entry.id
+        );
+      }
+
+      return userObj;
+    });
+    return dispatch(fetchWeeklyEntriesSuccess(userObjs));
+  };
+};
+
+const fetchWeeklyEntries = () => ({
+  type: actionTypes.GET_WEEKLY_ENTRIES
+});
+const fetchWeeklyEntriesSuccess = users => ({
+  type: actionTypes.GET_WEEKLY_ENTRIES_SUCCESS,
+  users
+});
+const fetchWeeklyEntriesFail = error => ({
+  type: actionTypes.GET_WEEKLY_ENTRIES_FAIL,
+  error
+});

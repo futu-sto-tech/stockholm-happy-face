@@ -13,6 +13,10 @@ const BASE_LINKS = [
   {
     title: "History",
     path: "/history"
+  },
+  {
+    title: "Present",
+    path: "/present"
   }
 ];
 
