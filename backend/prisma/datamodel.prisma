@@ -1,0 +1,17 @@
+type User {
+  id: ID! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  email: String! @unique
+  name: String!
+  entries: [Entry!]!
+}
+
+type Entry {
+  id: ID! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  user: User!
+  link: String
+  content: String
+}
