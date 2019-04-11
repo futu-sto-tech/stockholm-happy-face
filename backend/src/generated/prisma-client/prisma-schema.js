@@ -7,6 +7,10 @@ module.exports = {
   count: Int!
 }
 
+type AggregateGif {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -22,8 +26,8 @@ type Entry {
   createdAt: DateTime!
   updatedAt: DateTime!
   user: User!
-  link: String
-  content: String
+  gif: Gif
+  emoji: String
 }
 
 type EntryConnection {
@@ -34,8 +38,8 @@ type EntryConnection {
 
 input EntryCreateInput {
   user: UserCreateOneWithoutEntriesInput!
-  link: String
-  content: String
+  gif: GifCreateOneInput
+  emoji: String
 }
 
 input EntryCreateManyWithoutUserInput {
@@ -44,8 +48,8 @@ input EntryCreateManyWithoutUserInput {
 }
 
 input EntryCreateWithoutUserInput {
-  link: String
-  content: String
+  gif: GifCreateOneInput
+  emoji: String
 }
 
 type EntryEdge {
@@ -60,18 +64,15 @@ enum EntryOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
-  link_ASC
-  link_DESC
-  content_ASC
-  content_DESC
+  emoji_ASC
+  emoji_DESC
 }
 
 type EntryPreviousValues {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  link: String
-  content: String
+  emoji: String
 }
 
 input EntryScalarWhereInput {
@@ -105,34 +106,20 @@ input EntryScalarWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-  link: String
-  link_not: String
-  link_in: [String!]
-  link_not_in: [String!]
-  link_lt: String
-  link_lte: String
-  link_gt: String
-  link_gte: String
-  link_contains: String
-  link_not_contains: String
-  link_starts_with: String
-  link_not_starts_with: String
-  link_ends_with: String
-  link_not_ends_with: String
-  content: String
-  content_not: String
-  content_in: [String!]
-  content_not_in: [String!]
-  content_lt: String
-  content_lte: String
-  content_gt: String
-  content_gte: String
-  content_contains: String
-  content_not_contains: String
-  content_starts_with: String
-  content_not_starts_with: String
-  content_ends_with: String
-  content_not_ends_with: String
+  emoji: String
+  emoji_not: String
+  emoji_in: [String!]
+  emoji_not_in: [String!]
+  emoji_lt: String
+  emoji_lte: String
+  emoji_gt: String
+  emoji_gte: String
+  emoji_contains: String
+  emoji_not_contains: String
+  emoji_starts_with: String
+  emoji_not_starts_with: String
+  emoji_ends_with: String
+  emoji_not_ends_with: String
   AND: [EntryScalarWhereInput!]
   OR: [EntryScalarWhereInput!]
   NOT: [EntryScalarWhereInput!]
@@ -158,18 +145,16 @@ input EntrySubscriptionWhereInput {
 
 input EntryUpdateInput {
   user: UserUpdateOneRequiredWithoutEntriesInput
-  link: String
-  content: String
+  gif: GifUpdateOneInput
+  emoji: String
 }
 
 input EntryUpdateManyDataInput {
-  link: String
-  content: String
+  emoji: String
 }
 
 input EntryUpdateManyMutationInput {
-  link: String
-  content: String
+  emoji: String
 }
 
 input EntryUpdateManyWithoutUserInput {
@@ -190,8 +175,8 @@ input EntryUpdateManyWithWhereNestedInput {
 }
 
 input EntryUpdateWithoutUserDataInput {
-  link: String
-  content: String
+  gif: GifUpdateOneInput
+  emoji: String
 }
 
 input EntryUpdateWithWhereUniqueWithoutUserInput {
@@ -237,40 +222,236 @@ input EntryWhereInput {
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
   user: UserWhereInput
-  link: String
-  link_not: String
-  link_in: [String!]
-  link_not_in: [String!]
-  link_lt: String
-  link_lte: String
-  link_gt: String
-  link_gte: String
-  link_contains: String
-  link_not_contains: String
-  link_starts_with: String
-  link_not_starts_with: String
-  link_ends_with: String
-  link_not_ends_with: String
-  content: String
-  content_not: String
-  content_in: [String!]
-  content_not_in: [String!]
-  content_lt: String
-  content_lte: String
-  content_gt: String
-  content_gte: String
-  content_contains: String
-  content_not_contains: String
-  content_starts_with: String
-  content_not_starts_with: String
-  content_ends_with: String
-  content_not_ends_with: String
+  gif: GifWhereInput
+  emoji: String
+  emoji_not: String
+  emoji_in: [String!]
+  emoji_not_in: [String!]
+  emoji_lt: String
+  emoji_lte: String
+  emoji_gt: String
+  emoji_gte: String
+  emoji_contains: String
+  emoji_not_contains: String
+  emoji_starts_with: String
+  emoji_not_starts_with: String
+  emoji_ends_with: String
+  emoji_not_ends_with: String
   AND: [EntryWhereInput!]
   OR: [EntryWhereInput!]
   NOT: [EntryWhereInput!]
 }
 
 input EntryWhereUniqueInput {
+  id: ID
+}
+
+type Gif {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  url: String!
+  width: String
+  height: String
+  giphyId: String
+}
+
+type GifConnection {
+  pageInfo: PageInfo!
+  edges: [GifEdge]!
+  aggregate: AggregateGif!
+}
+
+input GifCreateInput {
+  url: String!
+  width: String
+  height: String
+  giphyId: String
+}
+
+input GifCreateOneInput {
+  create: GifCreateInput
+  connect: GifWhereUniqueInput
+}
+
+type GifEdge {
+  node: Gif!
+  cursor: String!
+}
+
+enum GifOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  url_ASC
+  url_DESC
+  width_ASC
+  width_DESC
+  height_ASC
+  height_DESC
+  giphyId_ASC
+  giphyId_DESC
+}
+
+type GifPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  url: String!
+  width: String
+  height: String
+  giphyId: String
+}
+
+type GifSubscriptionPayload {
+  mutation: MutationType!
+  node: Gif
+  updatedFields: [String!]
+  previousValues: GifPreviousValues
+}
+
+input GifSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: GifWhereInput
+  AND: [GifSubscriptionWhereInput!]
+  OR: [GifSubscriptionWhereInput!]
+  NOT: [GifSubscriptionWhereInput!]
+}
+
+input GifUpdateDataInput {
+  url: String
+  width: String
+  height: String
+  giphyId: String
+}
+
+input GifUpdateInput {
+  url: String
+  width: String
+  height: String
+  giphyId: String
+}
+
+input GifUpdateManyMutationInput {
+  url: String
+  width: String
+  height: String
+  giphyId: String
+}
+
+input GifUpdateOneInput {
+  create: GifCreateInput
+  update: GifUpdateDataInput
+  upsert: GifUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: GifWhereUniqueInput
+}
+
+input GifUpsertNestedInput {
+  update: GifUpdateDataInput!
+  create: GifCreateInput!
+}
+
+input GifWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  url: String
+  url_not: String
+  url_in: [String!]
+  url_not_in: [String!]
+  url_lt: String
+  url_lte: String
+  url_gt: String
+  url_gte: String
+  url_contains: String
+  url_not_contains: String
+  url_starts_with: String
+  url_not_starts_with: String
+  url_ends_with: String
+  url_not_ends_with: String
+  width: String
+  width_not: String
+  width_in: [String!]
+  width_not_in: [String!]
+  width_lt: String
+  width_lte: String
+  width_gt: String
+  width_gte: String
+  width_contains: String
+  width_not_contains: String
+  width_starts_with: String
+  width_not_starts_with: String
+  width_ends_with: String
+  width_not_ends_with: String
+  height: String
+  height_not: String
+  height_in: [String!]
+  height_not_in: [String!]
+  height_lt: String
+  height_lte: String
+  height_gt: String
+  height_gte: String
+  height_contains: String
+  height_not_contains: String
+  height_starts_with: String
+  height_not_starts_with: String
+  height_ends_with: String
+  height_not_ends_with: String
+  giphyId: String
+  giphyId_not: String
+  giphyId_in: [String!]
+  giphyId_not_in: [String!]
+  giphyId_lt: String
+  giphyId_lte: String
+  giphyId_gt: String
+  giphyId_gte: String
+  giphyId_contains: String
+  giphyId_not_contains: String
+  giphyId_starts_with: String
+  giphyId_not_starts_with: String
+  giphyId_ends_with: String
+  giphyId_not_ends_with: String
+  AND: [GifWhereInput!]
+  OR: [GifWhereInput!]
+  NOT: [GifWhereInput!]
+}
+
+input GifWhereUniqueInput {
   id: ID
 }
 
@@ -283,6 +464,12 @@ type Mutation {
   upsertEntry(where: EntryWhereUniqueInput!, create: EntryCreateInput!, update: EntryUpdateInput!): Entry!
   deleteEntry(where: EntryWhereUniqueInput!): Entry
   deleteManyEntries(where: EntryWhereInput): BatchPayload!
+  createGif(data: GifCreateInput!): Gif!
+  updateGif(data: GifUpdateInput!, where: GifWhereUniqueInput!): Gif
+  updateManyGifs(data: GifUpdateManyMutationInput!, where: GifWhereInput): BatchPayload!
+  upsertGif(where: GifWhereUniqueInput!, create: GifCreateInput!, update: GifUpdateInput!): Gif!
+  deleteGif(where: GifWhereUniqueInput!): Gif
+  deleteManyGifs(where: GifWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -312,6 +499,9 @@ type Query {
   entry(where: EntryWhereUniqueInput!): Entry
   entries(where: EntryWhereInput, orderBy: EntryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Entry]!
   entriesConnection(where: EntryWhereInput, orderBy: EntryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EntryConnection!
+  gif(where: GifWhereUniqueInput!): Gif
+  gifs(where: GifWhereInput, orderBy: GifOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Gif]!
+  gifsConnection(where: GifWhereInput, orderBy: GifOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GifConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -320,6 +510,7 @@ type Query {
 
 type Subscription {
   entry(where: EntrySubscriptionWhereInput): EntrySubscriptionPayload
+  gif(where: GifSubscriptionWhereInput): GifSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -327,7 +518,6 @@ type User {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  email: String!
   name: String!
   entries(where: EntryWhereInput, orderBy: EntryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Entry!]
 }
@@ -339,7 +529,6 @@ type UserConnection {
 }
 
 input UserCreateInput {
-  email: String!
   name: String!
   entries: EntryCreateManyWithoutUserInput
 }
@@ -350,7 +539,6 @@ input UserCreateOneWithoutEntriesInput {
 }
 
 input UserCreateWithoutEntriesInput {
-  email: String!
   name: String!
 }
 
@@ -366,8 +554,6 @@ enum UserOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
-  email_ASC
-  email_DESC
   name_ASC
   name_DESC
 }
@@ -376,7 +562,6 @@ type UserPreviousValues {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  email: String!
   name: String!
 }
 
@@ -399,13 +584,11 @@ input UserSubscriptionWhereInput {
 }
 
 input UserUpdateInput {
-  email: String
   name: String
   entries: EntryUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
-  email: String
   name: String
 }
 
@@ -417,7 +600,6 @@ input UserUpdateOneRequiredWithoutEntriesInput {
 }
 
 input UserUpdateWithoutEntriesDataInput {
-  email: String
   name: String
 }
 
@@ -457,20 +639,6 @@ input UserWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-  email: String
-  email_not: String
-  email_in: [String!]
-  email_not_in: [String!]
-  email_lt: String
-  email_lte: String
-  email_gt: String
-  email_gte: String
-  email_contains: String
-  email_not_contains: String
-  email_starts_with: String
-  email_not_starts_with: String
-  email_ends_with: String
-  email_not_ends_with: String
   name: String
   name_not: String
   name_in: [String!]
@@ -495,7 +663,7 @@ input UserWhereInput {
 
 input UserWhereUniqueInput {
   id: ID
-  email: String
+  name: String
 }
 `
       }

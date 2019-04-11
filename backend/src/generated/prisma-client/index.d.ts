@@ -15,6 +15,7 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 
 export interface Exists {
   entry: (where?: EntryWhereInput) => Promise<boolean>;
+  gif: (where?: GifWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -60,6 +61,29 @@ export interface Prisma {
       last?: Int;
     }
   ) => EntryConnectionPromise;
+  gif: (where: GifWhereUniqueInput) => GifPromise;
+  gifs: (
+    args?: {
+      where?: GifWhereInput;
+      orderBy?: GifOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<Gif>;
+  gifsConnection: (
+    args?: {
+      where?: GifWhereInput;
+      orderBy?: GifOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => GifConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserPromise;
   users: (
     args?: {
@@ -105,6 +129,22 @@ export interface Prisma {
   ) => EntryPromise;
   deleteEntry: (where: EntryWhereUniqueInput) => EntryPromise;
   deleteManyEntries: (where?: EntryWhereInput) => BatchPayloadPromise;
+  createGif: (data: GifCreateInput) => GifPromise;
+  updateGif: (
+    args: { data: GifUpdateInput; where: GifWhereUniqueInput }
+  ) => GifPromise;
+  updateManyGifs: (
+    args: { data: GifUpdateManyMutationInput; where?: GifWhereInput }
+  ) => BatchPayloadPromise;
+  upsertGif: (
+    args: {
+      where: GifWhereUniqueInput;
+      create: GifCreateInput;
+      update: GifUpdateInput;
+    }
+  ) => GifPromise;
+  deleteGif: (where: GifWhereUniqueInput) => GifPromise;
+  deleteManyGifs: (where?: GifWhereInput) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (
     args: { data: UserUpdateInput; where: UserWhereUniqueInput }
@@ -133,6 +173,9 @@ export interface Subscription {
   entry: (
     where?: EntrySubscriptionWhereInput
   ) => EntrySubscriptionPayloadSubscription;
+  gif: (
+    where?: GifSubscriptionWhereInput
+  ) => GifSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -153,10 +196,24 @@ export type EntryOrderByInput =
   | "createdAt_DESC"
   | "updatedAt_ASC"
   | "updatedAt_DESC"
-  | "link_ASC"
-  | "link_DESC"
-  | "content_ASC"
-  | "content_DESC";
+  | "emoji_ASC"
+  | "emoji_DESC";
+
+export type GifOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC"
+  | "url_ASC"
+  | "url_DESC"
+  | "width_ASC"
+  | "width_DESC"
+  | "height_ASC"
+  | "height_DESC"
+  | "giphyId_ASC"
+  | "giphyId_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -165,8 +222,6 @@ export type UserOrderByInput =
   | "createdAt_DESC"
   | "updatedAt_ASC"
   | "updatedAt_DESC"
-  | "email_ASC"
-  | "email_DESC"
   | "name_ASC"
   | "name_DESC";
 
@@ -208,34 +263,21 @@ export interface EntryWhereInput {
   updatedAt_gt?: DateTimeInput;
   updatedAt_gte?: DateTimeInput;
   user?: UserWhereInput;
-  link?: String;
-  link_not?: String;
-  link_in?: String[] | String;
-  link_not_in?: String[] | String;
-  link_lt?: String;
-  link_lte?: String;
-  link_gt?: String;
-  link_gte?: String;
-  link_contains?: String;
-  link_not_contains?: String;
-  link_starts_with?: String;
-  link_not_starts_with?: String;
-  link_ends_with?: String;
-  link_not_ends_with?: String;
-  content?: String;
-  content_not?: String;
-  content_in?: String[] | String;
-  content_not_in?: String[] | String;
-  content_lt?: String;
-  content_lte?: String;
-  content_gt?: String;
-  content_gte?: String;
-  content_contains?: String;
-  content_not_contains?: String;
-  content_starts_with?: String;
-  content_not_starts_with?: String;
-  content_ends_with?: String;
-  content_not_ends_with?: String;
+  gif?: GifWhereInput;
+  emoji?: String;
+  emoji_not?: String;
+  emoji_in?: String[] | String;
+  emoji_not_in?: String[] | String;
+  emoji_lt?: String;
+  emoji_lte?: String;
+  emoji_gt?: String;
+  emoji_gte?: String;
+  emoji_contains?: String;
+  emoji_not_contains?: String;
+  emoji_starts_with?: String;
+  emoji_not_starts_with?: String;
+  emoji_ends_with?: String;
+  emoji_not_ends_with?: String;
   AND?: EntryWhereInput[] | EntryWhereInput;
   OR?: EntryWhereInput[] | EntryWhereInput;
   NOT?: EntryWhereInput[] | EntryWhereInput;
@@ -272,20 +314,6 @@ export interface UserWhereInput {
   updatedAt_lte?: DateTimeInput;
   updatedAt_gt?: DateTimeInput;
   updatedAt_gte?: DateTimeInput;
-  email?: String;
-  email_not?: String;
-  email_in?: String[] | String;
-  email_not_in?: String[] | String;
-  email_lt?: String;
-  email_lte?: String;
-  email_gt?: String;
-  email_gte?: String;
-  email_contains?: String;
-  email_not_contains?: String;
-  email_starts_with?: String;
-  email_not_starts_with?: String;
-  email_ends_with?: String;
-  email_not_ends_with?: String;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -308,15 +336,111 @@ export interface UserWhereInput {
   NOT?: UserWhereInput[] | UserWhereInput;
 }
 
+export interface GifWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  url?: String;
+  url_not?: String;
+  url_in?: String[] | String;
+  url_not_in?: String[] | String;
+  url_lt?: String;
+  url_lte?: String;
+  url_gt?: String;
+  url_gte?: String;
+  url_contains?: String;
+  url_not_contains?: String;
+  url_starts_with?: String;
+  url_not_starts_with?: String;
+  url_ends_with?: String;
+  url_not_ends_with?: String;
+  width?: String;
+  width_not?: String;
+  width_in?: String[] | String;
+  width_not_in?: String[] | String;
+  width_lt?: String;
+  width_lte?: String;
+  width_gt?: String;
+  width_gte?: String;
+  width_contains?: String;
+  width_not_contains?: String;
+  width_starts_with?: String;
+  width_not_starts_with?: String;
+  width_ends_with?: String;
+  width_not_ends_with?: String;
+  height?: String;
+  height_not?: String;
+  height_in?: String[] | String;
+  height_not_in?: String[] | String;
+  height_lt?: String;
+  height_lte?: String;
+  height_gt?: String;
+  height_gte?: String;
+  height_contains?: String;
+  height_not_contains?: String;
+  height_starts_with?: String;
+  height_not_starts_with?: String;
+  height_ends_with?: String;
+  height_not_ends_with?: String;
+  giphyId?: String;
+  giphyId_not?: String;
+  giphyId_in?: String[] | String;
+  giphyId_not_in?: String[] | String;
+  giphyId_lt?: String;
+  giphyId_lte?: String;
+  giphyId_gt?: String;
+  giphyId_gte?: String;
+  giphyId_contains?: String;
+  giphyId_not_contains?: String;
+  giphyId_starts_with?: String;
+  giphyId_not_starts_with?: String;
+  giphyId_ends_with?: String;
+  giphyId_not_ends_with?: String;
+  AND?: GifWhereInput[] | GifWhereInput;
+  OR?: GifWhereInput[] | GifWhereInput;
+  NOT?: GifWhereInput[] | GifWhereInput;
+}
+
+export type GifWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
 export type UserWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
-  email?: String;
+  name?: String;
 }>;
 
 export interface EntryCreateInput {
   user: UserCreateOneWithoutEntriesInput;
-  link?: String;
-  content?: String;
+  gif?: GifCreateOneInput;
+  emoji?: String;
 }
 
 export interface UserCreateOneWithoutEntriesInput {
@@ -325,14 +449,25 @@ export interface UserCreateOneWithoutEntriesInput {
 }
 
 export interface UserCreateWithoutEntriesInput {
-  email: String;
   name: String;
+}
+
+export interface GifCreateOneInput {
+  create?: GifCreateInput;
+  connect?: GifWhereUniqueInput;
+}
+
+export interface GifCreateInput {
+  url: String;
+  width?: String;
+  height?: String;
+  giphyId?: String;
 }
 
 export interface EntryUpdateInput {
   user?: UserUpdateOneRequiredWithoutEntriesInput;
-  link?: String;
-  content?: String;
+  gif?: GifUpdateOneInput;
+  emoji?: String;
 }
 
 export interface UserUpdateOneRequiredWithoutEntriesInput {
@@ -343,7 +478,6 @@ export interface UserUpdateOneRequiredWithoutEntriesInput {
 }
 
 export interface UserUpdateWithoutEntriesDataInput {
-  email?: String;
   name?: String;
 }
 
@@ -352,13 +486,46 @@ export interface UserUpsertWithoutEntriesInput {
   create: UserCreateWithoutEntriesInput;
 }
 
+export interface GifUpdateOneInput {
+  create?: GifCreateInput;
+  update?: GifUpdateDataInput;
+  upsert?: GifUpsertNestedInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: GifWhereUniqueInput;
+}
+
+export interface GifUpdateDataInput {
+  url?: String;
+  width?: String;
+  height?: String;
+  giphyId?: String;
+}
+
+export interface GifUpsertNestedInput {
+  update: GifUpdateDataInput;
+  create: GifCreateInput;
+}
+
 export interface EntryUpdateManyMutationInput {
-  link?: String;
-  content?: String;
+  emoji?: String;
+}
+
+export interface GifUpdateInput {
+  url?: String;
+  width?: String;
+  height?: String;
+  giphyId?: String;
+}
+
+export interface GifUpdateManyMutationInput {
+  url?: String;
+  width?: String;
+  height?: String;
+  giphyId?: String;
 }
 
 export interface UserCreateInput {
-  email: String;
   name: String;
   entries?: EntryCreateManyWithoutUserInput;
 }
@@ -369,12 +536,11 @@ export interface EntryCreateManyWithoutUserInput {
 }
 
 export interface EntryCreateWithoutUserInput {
-  link?: String;
-  content?: String;
+  gif?: GifCreateOneInput;
+  emoji?: String;
 }
 
 export interface UserUpdateInput {
-  email?: String;
   name?: String;
   entries?: EntryUpdateManyWithoutUserInput;
 }
@@ -403,8 +569,8 @@ export interface EntryUpdateWithWhereUniqueWithoutUserInput {
 }
 
 export interface EntryUpdateWithoutUserDataInput {
-  link?: String;
-  content?: String;
+  gif?: GifUpdateOneInput;
+  emoji?: String;
 }
 
 export interface EntryUpsertWithWhereUniqueWithoutUserInput {
@@ -444,34 +610,20 @@ export interface EntryScalarWhereInput {
   updatedAt_lte?: DateTimeInput;
   updatedAt_gt?: DateTimeInput;
   updatedAt_gte?: DateTimeInput;
-  link?: String;
-  link_not?: String;
-  link_in?: String[] | String;
-  link_not_in?: String[] | String;
-  link_lt?: String;
-  link_lte?: String;
-  link_gt?: String;
-  link_gte?: String;
-  link_contains?: String;
-  link_not_contains?: String;
-  link_starts_with?: String;
-  link_not_starts_with?: String;
-  link_ends_with?: String;
-  link_not_ends_with?: String;
-  content?: String;
-  content_not?: String;
-  content_in?: String[] | String;
-  content_not_in?: String[] | String;
-  content_lt?: String;
-  content_lte?: String;
-  content_gt?: String;
-  content_gte?: String;
-  content_contains?: String;
-  content_not_contains?: String;
-  content_starts_with?: String;
-  content_not_starts_with?: String;
-  content_ends_with?: String;
-  content_not_ends_with?: String;
+  emoji?: String;
+  emoji_not?: String;
+  emoji_in?: String[] | String;
+  emoji_not_in?: String[] | String;
+  emoji_lt?: String;
+  emoji_lte?: String;
+  emoji_gt?: String;
+  emoji_gte?: String;
+  emoji_contains?: String;
+  emoji_not_contains?: String;
+  emoji_starts_with?: String;
+  emoji_not_starts_with?: String;
+  emoji_ends_with?: String;
+  emoji_not_ends_with?: String;
   AND?: EntryScalarWhereInput[] | EntryScalarWhereInput;
   OR?: EntryScalarWhereInput[] | EntryScalarWhereInput;
   NOT?: EntryScalarWhereInput[] | EntryScalarWhereInput;
@@ -483,12 +635,10 @@ export interface EntryUpdateManyWithWhereNestedInput {
 }
 
 export interface EntryUpdateManyDataInput {
-  link?: String;
-  content?: String;
+  emoji?: String;
 }
 
 export interface UserUpdateManyMutationInput {
-  email?: String;
   name?: String;
 }
 
@@ -501,6 +651,17 @@ export interface EntrySubscriptionWhereInput {
   AND?: EntrySubscriptionWhereInput[] | EntrySubscriptionWhereInput;
   OR?: EntrySubscriptionWhereInput[] | EntrySubscriptionWhereInput;
   NOT?: EntrySubscriptionWhereInput[] | EntrySubscriptionWhereInput;
+}
+
+export interface GifSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: GifWhereInput;
+  AND?: GifSubscriptionWhereInput[] | GifSubscriptionWhereInput;
+  OR?: GifSubscriptionWhereInput[] | GifSubscriptionWhereInput;
+  NOT?: GifSubscriptionWhereInput[] | GifSubscriptionWhereInput;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -522,8 +683,7 @@ export interface Entry {
   id: ID_Output;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
-  link?: String;
-  content?: String;
+  emoji?: String;
 }
 
 export interface EntryPromise extends Promise<Entry>, Fragmentable {
@@ -531,8 +691,8 @@ export interface EntryPromise extends Promise<Entry>, Fragmentable {
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   user: <T = UserPromise>() => T;
-  link: () => Promise<String>;
-  content: () => Promise<String>;
+  gif: <T = GifPromise>() => T;
+  emoji: () => Promise<String>;
 }
 
 export interface EntrySubscription
@@ -542,15 +702,14 @@ export interface EntrySubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   user: <T = UserSubscription>() => T;
-  link: () => Promise<AsyncIterator<String>>;
-  content: () => Promise<AsyncIterator<String>>;
+  gif: <T = GifSubscription>() => T;
+  emoji: () => Promise<AsyncIterator<String>>;
 }
 
 export interface User {
   id: ID_Output;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
-  email: String;
   name: String;
 }
 
@@ -558,7 +717,6 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
-  email: () => Promise<String>;
   name: () => Promise<String>;
   entries: <T = FragmentableArray<Entry>>(
     args?: {
@@ -579,7 +737,6 @@ export interface UserSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  email: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
   entries: <T = Promise<AsyncIterator<EntrySubscription>>>(
     args?: {
@@ -592,6 +749,38 @@ export interface UserSubscription
       last?: Int;
     }
   ) => T;
+}
+
+export interface Gif {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  url: String;
+  width?: String;
+  height?: String;
+  giphyId?: String;
+}
+
+export interface GifPromise extends Promise<Gif>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  url: () => Promise<String>;
+  width: () => Promise<String>;
+  height: () => Promise<String>;
+  giphyId: () => Promise<String>;
+}
+
+export interface GifSubscription
+  extends Promise<AsyncIterator<Gif>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  url: () => Promise<AsyncIterator<String>>;
+  width: () => Promise<AsyncIterator<String>>;
+  height: () => Promise<AsyncIterator<String>>;
+  giphyId: () => Promise<AsyncIterator<String>>;
 }
 
 export interface EntryConnection {
@@ -667,6 +856,60 @@ export interface AggregateEntryPromise
 
 export interface AggregateEntrySubscription
   extends Promise<AsyncIterator<AggregateEntry>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface GifConnection {
+  pageInfo: PageInfo;
+  edges: GifEdge[];
+}
+
+export interface GifConnectionPromise
+  extends Promise<GifConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<GifEdge>>() => T;
+  aggregate: <T = AggregateGifPromise>() => T;
+}
+
+export interface GifConnectionSubscription
+  extends Promise<AsyncIterator<GifConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<GifEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateGifSubscription>() => T;
+}
+
+export interface GifEdge {
+  node: Gif;
+  cursor: String;
+}
+
+export interface GifEdgePromise extends Promise<GifEdge>, Fragmentable {
+  node: <T = GifPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface GifEdgeSubscription
+  extends Promise<AsyncIterator<GifEdge>>,
+    Fragmentable {
+  node: <T = GifSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateGif {
+  count: Int;
+}
+
+export interface AggregateGifPromise
+  extends Promise<AggregateGif>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateGifSubscription
+  extends Promise<AsyncIterator<AggregateGif>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -770,8 +1013,7 @@ export interface EntryPreviousValues {
   id: ID_Output;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
-  link?: String;
-  content?: String;
+  emoji?: String;
 }
 
 export interface EntryPreviousValuesPromise
@@ -780,8 +1022,7 @@ export interface EntryPreviousValuesPromise
   id: () => Promise<ID_Output>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
-  link: () => Promise<String>;
-  content: () => Promise<String>;
+  emoji: () => Promise<String>;
 }
 
 export interface EntryPreviousValuesSubscription
@@ -790,8 +1031,66 @@ export interface EntryPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  link: () => Promise<AsyncIterator<String>>;
-  content: () => Promise<AsyncIterator<String>>;
+  emoji: () => Promise<AsyncIterator<String>>;
+}
+
+export interface GifSubscriptionPayload {
+  mutation: MutationType;
+  node: Gif;
+  updatedFields: String[];
+  previousValues: GifPreviousValues;
+}
+
+export interface GifSubscriptionPayloadPromise
+  extends Promise<GifSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = GifPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = GifPreviousValuesPromise>() => T;
+}
+
+export interface GifSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<GifSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = GifSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = GifPreviousValuesSubscription>() => T;
+}
+
+export interface GifPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  url: String;
+  width?: String;
+  height?: String;
+  giphyId?: String;
+}
+
+export interface GifPreviousValuesPromise
+  extends Promise<GifPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  url: () => Promise<String>;
+  width: () => Promise<String>;
+  height: () => Promise<String>;
+  giphyId: () => Promise<String>;
+}
+
+export interface GifPreviousValuesSubscription
+  extends Promise<AsyncIterator<GifPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  url: () => Promise<AsyncIterator<String>>;
+  width: () => Promise<AsyncIterator<String>>;
+  height: () => Promise<AsyncIterator<String>>;
+  giphyId: () => Promise<AsyncIterator<String>>;
 }
 
 export interface UserSubscriptionPayload {
@@ -823,7 +1122,6 @@ export interface UserPreviousValues {
   id: ID_Output;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
-  email: String;
   name: String;
 }
 
@@ -833,7 +1131,6 @@ export interface UserPreviousValuesPromise
   id: () => Promise<ID_Output>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
-  email: () => Promise<String>;
   name: () => Promise<String>;
 }
 
@@ -843,7 +1140,6 @@ export interface UserPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  email: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
 }
 
@@ -885,6 +1181,10 @@ export type Long = string;
  */
 
 export const models: Model[] = [
+  {
+    name: "Gif",
+    embedded: false
+  },
   {
     name: "User",
     embedded: false

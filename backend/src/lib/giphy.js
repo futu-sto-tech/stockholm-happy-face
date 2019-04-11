@@ -16,7 +16,7 @@ class GiphyAPI {
 
   parseGifData(data) {
     const { id, title, images } = data
-    const { width, height, mp4 } = images.preview
+    const { width, height, url } = images.preview_gif
 
     return {
       id,
@@ -24,12 +24,12 @@ class GiphyAPI {
       preview: {
         width,
         height,
-        url: mp4,
+        url,
       },
       original: {
-        width: images.original_mp4.width,
-        height: images.original_mp4.height,
-        url: images.original_mp4.mp4,
+        width: images.original.width,
+        height: images.original.height,
+        url: images.original.url,
       },
     }
   }
