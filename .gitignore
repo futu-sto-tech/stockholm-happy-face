@@ -1,6 +1,7 @@
 # Secrets
 .env
 firebase-admin-cert.json
+backend/backup/
 
 # Node.js
 node_modules/

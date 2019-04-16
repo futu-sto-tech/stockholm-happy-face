@@ -1,19 +1,30 @@
 import styled, { css } from "styled-components/macro";
 
-const ResultList = styled.div.attrs({ className: "nes-container is-rounded" })`
-  &.is-rounded {
-    margin: 16px 0;
-  }
+const ResultList = styled.div.attrs({ className: "nes-container" })`
+  margin: 0 -4px 16px -4px;
+  padding: 8px;
+  background-color: white;
 
-  width: 100%;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
 
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 8px;
+  grid-auto-rows: 120px;
 
-  height: 300px;
+  @media (min-width: 600px) {
+    grid-auto-rows: 200px;
+  }
+
+  @media (min-width: 768px) {
+    padding: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 16px;
+    grid-auto-rows: 200px;
+  }
+
+  min-height: 200px;
 `;
 
 ResultList.Item = styled.div`
@@ -22,10 +33,6 @@ ResultList.Item = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  &:not(:last-child) {
-    margin-right: 24px;
-  }
 
   ${props =>
     props.selected &&

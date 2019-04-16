@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { prisma } = require('../generated/prisma-client')
 
 const ENTRY_WITH_USER_FRAGMENT = /* GraphQL */ `
@@ -5,7 +6,9 @@ const ENTRY_WITH_USER_FRAGMENT = /* GraphQL */ `
     id
     createdAt
     updatedAt
-    emoji
+
+    productivity
+    positivity
 
     gif {
       id
@@ -46,42 +49,50 @@ exports.createEntry = async (req, res) => {
 }
 
 exports.getEntries = async (req, res) => {
+  const whereQuery = {}
+
   if (req.query.user) {
-    res.json(
-      (await prisma
-        .user({ id: req.query.user })
-        .entries()
-        .$fragment(ENTRY_WITH_USER_FRAGMENT)) || []
-    )
-  } else if (req.query.name) {
-    res.json(
-      (await prisma
-        .user({ name: req.query.name })
-        .entries()
-        .$fragment(ENTRY_WITH_USER_FRAGMENT)) || []
-    )
-  } else {
-    res.json(await prisma.entries().$fragment(ENTRY_WITH_USER_FRAGMENT))
+    whereQuery.user = { id: req.query.user }
+  }
+
+  if (req.query.name) {
+    whereQuery.user = { name: req.query.name }
+  }
+
+  if (req.query.week) {
+    let fromDate, toDate
+    if (req.query.week === 'current') {
+      fromDate = moment().startOf('isoWeek')
+      toDate = moment().endOf('isoWeek')
+    } else {
+      fromDate = moment()
+        .week(req.query.week)
+        .startOf('isoWeek')
+      toDate = moment()
+        .week(req.query.week)
+        .endOf('isoWeek')
+    }
+
+    whereQuery.createdAt_gte = fromDate
+    whereQuery.createdAt_lte = toDate
+  }
+
+  try {
+    const entries = await prisma
+      .entries({ where: whereQuery })
+      .$fragment(ENTRY_WITH_USER_FRAGMENT)
+    res.json(entries)
+  } catch (error) {
+    res.status(500).send({ message: 'Unable to fetch entries' })
   }
 }
 
 exports.getEntry = async (req, res) => {
-  res.json(
-    await prisma
-      .entry({ id: req.params.id })
-      .$fragment(ENTRY_WITH_USER_FRAGMENT)
-  )
-}
+  const entry = await prisma
+    .entry({ id: req.params.id })
+    .$fragment(ENTRY_WITH_USER_FRAGMENT)
 
-exports.getRandomEntry = async (req, res) => {
-  const entries = await prisma.entries()
-  const randomEntry = entries[Math.floor(Math.random() * entries.length)]
-
-  res.json(
-    await prisma
-      .entry({ id: randomEntry.id })
-      .$fragment(ENTRY_WITH_USER_FRAGMENT)
-  )
+  res.json(entry)
 }
 
 exports.deleteEntry = async (req, res) => {

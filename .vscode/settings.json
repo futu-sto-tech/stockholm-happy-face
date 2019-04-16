@@ -3,6 +3,7 @@
     "api",
     "giphy",
     "key",
+    "positivity",
     "prisma"
   ]
 }

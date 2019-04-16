@@ -6,13 +6,14 @@ import Form from "./styled/Form";
 import SearchBoxContainer from "./SearchBoxContainer";
 import ResultListContainer from "./ResultListContainer";
 
-const FormPage = ({ onSubmit, loading, url, onChangeUrl }) => (
+const GifStep = ({ onSubmit, url, onChangeUrl }) => (
   <Form onSubmit={onSubmit}>
     <Form.Field>
       <Form.Label htmlFor="gif-url">Link to GIF</Form.Label>
       <Form.Input
         id="gif-url"
         placeholder="https://giphy.com/jadowijawiodj"
+        required={true}
         type="url"
         value={url}
         onChange={onChangeUrl}
@@ -23,11 +24,9 @@ const FormPage = ({ onSubmit, loading, url, onChangeUrl }) => (
     <ResultListContainer />
 
     <Flex justify="center">
-      <Button type="submit" disabled={loading}>
-        {loading ? "Loading..." : "Done"}
-      </Button>
+      <Button type="submit">Next</Button>
     </Flex>
   </Form>
 );
 
-export default FormPage;
+export default GifStep;

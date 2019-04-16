@@ -2,10 +2,10 @@ import styled from "styled-components/macro";
 
 const Layout = styled.div``;
 
-Layout.Main = styled.div.attrs({ className: "nes-container is-rounded" })`
-  &.is-rounded {
-    margin: 0;
-  }
+Layout.Main = styled.div.attrs({ className: "nes-container" })`
+  margin: 0 -4px 16px;
+  padding: 16px;
+  background-color: white;
 
   display: flex;
   justify-content: center;

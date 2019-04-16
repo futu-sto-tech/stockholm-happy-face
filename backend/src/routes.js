@@ -10,7 +10,6 @@ exports.setupRoutes = app => {
   app.post('/users', UserController.createUser)
   app.get('/entries', EntryController.getEntries)
   app.post('/entries', EntryController.createEntry)
-  app.get('/entries/random', EntryController.getRandomEntry)
   app.get('/entries/:id', EntryController.getEntry)
   app.delete('/entries/:id', EntryController.deleteEntry)
 }

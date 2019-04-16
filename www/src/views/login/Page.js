@@ -33,7 +33,7 @@ const LoginPage = ({
         </Autocomplete>
       )}
 
-      <Form.Button>{loading ? "Loading..." : "Login"}</Form.Button>
+      <Form.Button>{loading ? "Loading..." : "Continue"}</Form.Button>
     </Form>
   </Layout>
 );

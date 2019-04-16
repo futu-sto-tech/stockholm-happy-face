@@ -1,27 +1,21 @@
-import axios from "axios";
-
+import apiClient from "../api";
 import { ACTION_TYPE } from "./Context";
 
 export const login = async (state, dispatch) => {
   dispatch({ type: ACTION_TYPE.START_LOGIN });
 
   try {
-    const response = await axios.get(
-      `https://smileys-api.now.sh/users/name/${state.username}`
-    );
+    const response = await apiClient.get(`/users/name/${state.username}`);
 
     if (response.data) {
-      const entryResponse = await axios.get(
-        "https://smileys-api.now.sh/entries",
-        { params: { user: response.data.id } }
-      );
+      const entryResponse = await apiClient.get("/entries", {
+        params: { user: response.data.id, week: "current" }
+      });
 
       if (entryResponse.data.length > 0) {
-        const entryId = entryResponse.data[0].id;
-        const url = `https://smileys-api.now.sh/entries/${entryId}`;
         dispatch({
           type: ACTION_TYPE.UPDATE_CURRENT_ENTRY,
-          payload: { entry: (await axios.get(url)).data }
+          payload: { entry: entryResponse.data[0] }
         });
       }
 
@@ -31,7 +25,7 @@ export const login = async (state, dispatch) => {
       });
     } else {
       try {
-        const response = await axios.post("https://smileys-api.now.sh/users", {
+        const response = await apiClient.post("/users", {
           name: state.username
         });
         dispatch({
@@ -52,9 +46,11 @@ export const submitEntry = async (state, dispatch) => {
 
   try {
     const { id, ...giphyData } = state.selectedGif;
-    const response = await axios.post("https://smileys-api.now.sh/entries", {
+    const response = await apiClient.post("/entries", {
       user: state.user.id,
-      gif: { giphyId: id, ...giphyData }
+      gif: { giphyId: id, ...giphyData },
+      productivity: state.productivity,
+      positivity: state.positivity
     });
     dispatch({
       type: ACTION_TYPE.COMPLETE_SAVE_ENTRY,
@@ -69,8 +65,8 @@ export const deleteEntry = async (state, dispatch) => {
   dispatch({ type: ACTION_TYPE.START_DELETE_ENTRY });
 
   try {
-    const url = `https://smileys-api.now.sh/entries/${state.currentEntry.id}`;
-    await axios.delete(url);
+    const url = `/entries/${state.currentEntry.id}`;
+    await apiClient.delete(url);
     dispatch({ type: ACTION_TYPE.COMPLETE_DELETE_ENTRY });
   } catch (error) {
     dispatch({ type: ACTION_TYPE.FAIL_DELETE_ENTRY });

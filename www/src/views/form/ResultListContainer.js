@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import axios from "axios";
 
+import apiClient from "../../api";
 import { debounce } from "../../utils";
 import Context, { ACTION_TYPE } from "../../context/Context";
 import ResultList from "./styled/ResultList";
@@ -11,11 +11,10 @@ const ResultListContainer = () => {
 
   async function fetchResults() {
     try {
-      const response = await axios.get(
-        "https://smileys-api.now.sh/gif/search",
-        { params: { query: state.gifQuery } }
-      );
-      setResults(response.data.images);
+      const response = await apiClient.get("/gif/search", {
+        params: { query: state.gifQuery }
+      });
+      setResults(response.data.images.slice(0, 9));
     } catch (error) {
       console.log(error);
     }

@@ -18,12 +18,15 @@ export const ACTION_TYPE = {
 
   UPDATE_GIF_URL: "UPDATE_GIF_URL",
   UPDATE_SELECTED_GIF: "UPDATE_SELECTED_GIF",
+  COMPLETE_SELECT_GIF: "COMPLETE_SELECT_GIF",
 
   START_DELETE_ENTRY: "START_DELETE_ENTRY",
   COMPLETE_DELETE_ENTRY: "COMPLETE_DELETE_ENTRY",
   FAIL_DELETE_ENTRY: "COMPLETE_DELETE_ENTRY",
 
-  UPDATE_CURRENT_ENTRY: "UPDATE_CURRENT_ENTRY"
+  UPDATE_CURRENT_ENTRY: "UPDATE_CURRENT_ENTRY",
+
+  UPDATE_PRODUCTIVITY_POSITIVITY: "UPDATE_PRODUCTIVITY_POSITIVITY"
 };
 
 const Context = createContext();
@@ -37,10 +40,14 @@ const initialState = {
   loadingSaveEntry: false,
   currentEntry: null,
 
+  productivity: 0,
+  positivity: 0,
+
   gifQuery: "",
   loadingGifSearch: false,
 
   selectedGif: { url: "" },
+  hasEnteredGif: false,
 
   loadingDeleteEntry: false
 };
@@ -85,13 +92,24 @@ const reducer = (state, action) => {
       return { ...state, loadingDeleteEntry: true };
 
     case ACTION_TYPE.COMPLETE_DELETE_ENTRY:
-      return { ...state, loadingDeleteEntry: false, currentEntry: null };
+      return {
+        ...state,
+        loadingDeleteEntry: false,
+        currentEntry: null,
+        hasEnteredGif: false
+      };
 
     case ACTION_TYPE.FAIL_DELETE_ENTRY:
       return { ...state, loadingDeleteEntry: false };
 
     case ACTION_TYPE.UPDATE_CURRENT_ENTRY:
       return { ...state, currentEntry: action.payload.entry };
+
+    case ACTION_TYPE.UPDATE_PRODUCTIVITY_POSITIVITY:
+      return { ...state, ...action.payload };
+
+    case ACTION_TYPE.COMPLETE_SELECT_GIF:
+      return { ...state, hasEnteredGif: true };
 
     default:
       return state;

@@ -6,6 +6,7 @@ type Gif {
   width: String
   height: String
   giphyId: String
+  entry: Entry! @relation(name: "EntryGIF")
 }
 
 type User {
@@ -13,14 +14,15 @@ type User {
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   name: String! @unique
-  entries: [Entry!]!
+  entries: [Entry!]! @relation(name: "EntriesByUser", onDelete: CASCADE)
 }
 
 type Entry {
   id: ID! @unique
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  user: User!
-  gif: Gif
-  emoji: String
+  user: User! @relation(name: "EntriesByUser")
+  gif: Gif! @relation(name: "EntryGIF", onDelete: CASCADE)
+  productivity: Float!
+  positivity: Float!
 }

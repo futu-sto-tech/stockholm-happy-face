@@ -1,9 +1,6 @@
 import styled from "styled-components/macro";
 
 const Layout = styled.div`
-  height: 100vh;
-  width: 100vw;
-
   display: flex;
   flex-direction: column;
 `;
@@ -20,11 +17,11 @@ Layout.Main = styled.main`
 
   padding: 12px;
 
-  max-width: 480px;
+  max-width: 768px;
   margin: 0 auto;
 
-  @media (min-width: 600px) {
-    width: 480px;
+  @media (min-width: 800px) {
+    width: 768px;
   }
 `;
 
