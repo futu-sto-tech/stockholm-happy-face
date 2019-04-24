@@ -13,8 +13,8 @@ const EntryPage = ({ entry, onDelete, loading }) => (
       <Rating.Marker
         style={{
           position: "absolute",
-          bottom: `calc(${entry.positivity * 10}% - 16px)`,
-          left: `calc(${entry.productivity * 10}% - 16px)`
+          bottom: `calc(${(entry.positivity + 5) * 10}% - 16px)`,
+          left: `calc(${(entry.productivity + 5) * 10}% - 16px)`
         }}
       />
     </Rating>
