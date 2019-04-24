@@ -1,10 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import Context, { ACTION_TYPE } from "../../context/Context";
 import Rating from "../rating";
 
 const RatingContainer = () => {
   const { dispatch } = useContext(Context);
+
+  useEffect(() => {
+    document.getElementById("rating-area").addEventListener(
+      "touchmove",
+      function(event) {
+        event.preventDefault();
+      },
+      false
+    );
+  }, []);
 
   function handleStop(event, ui) {
     // you can only move the marker -32px from the right
@@ -14,14 +24,14 @@ const RatingContainer = () => {
     dispatch({
       type: ACTION_TYPE.UPDATE_PRODUCTIVITY_POSITIVITY,
       payload: {
-        productivity: normalizedX * 10,
-        positivity: 10 - normalizedY * 10 // y-axis is flipped
+        productivity: normalizedX * 10 - 5,
+        positivity: 5 - normalizedY * 10 // y-axis is flipped
       }
     });
   }
 
   return (
-    <Rating>
+    <Rating id="rating-area">
       <Rating.DraggableMarker
         onStop={handleStop}
         defaultPosition={{ x: 20, y: 20 }}

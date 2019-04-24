@@ -24,7 +24,7 @@ const GifStep = ({ onSubmit, url, onChangeUrl }) => (
     <ResultListContainer />
 
     <Flex justify="center">
-      <Button type="submit">Next</Button>
+      <Button type="submit">Continue</Button>
     </Flex>
   </Form>
 );

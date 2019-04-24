@@ -1,26 +1,20 @@
 import styled from "styled-components/macro";
 
 const Layout = styled.div`
-  display: flex;
-  flex-direction: column;
+  height: 100vh;
 `;
 
 Layout.Top = styled.div`
-  flex-shrink: 0;
-
   padding-top: 8px;
   margin-bottom: 8px;
 `;
 
 Layout.Main = styled.main`
-  flex: 1;
-
   padding: 12px;
-
-  max-width: 768px;
-  margin: 0 auto;
+  padding-bottom: 56px;
 
   @media (min-width: 800px) {
+    margin: 0 auto;
     width: 768px;
   }
 `;

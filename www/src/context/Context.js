@@ -73,7 +73,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         loadingSaveEntry: false,
-        currentEntry: action.payload.entry
+        currentEntry: action.payload.entry,
+        productivity: 0,
+        positivity: 0,
+        gifQuery: "",
+        selectedGif: { url: "" },
+        hasEnteredGif: false
       };
 
     case ACTION_TYPE.FAIL_SAVE_ENTRY:

@@ -23,7 +23,7 @@ const ResultListContainer = () => {
   useEffect(() => {
     if (state.gifQuery.length === 0) {
       setResults([]);
-    } else if (state.gifQuery.length > 2) {
+    } else {
       debounce(fetchResults(), 250);
     }
   }, [state.gifQuery]);

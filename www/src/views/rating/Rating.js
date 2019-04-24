@@ -5,8 +5,8 @@ import Area from "./styled/Area";
 import Axis from "./styled/Axis";
 import Marker from "./styled/Marker";
 
-const Rating = ({ children }) => (
-  <Area>
+const Rating = ({ children, ...props }) => (
+  <Area {...props}>
     <Axis.Y />
     <Axis.LabelY>Positivity</Axis.LabelY>
     <Axis.X />
