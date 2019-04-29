@@ -1,13 +1,8 @@
 import styled, { css } from "styled-components/macro";
 
-const ResultList = styled.div.attrs({ className: "nes-container" })`
-  margin: 0 -4px 16px -4px;
-  padding: 8px;
-  background-color: white;
+import Button from "./Button";
 
-  overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
-
+const ResultList = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 8px;
@@ -18,13 +13,39 @@ const ResultList = styled.div.attrs({ className: "nes-container" })`
   }
 
   @media (min-width: 768px) {
-    padding: 16px;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 16px;
     grid-auto-rows: 200px;
   }
 
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+`;
+
+ResultList.Wrapper = styled.div.attrs({ className: "nes-container" })`
+  margin: 0 -4px 16px -4px;
+  padding: 8px;
+  background-color: white;
+
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+
   min-height: 200px;
+
+  @media (min-width: 768px) {
+    padding: 16px;
+  }
+`;
+
+ResultList.MoreButton = styled(Button).attrs({ type: "button" })`
+  &.is-primary {
+    margin-top: 24px;
+  }
 `;
 
 ResultList.Item = styled.div`

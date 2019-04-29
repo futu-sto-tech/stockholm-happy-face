@@ -13,10 +13,13 @@ Layout.Main = styled.main`
   padding: 12px;
   padding-bottom: 56px;
 
-  @media (min-width: 800px) {
-    margin: 0 auto;
-    width: 768px;
+  @media (min-width: 768px) {
+    padding-left: 56px;
+    padding-right: 56px;
   }
+
+  max-width: 1600px;
+  margin: 0 auto;
 `;
 
 export default Layout;

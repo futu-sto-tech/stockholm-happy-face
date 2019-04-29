@@ -34,9 +34,9 @@ class GiphyAPI {
     }
   }
 
-  async search(query, limit = 10) {
+  async search(query, { limit = 25, offset = 0 }) {
     const response = await this.axios.get('search', {
-      params: { q: query, limit },
+      params: { q: query, limit, offset },
     })
 
     return response.data.data.map(this.parseGifData)

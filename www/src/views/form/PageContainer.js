@@ -8,21 +8,23 @@ import RatingStep from "./RatingStep";
 const FormPageContainer = () => {
   let { state, dispatch } = useContext(Context);
 
-  if (state.hasEnteredGif) {
-    return (
-      <RatingStep
-        onSubmit={() => submitEntry(state, dispatch)}
-        loading={state.loadingSaveEntry}
-      />
-    );
-  }
+  // if (state.hasEnteredGif) {
+  //   return (
+  //     <RatingStep
+  //       onSubmit={() => submitEntry(state, dispatch)}
+  //       loading={state.loadingSaveEntry}
+  //     />
+  //   );
+  // }
 
   return (
     <GifStep
       onSubmit={event => {
         event.preventDefault();
         dispatch({ type: ACTION_TYPE.COMPLETE_SELECT_GIF });
+        submitEntry(state, dispatch)
       }}
+      loading={state.loadingSaveEntry}
       url={state.selectedGif.url}
       onChangeUrl={({ target: { value } }) =>
         dispatch({

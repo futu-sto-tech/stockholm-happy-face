@@ -9,7 +9,7 @@ const EntryPage = ({ entry, onDelete, loading }) => (
       <img src={entry.gif.url} alt="Animation" />
     </Layout.Main>
 
-    <Rating>
+    {/* <Rating>
       <Rating.Marker
         style={{
           position: "absolute",
@@ -17,7 +17,7 @@ const EntryPage = ({ entry, onDelete, loading }) => (
           left: `calc(${(entry.productivity + 5) * 10}% - 16px)`
         }}
       />
-    </Rating>
+    </Rating> */}
 
     <Layout.Button onClick={onDelete} disabled={loading}>
       {loading ? "Loading..." : "Delete"}
