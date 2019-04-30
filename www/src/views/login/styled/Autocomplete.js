@@ -16,6 +16,8 @@ Autocomplete.Item = styled.div`
     border-bottom: 4px solid black;
   }
 
+  background-color: ${props => props.selected && "rgba(0, 0, 0, 0.05)"};
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);
   }

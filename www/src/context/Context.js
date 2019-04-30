@@ -26,7 +26,11 @@ export const ACTION_TYPE = {
 
   UPDATE_CURRENT_ENTRY: "UPDATE_CURRENT_ENTRY",
 
-  UPDATE_PRODUCTIVITY_POSITIVITY: "UPDATE_PRODUCTIVITY_POSITIVITY"
+  UPDATE_PRODUCTIVITY_POSITIVITY: "UPDATE_PRODUCTIVITY_POSITIVITY",
+
+  START_FETCH_USER_ENTRIES: "START_FETCH_USER_ENTRIES",
+  COMPLETE_FETCH_USER_ENTRIES: "COMPLETE_FETCH_USER_ENTRIES",
+  FAIL_FETCH_USER_ENTRIES: "FAIL_FETCH_USER_ENTRIES"
 };
 
 const Context = createContext();
@@ -49,7 +53,10 @@ const initialState = {
   selectedGif: { url: "" },
   hasEnteredGif: false,
 
-  loadingDeleteEntry: false
+  loadingDeleteEntry: false,
+
+  loadingUserEntries: false,
+  userEntries: []
 };
 
 const reducer = (state, action) => {
@@ -115,6 +122,19 @@ const reducer = (state, action) => {
 
     case ACTION_TYPE.COMPLETE_SELECT_GIF:
       return { ...state, hasEnteredGif: true };
+
+    case ACTION_TYPE.START_FETCH_USER_ENTRIES:
+      return { ...state, loadingUserEntries: true };
+
+    case ACTION_TYPE.COMPLETE_FETCH_USER_ENTRIES:
+      return {
+        ...state,
+        loadingUserEntries: false,
+        userEntries: action.payload.entries
+      };
+
+    case ACTION_TYPE.FAIL_FETCH_USER_ENTRIES:
+      return { ...state, loadingUserEntries: false };
 
     default:
       return state;

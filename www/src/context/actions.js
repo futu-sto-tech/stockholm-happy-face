@@ -72,3 +72,19 @@ export const deleteEntry = async (state, dispatch) => {
     dispatch({ type: ACTION_TYPE.FAIL_DELETE_ENTRY });
   }
 };
+
+export const fetchUserEntries = async (state, dispatch) => {
+  dispatch({ type: ACTION_TYPE.START_FETCH_USER_ENTRIES });
+
+  try {
+    const response = await apiClient.get("/entries", {
+      params: { user: state.user.id }
+    });
+    dispatch({
+      type: ACTION_TYPE.COMPLETE_FETCH_USER_ENTRIES,
+      payload: { entries: response.data }
+    });
+  } catch (error) {
+    dispatch({ type: ACTION_TYPE.FAIL_FETCH_USER_ENTRIES });
+  }
+};

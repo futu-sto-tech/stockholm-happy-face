@@ -18,6 +18,7 @@ const LoginPage = ({
         <Form.Label>Enter your name</Form.Label>
         <Form.Input
           placeholder="Your name"
+          autoFocus
           value={username}
           onChange={onChangeUsername}
         />

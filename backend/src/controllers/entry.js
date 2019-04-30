@@ -25,6 +25,16 @@ const ENTRY_WITH_USER_FRAGMENT = /* GraphQL */ `
   }
 `
 
+const convertEntry = entry => {
+  const createdAt = moment(entry.createdAt)
+
+  return {
+    ...entry,
+    fromNow: createdAt.fromNow(),
+    week: createdAt.isoWeek(),
+  }
+}
+
 exports.createEntry = async (req, res) => {
   const { user, gif, ...data } = req.body
 
@@ -39,9 +49,10 @@ exports.createEntry = async (req, res) => {
 
   try {
     const result = await prisma.createEntry(entryInput)
-    res.json(
-      await prisma.entry({ id: result.id }).$fragment(ENTRY_WITH_USER_FRAGMENT)
-    )
+    const entry = await prisma
+      .entry({ id: result.id })
+      .$fragment(ENTRY_WITH_USER_FRAGMENT)
+    res.json(convertEntry(entry))
   } catch (error) {
     console.error(error)
     res.status(500).send({ error: 'Unable to save entry' })
@@ -81,7 +92,7 @@ exports.getEntries = async (req, res) => {
     const entries = await prisma
       .entries({ where: whereQuery })
       .$fragment(ENTRY_WITH_USER_FRAGMENT)
-    res.json(entries)
+    res.json(entries.map(convertEntry))
   } catch (error) {
     res.status(500).send({ message: 'Unable to fetch entries' })
   }
@@ -92,13 +103,13 @@ exports.getEntry = async (req, res) => {
     .entry({ id: req.params.id })
     .$fragment(ENTRY_WITH_USER_FRAGMENT)
 
-  res.json(entry)
+  res.json(convertEntry(entry))
 }
 
 exports.deleteEntry = async (req, res) => {
   try {
     const deletedEntry = await prisma.deleteEntry({ id: req.params.id })
-    res.json(deletedEntry)
+    res.json(convertEntry(deletedEntry))
   } catch (error) {
     console.error(error)
     res.status(500).send({ error: 'Unable to delete entry' })
