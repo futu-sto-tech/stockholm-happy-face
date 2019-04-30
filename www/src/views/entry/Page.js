@@ -39,7 +39,7 @@ const EntryPage = ({ entry, onDelete, loading, loadingEntries, entries }) => (
             <MessageList.Balloon
               className={`from-${index % 2 ? "left" : "right"}`}
             >
-              <MessageList.Title>Week: {entry.week || "18"}</MessageList.Title>
+              <MessageList.Title>Week: {entry.week}</MessageList.Title>
 
               <MessageList.Image src={entry.gif.url} alt="Animation" />
 
