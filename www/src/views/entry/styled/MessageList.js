@@ -32,6 +32,10 @@ MessageList.Title = styled.p`
   color: #000;
 `;
 
-MessageList.Image = styled.img``;
+MessageList.Image = styled.img`
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+`;
 
 export default MessageList;

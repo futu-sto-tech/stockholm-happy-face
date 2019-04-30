@@ -18,7 +18,11 @@ CurrentEntry.Title = styled.h2`
   text-align: center;
 `;
 
-CurrentEntry.Image = styled.img``;
+CurrentEntry.Image = styled.img`
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+`;
 
 CurrentEntry.Button = styled.button.attrs({ className: "nes-btn is-error" })`
   margin: 16px auto;
