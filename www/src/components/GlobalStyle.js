@@ -15,6 +15,9 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background-color: #33b9d2;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
 
   html, body, pre, code, kbd, samp {

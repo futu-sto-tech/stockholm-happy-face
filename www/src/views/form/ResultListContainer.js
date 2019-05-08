@@ -16,7 +16,6 @@ const ResultListContainer = () => {
 
   async function fetchResults() {
     try {
-      console.log(offset);
       setLocalState({ ...localState, loading: true });
       const response = await apiClient.get("/gif/search", {
         params: { query: state.gifQuery, offset }
