@@ -42,9 +42,20 @@ These are the instructions to deploy the service. First let's get some free acco
    npm install -g prisma
    ```
 
+1. Install dependencies and setup Prisma
+
+   ```bash
+   npm install --prefix ./api ./api
+   npm install --prefix ./www ./api
+
+   prisma deploy
+   ```
+
+   Select "Demo server" when prompted and authenticate with Prisma.
+
 1. Finally we are gonna use [now][now] to deploy our services.
 
-   You can first test that everything is working by running `now` locally:
+   You can first test that everything works by running `now` locally:
 
    ```bash
    now dev
