@@ -1,5 +1,10 @@
+const { Router } = require('express')
 const moment = require('moment')
-const { prisma } = require('../generated/prisma-client')
+
+const app = require('../../utils/app')
+const { prisma } = require('../../generated/prisma-client')
+
+const router = Router()
 
 const ENTRY_WITH_USER_FRAGMENT = /* GraphQL */ `
   fragment EntryWithUser on Entry {
@@ -35,31 +40,7 @@ const convertEntry = entry => {
   }
 }
 
-exports.createEntry = async (req, res) => {
-  const { user, gif, ...data } = req.body
-
-  const entryInput = {
-    ...data,
-    user: { connect: { id: user } },
-  }
-
-  if (gif) {
-    entryInput.gif = { create: { ...gif } }
-  }
-
-  try {
-    const result = await prisma.createEntry(entryInput)
-    const entry = await prisma
-      .entry({ id: result.id })
-      .$fragment(ENTRY_WITH_USER_FRAGMENT)
-    res.json(convertEntry(entry))
-  } catch (error) {
-    console.error(error)
-    res.status(500).send({ error: 'Unable to save entry' })
-  }
-}
-
-exports.getEntries = async (req, res) => {
+router.get('/', async (req, res) => {
   const whereQuery = {}
 
   if (req.query.user) {
@@ -96,17 +77,41 @@ exports.getEntries = async (req, res) => {
   } catch (error) {
     res.status(500).send({ message: 'Unable to fetch entries' })
   }
-}
+})
 
-exports.getEntry = async (req, res) => {
+router.post('/', async (req, res) => {
+  const { user, gif, ...data } = req.body
+
+  const entryInput = {
+    ...data,
+    user: { connect: { id: user } },
+  }
+
+  if (gif) {
+    entryInput.gif = { create: { ...gif } }
+  }
+
+  try {
+    const result = await prisma.createEntry(entryInput)
+    const entry = await prisma
+      .entry({ id: result.id })
+      .$fragment(ENTRY_WITH_USER_FRAGMENT)
+    res.json(convertEntry(entry))
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'Unable to save entry' })
+  }
+})
+
+router.get('/:id', async (req, res) => {
   const entry = await prisma
     .entry({ id: req.params.id })
     .$fragment(ENTRY_WITH_USER_FRAGMENT)
 
   res.json(convertEntry(entry))
-}
+})
 
-exports.deleteEntry = async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const deletedEntry = await prisma.deleteEntry({ id: req.params.id })
     res.json(convertEntry(deletedEntry))
@@ -114,4 +119,8 @@ exports.deleteEntry = async (req, res) => {
     console.error(error)
     res.status(500).send({ error: 'Unable to delete entry' })
   }
-}
+})
+
+app.use('/api/entries', router)
+
+module.exports = app

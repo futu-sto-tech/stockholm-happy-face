@@ -1,14 +1,12 @@
 const axios = require('axios')
 require('axios-debug-log')
 
-const { GIPHY_API_KEY } = require('../config')
-
 class GiphyAPI {
   constructor() {
     this.axios = axios.create({ baseURL: 'https://api.giphy.com/v1/gifs' })
 
     this.axios.defaults.params = {
-      api_key: GIPHY_API_KEY,
+      api_key: process.env.GIPHY_API_KEY,
       lang: 'en',
       rating: 'PG-13',
     }

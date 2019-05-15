@@ -1,8 +1,12 @@
-const GiphyAPI = require('../lib/giphy')
+const { Router } = require('express')
 
+const app = require('../../utils/app')
+const GiphyAPI = require('../../lib/giphy')
+
+const router = Router()
 const giphyApi = new GiphyAPI()
 
-exports.search = async (req, res) => {
+router.get('/search', async (req, res) => {
   const query = req.query.query
   const offset = parseInt(req.query.offset) || 0
 
@@ -10,4 +14,8 @@ exports.search = async (req, res) => {
 
   const images = await giphyApi.search(query, { offset })
   res.json({ images })
-}
+})
+
+app.use('/api/gif', router)
+
+module.exports = app

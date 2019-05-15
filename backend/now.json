@@ -1,7 +1,0 @@
-{
-  "version": 1,
-  "alias": ["smileys-api"],
-  "env": {
-    "GIPHY_API_KEY": "@giphy-api-key"
-  }
-}

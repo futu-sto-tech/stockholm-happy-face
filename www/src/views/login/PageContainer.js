@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
-import axios from "axios";
 
 import { debounce } from "../../utils";
 import Context, { ACTION_TYPE } from "../../context/Context";
 import { login } from "../../context/actions";
+import apiClient from "../../api";
 import Page from "./Page";
 
 const LoginPageContainer = () => {
@@ -12,7 +12,7 @@ const LoginPageContainer = () => {
 
   async function fetchUsers() {
     try {
-      const response = await axios.get("https://smileys-api.now.sh/users", {
+      const response = await apiClient.get("/users", {
         params: { query: state.username }
       });
       setUsers(response.data);
