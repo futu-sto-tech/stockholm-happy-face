@@ -10,28 +10,24 @@ const LoginPageContainer = () => {
   const [users, setUsers] = useState([])
   let { state, dispatch } = useContext(Context)
 
-  async function fetchUsers() {
-    try {
-      const response = await apiClient.get('/users', {
-        params: { query: state.username },
-      })
-      setUsers(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(
-    () => {
-      if (state.username.length === 0) {
-        setUsers([])
-      } else {
-        debounce(fetchUsers(), 250)
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await apiClient.get('/users', {
+          params: { query: state.username },
+        })
+        setUsers(response.data)
+      } catch (error) {
+        console.log(error)
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.username]
-  )
+    }
+
+    if (state.username.length === 0) {
+      setUsers([])
+    } else {
+      debounce(fetchUsers(), 250)
+    }
+  }, [state.username])
 
   const handleClickUser = user => {
     setUsers([])

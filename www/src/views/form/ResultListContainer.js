@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 
 import apiClient from '../../api'
 import { debounce } from '../../utils'
@@ -14,45 +14,37 @@ const ResultListContainer = () => {
   const [offset, setOffset] = useState(0)
   const { state, dispatch } = useContext(Context)
 
-  async function fetchResults() {
+  const fetchResults = useCallback(async () => {
     try {
-      setLocalState({ ...localState, loading: true })
+      setLocalState(prevState => ({ ...prevState, loading: true }))
       const response = await apiClient.get('/gif/search', {
         params: { query: state.gifQuery, offset },
       })
-      setLocalState({
-        ...localState,
+      setLocalState(prevState => ({
+        ...prevState,
         results: response.data.images,
         loading: false,
-      })
+      }))
     } catch (error) {
       console.log(error)
-      setLocalState({ ...localState, loading: false })
+      setLocalState(prevState => ({ ...prevState, loading: false }))
     }
-  }
+  }, [state.gifQuery, offset])
 
-  useEffect(
-    () => {
-      if (state.gifQuery.length === 0) {
-        setLocalState({ ...localState, results: [] })
-      } else {
-        debounce(fetchResults(), 250)
-      }
-      setOffset(0)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.gifQuery]
-  )
+  useEffect(() => {
+    if (state.gifQuery.length === 0) {
+      setLocalState(prevState => ({ ...prevState, results: [] }))
+    } else {
+      debounce(fetchResults(), 250)
+    }
+    setOffset(0)
+  }, [fetchResults, state.gifQuery.length])
 
-  useEffect(
-    () => {
-      if (!localState.loading && state.gifQuery.length > 0) {
-        fetchResults()
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [offset]
-  )
+  useEffect(() => {
+    if (!localState.loading && state.gifQuery.length > 0) {
+      fetchResults()
+    }
+  }, [fetchResults, localState.loading, state.gifQuery.length])
 
   return (
     <ResultList.Wrapper>
