@@ -12,9 +12,6 @@ const ENTRY_WITH_USER_FRAGMENT = /* GraphQL */ `
     createdAt
     updatedAt
 
-    productivity
-    positivity
-
     gif {
       id
       url

@@ -1,16 +1,16 @@
 type Gif {
-  id: ID! @unique
+  id: ID! @id
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   url: String!
   width: String
   height: String
   giphyId: String
-  entry: Entry! @relation(name: "EntryGIF")
+  entry: Entry! @relation(link: TABLE, name: "EntryGIF")
 }
 
 type User {
-  id: ID! @unique
+  id: ID! @id
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   name: String! @unique
@@ -18,11 +18,9 @@ type User {
 }
 
 type Entry {
-  id: ID! @unique
+  id: ID! @id
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  user: User! @relation(name: "EntriesByUser")
+  user: User! @relation(link: TABLE, name: "EntriesByUser")
   gif: Gif! @relation(name: "EntryGIF", onDelete: CASCADE)
-  productivity: Float!
-  positivity: Float!
 }
