@@ -1,50 +1,58 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from 'react'
 
-import apiClient from "../../api";
-import { debounce } from "../../utils";
-import Context, { ACTION_TYPE } from "../../context/Context";
-import Flex from "../../components/Flex";
-import ResultList from "./styled/ResultList";
+import apiClient from '../../api'
+import { debounce } from '../../utils'
+import Context, { ACTION_TYPE } from '../../context/Context'
+import Flex from '../../components/Flex'
+import ResultList from './styled/ResultList'
 
 const ResultListContainer = () => {
   const [localState, setLocalState] = useState({
     results: [],
-    loading: false
-  });
-  const [offset, setOffset] = useState(0);
-  const { state, dispatch } = useContext(Context);
+    loading: false,
+  })
+  const [offset, setOffset] = useState(0)
+  const { state, dispatch } = useContext(Context)
 
   async function fetchResults() {
     try {
-      setLocalState({ ...localState, loading: true });
-      const response = await apiClient.get("/gif/search", {
-        params: { query: state.gifQuery, offset }
-      });
+      setLocalState({ ...localState, loading: true })
+      const response = await apiClient.get('/gif/search', {
+        params: { query: state.gifQuery, offset },
+      })
       setLocalState({
         ...localState,
         results: response.data.images,
-        loading: false
-      });
+        loading: false,
+      })
     } catch (error) {
-      console.log(error);
-      setLocalState({ ...localState, loading: false });
+      console.log(error)
+      setLocalState({ ...localState, loading: false })
     }
   }
 
-  useEffect(() => {
-    if (state.gifQuery.length === 0) {
-      setLocalState({ ...localState, results: [] });
-    } else {
-      debounce(fetchResults(), 250);
-    }
-    setOffset(0);
-  }, [state.gifQuery]);
+  useEffect(
+    () => {
+      if (state.gifQuery.length === 0) {
+        setLocalState({ ...localState, results: [] })
+      } else {
+        debounce(fetchResults(), 250)
+      }
+      setOffset(0)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.gifQuery]
+  )
 
-  useEffect(() => {
-    if (!localState.loading && state.gifQuery.length > 0) {
-      fetchResults();
-    }
-  }, [offset]);
+  useEffect(
+    () => {
+      if (!localState.loading && state.gifQuery.length > 0) {
+        fetchResults()
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [offset]
+  )
 
   return (
     <ResultList.Wrapper>
@@ -59,7 +67,7 @@ const ResultListContainer = () => {
               onClick={() =>
                 dispatch({
                   type: ACTION_TYPE.UPDATE_SELECTED_GIF,
-                  payload: { gif: { id: result.id, ...result.original } }
+                  payload: { gif: { id: result.id, ...result.original } },
                 })
               }
               alt={result.title}
@@ -67,29 +75,29 @@ const ResultListContainer = () => {
           </ResultList.Item>
         ))}
       </ResultList>
-      <Flex justify={offset > 0 ? "space-between" : "flex-end"}>
+      <Flex justify={offset > 0 ? 'space-between' : 'flex-end'}>
         {offset > 0 && (
           <ResultList.MoreButton
             onClick={() => {
-              setOffset(offset - 25);
+              setOffset(offset - 25)
             }}
           >
-            {localState.loading ? "Loading..." : "Back"}
+            {localState.loading ? 'Loading...' : 'Back'}
           </ResultList.MoreButton>
         )}
 
         {localState.results.length === 25 && (
           <ResultList.MoreButton
             onClick={() => {
-              setOffset(offset + 25);
+              setOffset(offset + 25)
             }}
           >
-            {localState.loading ? "Loading..." : "Next"}
+            {localState.loading ? 'Loading...' : 'Next'}
           </ResultList.MoreButton>
         )}
       </Flex>
     </ResultList.Wrapper>
-  );
-};
+  )
+}
 
-export default ResultListContainer;
+export default ResultListContainer
