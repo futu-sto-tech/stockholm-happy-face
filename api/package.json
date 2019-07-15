@@ -1,29 +1,22 @@
 {
-  "name": "smileys-api",
+  "name": "smileys",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --experimental-modules src/server.mjs",
-    "start": "NODE_ENV=production node --experimental-modules src/server.mjs"
+    "start": "node ./api"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "cors": "^2.8.4",
+    "axios": "^0.18.0",
+    "axios-debug-log": "^0.4.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
-    "firebase-admin": "^6.0.0",
-    "moment": "^2.22.2",
-    "morgan": "^1.9.1",
-    "sillyname": "^0.1.0"
-  },
-  "devDependencies": {
-    "eslint": "^5.6.1",
-    "nodemon": "^1.18.4"
-  },
-  "engines": {
-    "node": "9.x.x"
+    "helmet": "^3.18.0",
+    "moment": "^2.24.0",
+    "prisma-client-lib": "^1.30.4"
   }
 }
