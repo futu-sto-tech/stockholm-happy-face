@@ -3,37 +3,25 @@
   "version": 2,
   "env": {
     "GIPHY_API_KEY": "@giphy-api-key",
-    "REACT_APP_API_BASE_URL": "/api"
+    "API_BASE_URL": "https://smileys.now.sh/api"
   },
+  "build": {
+    "env": {
+      "API_BASE_URL": "https://smileys.now.sh/api"
+    }
+  },
+  "alias": "smileys",
   "builds": [
     { "src": "api/src/routes/**/*.js", "use": "@now/node" },
-    {
-      "src": "www/package.json",
-      "use": "@now/static-build",
-      "config": { "distDir": "build" }
-    }
+    { "src": "next/next.config.js", "use": "@now/next" }
   ],
   "routes": [
     { "src": "/api/gif(.*)", "dest": "api/src/routes/gif" },
     { "src": "/api/users(.*)", "dest": "api/src/routes/users" },
     { "src": "/api/entries(.*)", "dest": "api/src/routes/entries" },
     {
-      "src": "/static/(.*)",
-      "headers": { "cache-control": "s-maxage=31536000,immutable" },
-      "dest": "/www/static/$1"
-    },
-    { "src": "/asset-manifest.json", "dest": "/www/asset-manifest.json" },
-    { "src": "/manifest.json", "dest": "/www/manifest.json" },
-    { "src": "/precache-manifest.(.*)", "dest": "/www/precache-manifest.$1" },
-    {
-      "src": "/service-worker.js",
-      "headers": { "cache-control": "s-maxage=0" },
-      "dest": "/www/service-worker.js"
-    },
-    {
       "src": "/(.*)",
-      "headers": { "cache-control": "s-maxage=0" },
-      "dest": "/www/index.html"
+      "dest": "/next/$1"
     }
   ]
 }
