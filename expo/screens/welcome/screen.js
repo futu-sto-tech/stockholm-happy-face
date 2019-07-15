@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Text,
   View,
@@ -7,12 +7,12 @@ import {
   Image,
   ActivityIndicator,
   TextInput,
-  KeyboardAvoidingView
-} from "react-native";
-import { BlurView } from "expo-blur";
-import { MaterialIcons } from "@expo/vector-icons";
+  KeyboardAvoidingView,
+} from 'react-native'
+import { BlurView } from 'expo-blur'
+import { MaterialIcons } from '@expo/vector-icons'
 
-import theme from "../../theme";
+import theme from '../../theme'
 
 const WelcomeScreen = ({
   onPressLogin,
@@ -20,7 +20,7 @@ const WelcomeScreen = ({
   backdropUrl,
   username,
   onChangeUsername,
-  isMatchingUser
+  isMatchingUser,
 }) => (
   <>
     <View style={styles.gifContainer}>
@@ -36,7 +36,7 @@ const WelcomeScreen = ({
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={styles.logoContainer}>
-            <Image source={require("../../assets/logo/logo.png")} />
+            <Image source={require('../../assets/logo/logo.png')} />
             <Text style={styles.logoText}>Smileys</Text>
           </View>
           <View style={styles.footer}>
@@ -44,7 +44,7 @@ const WelcomeScreen = ({
               <TextInput
                 style={styles.usernameInput}
                 placeholder="Your username..."
-                placeholderTextColor={"rgba(255, 255, 255, 0.38)"}
+                placeholderTextColor={'rgba(255, 255, 255, 0.38)'}
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="go"
@@ -55,11 +55,11 @@ const WelcomeScreen = ({
 
               <View
                 style={{
-                  position: "absolute",
+                  position: 'absolute',
                   top: 0,
                   bottom: 0,
                   right: 16,
-                  justifyContent: "center"
+                  justifyContent: 'center',
                 }}
               >
                 {loading ? (
@@ -67,12 +67,12 @@ const WelcomeScreen = ({
                 ) : (
                   username.length > 0 && (
                     <MaterialIcons
-                      name={isMatchingUser ? "check" : "add"}
+                      name={isMatchingUser ? 'check' : 'add'}
                       size={24}
                       color={
                         isMatchingUser
                           ? theme.colors.success
-                          : "rgba(255, 255, 255, 0.87)"
+                          : 'rgba(255, 255, 255, 0.87)'
                       }
                     />
                   )
@@ -84,55 +84,56 @@ const WelcomeScreen = ({
       </SafeAreaView>
     </View>
   </>
-);
+)
 
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFill,
-    justifyContent: "space-between"
+    justifyContent: 'space-between',
   },
   cover: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "black",
-    opacity: 0.5
+    backgroundColor: 'black',
+    opacity: 0.5,
   },
   gifContainer: {
-    ...StyleSheet.absoluteFill
+    ...StyleSheet.absoluteFill,
   },
   gifImage: {
-    flex: 1
+    flex: 1,
+    backgroundColor: theme.colors.background,
   },
   logoContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   logoText: {
     fontSize: 60,
-    color: "rgba(255, 255, 255, 0.87)",
-    textAlign: "center",
-    fontWeight: "700",
-    marginTop: 16
+    color: 'rgba(255, 255, 255, 0.87)',
+    textAlign: 'center',
+    fontWeight: '700',
+    marginTop: 16,
   },
   footer: {
     marginHorizontal: 16,
     marginBottom: 16,
     backgroundColor: theme.colors.background,
-    borderRadius: 4
+    borderRadius: 4,
   },
   usernameInputContainer: {
-    backgroundColor: "rgba(255, 255, 255, 0.07)",
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
     padding: 16,
-    borderRadius: 4
+    borderRadius: 4,
   },
   usernameInput: {
     fontSize: 20,
-    color: "rgba(255, 255, 255, 0.87)"
-  }
-});
+    color: 'rgba(255, 255, 255, 0.87)',
+  },
+})
 
-export default WelcomeScreen;
+export default WelcomeScreen
