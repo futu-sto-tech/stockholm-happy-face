@@ -1,15 +1,19 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from 'react'
 
-import Context from "../../context/Context";
-import { deleteEntry, fetchUserEntries } from "../../context/actions";
-import Page from "./Page";
+import Context from '../../context/Context'
+import { deleteEntry, fetchUserEntries } from '../../context/actions'
+import Page from './Page'
 
 const EntryPageContainer = () => {
-  let { state, dispatch } = useContext(Context);
+  let { state, dispatch } = useContext(Context)
 
-  useEffect(() => {
-    fetchUserEntries(state, dispatch);
-  }, [state.user.id]);
+  useEffect(
+    () => {
+      fetchUserEntries(state, dispatch)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.user.id]
+  )
 
   return (
     <Page
@@ -19,7 +23,7 @@ const EntryPageContainer = () => {
       entries={state.userEntries}
       loadingEntries={state.loadingUserEntries}
     />
-  );
-};
+  )
+}
 
-export default EntryPageContainer;
+export default EntryPageContainer
