@@ -12,6 +12,7 @@ import {
 import { BlurView } from 'expo-blur'
 import { MaterialIcons } from '@expo/vector-icons'
 
+import i18n from '../../lib/i18n'
 import theme from '../../theme'
 
 const WelcomeScreen = ({
@@ -43,7 +44,7 @@ const WelcomeScreen = ({
             <View style={styles.usernameInputContainer}>
               <TextInput
                 style={styles.usernameInput}
-                placeholder="Your username..."
+                placeholder={i18n.t('welcome.input.placeholder')}
                 placeholderTextColor={'rgba(255, 255, 255, 0.38)'}
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -118,6 +119,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
     marginTop: 16,
+    textShadowColor: 'black',
+    textShadowRadius: 3,
+    textShadowOffset: { height: 0, width: 0 },
   },
   footer: {
     marginHorizontal: 16,
@@ -129,6 +133,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.07)',
     padding: 16,
     borderRadius: 4,
+    elevation: 1,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    shadowOffset: { height: 0, width: 0 },
   },
   usernameInput: {
     fontSize: 20,

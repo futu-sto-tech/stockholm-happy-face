@@ -1,15 +1,16 @@
-import React from "react";
+import React from 'react'
 import {
   StyleSheet,
   SafeAreaView,
   View,
   TouchableOpacity,
   Text,
-  ActivityIndicator
-} from "react-native";
+  ActivityIndicator,
+} from 'react-native'
 
-import theme from "../../theme";
-import FullscreenImage from "../../components/fullscreen-image";
+import i18n from '../../lib/i18n'
+import theme from '../../theme'
+import FullscreenImage from '../../components/fullscreen-image'
 
 const EntryScreen = ({ entry, onPressDelete, isDeleting }) => (
   <SafeAreaView style={styles.safeArea}>
@@ -19,34 +20,36 @@ const EntryScreen = ({ entry, onPressDelete, isDeleting }) => (
         {isDeleting ? (
           <ActivityIndicator size="small" color="#000000" />
         ) : (
-          <Text style={styles.deleteButtonLabel}>Delete</Text>
+          <Text style={styles.deleteButtonLabel}>
+            {i18n.t('entry.deleteButton')}
+          </Text>
         )}
       </TouchableOpacity>
     </View>
   </SafeAreaView>
-);
+)
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme.colors.background
+    backgroundColor: theme.colors.background,
   },
   container: {
-    padding: 8
+    padding: 8,
   },
   deleteButton: {
     backgroundColor: theme.colors.danger,
     borderRadius: 4,
     marginTop: 16,
     height: 56,
-    justifyContent: "center"
+    justifyContent: 'center',
   },
   deleteButtonLabel: {
-    color: "#000",
+    color: '#000',
     fontSize: 20,
-    fontWeight: "500",
-    textAlign: "center"
-  }
-});
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+})
 
-export default EntryScreen;
+export default EntryScreen

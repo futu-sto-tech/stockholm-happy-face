@@ -30,9 +30,16 @@ const WelcomeContainer = ({ navigation }) => {
   async function handlePressLogin() {
     if (username.length > 0) {
       setLoading(true)
-      const user = await backend.getUser(username)
-      await AsyncStorage.setItem('user', JSON.stringify(user))
-      navigation.navigate('Profile', { user })
+      let user = await backend.getUser(username)
+
+      if (!user) {
+        user = await backend.createUser(username)
+      }
+
+      if (user) {
+        await AsyncStorage.setItem('user', JSON.stringify(user))
+        navigation.navigate('Profile', { user })
+      }
       setLoading(false)
     }
   }

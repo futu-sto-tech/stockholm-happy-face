@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react'
 import {
   StyleSheet,
   SafeAreaView,
   Image,
   FlatList,
   TouchableOpacity,
-  Dimensions
-} from "react-native";
+  Dimensions,
+} from 'react-native'
 
-import theme from "../../theme";
+import theme from '../../theme'
 
 const NewEntryScreen = ({ results, onPressResult }) => (
   <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -32,22 +32,22 @@ const NewEntryScreen = ({ results, onPressResult }) => (
       )}
     />
   </SafeAreaView>
-);
+)
 
 const styles = StyleSheet.create({
   resultList: {
-    elevation: 4
+    elevation: 4,
   },
   resultListItem: {
-    flex: 1
+    flex: 1,
   },
   resultListImage: {
-    height: (Dimensions.get("screen").width - 8 * 3) / 2,
-    width: (Dimensions.get("screen").width - 8 * 3) / 2,
+    height: (Dimensions.get('screen').width - 8 * 3) / 2,
+    width: (Dimensions.get('screen').width - 8 * 3) / 2,
     margin: 4,
     borderRadius: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.05)"
-  }
-});
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+})
 
-export default NewEntryScreen;
+export default NewEntryScreen

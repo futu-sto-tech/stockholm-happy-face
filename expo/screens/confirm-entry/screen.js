@@ -1,15 +1,16 @@
-import React from "react";
+import React from 'react'
 import {
   StyleSheet,
   SafeAreaView,
   View,
   TouchableOpacity,
   Text,
-  ActivityIndicator
-} from "react-native";
+  ActivityIndicator,
+} from 'react-native'
 
-import theme from "../../theme";
-import FullscreenImage from "../../components/fullscreen-image";
+import i18n from '../../lib/i18n'
+import theme from '../../theme'
+import FullscreenImage from '../../components/fullscreen-image'
 
 const ConfirmEntryScreen = ({ image, onPressSave, isSaving }) => (
   <SafeAreaView style={styles.safeArea}>
@@ -20,35 +21,37 @@ const ConfirmEntryScreen = ({ image, onPressSave, isSaving }) => (
         {isSaving ? (
           <ActivityIndicator size="small" color="#000000" />
         ) : (
-          <Text style={styles.saveButtonText}>Save</Text>
+          <Text style={styles.saveButtonText}>
+            {i18n.t('confirmEntry.saveButton')}
+          </Text>
         )}
       </TouchableOpacity>
     </View>
   </SafeAreaView>
-);
+)
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: theme.colors.background },
   container: {
-    padding: 8
+    padding: 8,
   },
   image: {
     flex: 1,
     borderRadius: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.05)"
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   saveButton: {
-    backgroundColor: "rgb(0, 159, 119)",
+    backgroundColor: 'rgb(0, 159, 119)',
     marginTop: 8,
     borderRadius: 4,
     height: 56,
-    justifyContent: "center"
+    justifyContent: 'center',
   },
   saveButtonText: {
     fontSize: 20,
-    fontWeight: "500",
-    textAlign: "center"
-  }
-});
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+})
 
-export default ConfirmEntryScreen;
+export default ConfirmEntryScreen

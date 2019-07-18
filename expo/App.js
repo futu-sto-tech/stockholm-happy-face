@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, AsyncStorage } from 'react-native'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 
+import i18n from './lib/i18n'
 import WelcomeScreen from './screens/welcome'
 import ProfileScreen from './screens/profile'
 import NewEntryScreen from './screens/new-entry'
@@ -22,7 +23,7 @@ const AuthenticatedNavigator = createStackNavigator(
               await AsyncStorage.removeItem('user')
               navigation.navigate('Welcome')
             }}
-            title="Logout"
+            title={i18n.t('profile.navigation.logoutButton')}
             color="rgba(255, 255, 255, 0.87)"
           />
         ),
@@ -31,7 +32,9 @@ const AuthenticatedNavigator = createStackNavigator(
     Entry: {
       screen: EntryScreen,
       navigationOptions: ({ navigation }) => ({
-        title: `Week ${navigation.getParam('entry').week}`,
+        title: `${i18n.t('entry.navigation.titlePrefix')} ${
+          navigation.getParam('entry').week
+        }`,
       }),
     },
     NewEntry: {

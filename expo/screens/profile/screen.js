@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   View,
   StyleSheet,
@@ -8,12 +8,12 @@ import {
   StatusBar,
   FlatList,
   TouchableOpacity,
-  Dimensions
-} from "react-native";
+  Dimensions,
+} from 'react-native'
 
-import theme from "../../theme";
-import EntryForm from "./entry-form";
-import CurrentEntry from "./current-entry";
+import theme from '../../theme'
+import EntryForm from './entry-form'
+import CurrentEntry from './current-entry'
 
 const ProfileScreen = ({
   currentEntry,
@@ -21,7 +21,7 @@ const ProfileScreen = ({
   onPressInput,
   onPressEntry,
   onPressDeleteCurrentEntry,
-  isDeleting
+  isDeleting,
 }) => (
   <SafeAreaView style={styles.safeArea}>
     <StatusBar barStyle="light-content" />
@@ -57,27 +57,27 @@ const ProfileScreen = ({
       />
     </ScrollView>
   </SafeAreaView>
-);
+)
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: theme.colors.background },
   container: {
-    overflow: "scroll",
-    padding: 8
+    overflow: 'scroll',
+    padding: 8,
   },
   topContainer: {
-    marginBottom: 4
+    marginBottom: 4,
   },
   historyImageButton: {
-    flex: 1
+    flex: 1,
   },
   historyImage: {
-    height: (Dimensions.get("screen").width - 8 * 3) / 2,
-    width: (Dimensions.get("screen").width - 8 * 3) / 2,
+    height: (Dimensions.get('screen').width - 8 * 3) / 2,
+    width: (Dimensions.get('screen').width - 8 * 3) / 2,
     margin: 4,
     borderRadius: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.05)"
-  }
-});
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+})
 
-export default ProfileScreen;
+export default ProfileScreen
