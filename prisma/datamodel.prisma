@@ -14,6 +14,7 @@ type User {
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   name: String! @unique
+  expoPushToken: String @unique
   entries: [Entry!]! @relation(name: "EntriesByUser", onDelete: CASCADE)
 }
 

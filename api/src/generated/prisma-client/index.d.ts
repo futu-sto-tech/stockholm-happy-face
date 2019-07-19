@@ -207,7 +207,9 @@ export type UserOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC"
   | "name_ASC"
-  | "name_DESC";
+  | "name_DESC"
+  | "expoPushToken_ASC"
+  | "expoPushToken_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
@@ -298,6 +300,20 @@ export interface UserWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  expoPushToken?: Maybe<String>;
+  expoPushToken_not?: Maybe<String>;
+  expoPushToken_in?: Maybe<String[] | String>;
+  expoPushToken_not_in?: Maybe<String[] | String>;
+  expoPushToken_lt?: Maybe<String>;
+  expoPushToken_lte?: Maybe<String>;
+  expoPushToken_gt?: Maybe<String>;
+  expoPushToken_gte?: Maybe<String>;
+  expoPushToken_contains?: Maybe<String>;
+  expoPushToken_not_contains?: Maybe<String>;
+  expoPushToken_starts_with?: Maybe<String>;
+  expoPushToken_not_starts_with?: Maybe<String>;
+  expoPushToken_ends_with?: Maybe<String>;
+  expoPushToken_not_ends_with?: Maybe<String>;
   entries_every?: Maybe<EntryWhereInput>;
   entries_some?: Maybe<EntryWhereInput>;
   entries_none?: Maybe<EntryWhereInput>;
@@ -406,6 +422,7 @@ export type GifWhereUniqueInput = AtLeastOne<{
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   name?: Maybe<String>;
+  expoPushToken?: Maybe<String>;
 }>;
 
 export interface EntryCreateInput {
@@ -422,6 +439,7 @@ export interface UserCreateOneWithoutEntriesInput {
 export interface UserCreateWithoutEntriesInput {
   id?: Maybe<ID_Input>;
   name: String;
+  expoPushToken?: Maybe<String>;
 }
 
 export interface GifCreateOneWithoutEntryInput {
@@ -451,6 +469,7 @@ export interface UserUpdateOneRequiredWithoutEntriesInput {
 
 export interface UserUpdateWithoutEntriesDataInput {
   name?: Maybe<String>;
+  expoPushToken?: Maybe<String>;
 }
 
 export interface UserUpsertWithoutEntriesInput {
@@ -530,6 +549,7 @@ export interface GifUpdateManyMutationInput {
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
+  expoPushToken?: Maybe<String>;
   entries?: Maybe<EntryCreateManyWithoutUserInput>;
 }
 
@@ -545,6 +565,7 @@ export interface EntryCreateWithoutUserInput {
 
 export interface UserUpdateInput {
   name?: Maybe<String>;
+  expoPushToken?: Maybe<String>;
   entries?: Maybe<EntryUpdateManyWithoutUserInput>;
 }
 
@@ -618,6 +639,7 @@ export interface EntryScalarWhereInput {
 
 export interface UserUpdateManyMutationInput {
   name?: Maybe<String>;
+  expoPushToken?: Maybe<String>;
 }
 
 export interface EntrySubscriptionWhereInput {
@@ -696,6 +718,7 @@ export interface User {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   name: String;
+  expoPushToken?: String;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -703,6 +726,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
+  expoPushToken: () => Promise<String>;
   entries: <T = FragmentableArray<Entry>>(args?: {
     where?: EntryWhereInput;
     orderBy?: EntryOrderByInput;
@@ -721,6 +745,7 @@ export interface UserSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   name: () => Promise<AsyncIterator<String>>;
+  expoPushToken: () => Promise<AsyncIterator<String>>;
   entries: <T = Promise<AsyncIterator<EntrySubscription>>>(args?: {
     where?: EntryWhereInput;
     orderBy?: EntryOrderByInput;
@@ -739,6 +764,7 @@ export interface UserNullablePromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
+  expoPushToken: () => Promise<String>;
   entries: <T = FragmentableArray<Entry>>(args?: {
     where?: EntryWhereInput;
     orderBy?: EntryOrderByInput;
@@ -1132,6 +1158,7 @@ export interface UserPreviousValues {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   name: String;
+  expoPushToken?: String;
 }
 
 export interface UserPreviousValuesPromise
@@ -1141,6 +1168,7 @@ export interface UserPreviousValuesPromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
+  expoPushToken: () => Promise<String>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -1150,6 +1178,7 @@ export interface UserPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   name: () => Promise<AsyncIterator<String>>;
+  expoPushToken: () => Promise<AsyncIterator<String>>;
 }
 
 /*

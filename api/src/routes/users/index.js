@@ -22,6 +22,16 @@ router.get('/:id', async (req, res) => {
   res.json(await prisma.user({ id: req.params.id }))
 })
 
+router.put('/:id', async (req, res) => {
+  const { expoPushToken } = req.body
+  res.json(
+    await prisma.updateUser({
+      where: { id: req.params.id },
+      data: { expoPushToken },
+    })
+  )
+})
+
 router.get('/name/:name', async (req, res) => {
   res.json(await prisma.user({ name: req.params.name }))
 })

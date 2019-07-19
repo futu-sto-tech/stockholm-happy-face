@@ -507,6 +507,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  expoPushToken: String
   entries(where: EntryWhereInput, orderBy: EntryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Entry!]
 }
 
@@ -519,6 +520,7 @@ type UserConnection {
 input UserCreateInput {
   id: ID
   name: String!
+  expoPushToken: String
   entries: EntryCreateManyWithoutUserInput
 }
 
@@ -530,6 +532,7 @@ input UserCreateOneWithoutEntriesInput {
 input UserCreateWithoutEntriesInput {
   id: ID
   name: String!
+  expoPushToken: String
 }
 
 type UserEdge {
@@ -546,6 +549,8 @@ enum UserOrderByInput {
   updatedAt_DESC
   name_ASC
   name_DESC
+  expoPushToken_ASC
+  expoPushToken_DESC
 }
 
 type UserPreviousValues {
@@ -553,6 +558,7 @@ type UserPreviousValues {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  expoPushToken: String
 }
 
 type UserSubscriptionPayload {
@@ -575,11 +581,13 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateInput {
   name: String
+  expoPushToken: String
   entries: EntryUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
   name: String
+  expoPushToken: String
 }
 
 input UserUpdateOneRequiredWithoutEntriesInput {
@@ -591,6 +599,7 @@ input UserUpdateOneRequiredWithoutEntriesInput {
 
 input UserUpdateWithoutEntriesDataInput {
   name: String
+  expoPushToken: String
 }
 
 input UserUpsertWithoutEntriesInput {
@@ -643,6 +652,20 @@ input UserWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  expoPushToken: String
+  expoPushToken_not: String
+  expoPushToken_in: [String!]
+  expoPushToken_not_in: [String!]
+  expoPushToken_lt: String
+  expoPushToken_lte: String
+  expoPushToken_gt: String
+  expoPushToken_gte: String
+  expoPushToken_contains: String
+  expoPushToken_not_contains: String
+  expoPushToken_starts_with: String
+  expoPushToken_not_starts_with: String
+  expoPushToken_ends_with: String
+  expoPushToken_not_ends_with: String
   entries_every: EntryWhereInput
   entries_some: EntryWhereInput
   entries_none: EntryWhereInput
@@ -654,6 +677,7 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   name: String
+  expoPushToken: String
 }
 `
       }

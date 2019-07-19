@@ -3,6 +3,7 @@ import { AsyncStorage } from 'react-native'
 import * as Amplitude from 'expo-analytics-amplitude'
 
 import backend from '../../lib/backend'
+import { login } from '../../lib/auth'
 import WelcomeScreen from './screen'
 
 const WAIT_INTERVAL = 750
@@ -33,15 +34,8 @@ const WelcomeContainer = ({ navigation }) => {
   async function handlePressLogin() {
     if (username.length > 0) {
       setLoading(true)
-      let user = await backend.getUser(username)
-
-      if (!user) {
-        user = await backend.createUser(username)
-      }
-
+      const user = await login(username)
       if (user) {
-        await AsyncStorage.setItem('user', JSON.stringify(user))
-        Amplitude.setUserId(user.id)
         navigation.navigate('Profile', { user })
       }
       setLoading(false)

@@ -88,4 +88,14 @@ apiClient.saveEntry = async (user, { giphyId, url, width, height }) => {
   }
 }
 
+apiClient.updateUser = async (user, { expoPushToken }) => {
+  try {
+    const response = await apiClient.put(`/users/${user.id}`, { expoPushToken })
+    return response.data
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
 export default apiClient
