@@ -21,6 +21,8 @@ const BACKDROPS = [
   'https://media1.tenor.com/images/37b52b6cce82adebdb75d94f26947c5e/tenor.gif?itemid=14236145',
 ]
 
+const BACKDROP = BACKDROPS[Math.floor(Math.random() * BACKDROPS.length)]
+
 const WelcomeContainer = ({ navigation }) => {
   const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState('')
@@ -81,13 +83,11 @@ const WelcomeContainer = ({ navigation }) => {
     checkCurrentUser()
   }, [])
 
-  const backdrop = BACKDROPS[Math.floor(Math.random() * BACKDROPS.length)]
-
   return (
     <WelcomeScreen
       onPressLogin={handlePressLogin}
       loading={loading}
-      backdropUrl={backdrop}
+      backdropUrl={BACKDROP}
       username={username}
       onChangeUsername={handleChangeUsername}
       isMatchingUser={isMatchingUser}

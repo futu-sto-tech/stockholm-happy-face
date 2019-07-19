@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 16,
     alignSelf: 'stretch',
-    marginBottom: 4,
+    marginVertical: 4,
     justifyContent: 'center',
   },
   textInput: {

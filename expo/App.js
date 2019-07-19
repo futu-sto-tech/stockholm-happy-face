@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, AsyncStorage } from 'react-native'
+import { AsyncStorage, View, TouchableOpacity, Text } from 'react-native'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 
 import i18n from './lib/i18n'
@@ -18,14 +18,20 @@ const AuthenticatedNavigator = createStackNavigator(
         title: navigation.getParam('user', {}).name,
         headerBackTitle: 'Profile',
         headerRight: (
-          <Button
-            onPress={async () => {
-              await AsyncStorage.removeItem('user')
-              navigation.navigate('Welcome')
-            }}
-            title={i18n.t('profile.navigation.logoutButton')}
-            color="rgba(255, 255, 255, 0.87)"
-          />
+          <View style={{ marginRight: 16 }}>
+            <TouchableOpacity
+              onPress={async () => {
+                await AsyncStorage.removeItem('user')
+                navigation.navigate('Welcome')
+              }}
+            >
+              <Text
+                style={{ color: 'rgba(255, 255, 255, 0.87)', fontSize: 16 }}
+              >
+                {i18n.t('profile.navigation.logoutButton')}
+              </Text>
+            </TouchableOpacity>
+          </View>
         ),
       }),
     },
@@ -39,12 +45,16 @@ const AuthenticatedNavigator = createStackNavigator(
     },
     NewEntry: {
       screen: NewEntryScreen,
-      navigationOptions: {
-        title: "How's your week?",
-      },
+      navigationOptions: () => ({
+        title: i18n.t('newEntry.navigation.title'),
+        headerBackTitle: i18n.t('newEntry.navigation.backTitle'),
+      }),
     },
     ConfirmEntry: {
       screen: ConfirmEntryScreen,
+      navigationOptions: () => ({
+        title: i18n.t('confirmEntry.navigation.title'),
+      }),
     },
   },
   {
@@ -66,6 +76,7 @@ const AuthenticatedNavigator = createStackNavigator(
         color: 'rgba(255, 255, 255, 0.87)',
         fontSize: 20,
       },
+      headerTintColor: 'rgba(255, 255, 255, 0.6)',
     },
   }
 )
