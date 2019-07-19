@@ -3,6 +3,7 @@ import { AsyncStorage, View, TouchableOpacity, Text } from 'react-native'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 import Constants from 'expo-constants'
 import Sentry from 'sentry-expo'
+import * as Amplitude from 'expo-analytics-amplitude'
 
 import i18n from './lib/i18n'
 import WelcomeScreen from './screens/welcome'
@@ -12,7 +13,10 @@ import EntryScreen from './screens/entry'
 import ConfirmEntryScreen from './screens/confirm-entry'
 import AuthLoadingScreen from './screens/auth-loading'
 
-Sentry.config(Constants.manifest.extra.sentryDSN).install()
+Sentry.config(Constants.manifest.extra.sentryDSN, {
+  environment: Constants.manifest.extra.sentryEnvironment,
+}).install()
+Amplitude.initialize(Constants.manifest.extra.amplitudeApiKey)
 
 const AuthenticatedNavigator = createStackNavigator(
   {

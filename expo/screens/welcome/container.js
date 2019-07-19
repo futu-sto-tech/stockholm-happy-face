@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { AsyncStorage } from 'react-native'
+import * as Amplitude from 'expo-analytics-amplitude'
 
 import backend from '../../lib/backend'
 import WelcomeScreen from './screen'
@@ -40,6 +41,7 @@ const WelcomeContainer = ({ navigation }) => {
 
       if (user) {
         await AsyncStorage.setItem('user', JSON.stringify(user))
+        Amplitude.setUserId(user.id)
         navigation.navigate('Profile', { user })
       }
       setLoading(false)

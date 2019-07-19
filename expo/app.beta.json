@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "Smileys",
-    "slug": "smileys",
+    "name": "Smileys Beta",
+    "slug": "smileys-beta",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-beta.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -19,18 +19,18 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.futurice.smileys"
+      "bundleIdentifier": "com.futurice.smileys.beta"
     },
     "extra": {
       "baseUrl": "https://smileys.now.sh/api",
       "sentryDSN": "https://0dd4966273a4491b9d55df8fbbc083af@sentry.io/1508869",
-      "sentryEnvironment": "production",
+      "sentryEnvironment": "beta",
       "amplitudeApiKey": "6856cca98fc87140ae46a242a5a3c308"
     },
     "description": "",
     "githubUrl": "https://github.com/futurice/stockholm-happy-face",
     "android": {
-      "package": "com.futurice.smileys",
+      "package": "com.futurice.smileys.beta",
       "adaptiveIcon": {
         "backgroundColor": "#01956C"
       }

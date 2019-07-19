@@ -1,36 +1,36 @@
-import React from "react";
-import { NavigationEvents } from "react-navigation";
+import React from 'react'
+import { NavigationEvents } from 'react-navigation'
 
-import backend from "../../lib/backend";
-import ProfileScreen from "./screen";
+import backend from '../../lib/backend'
+import ProfileScreen from './screen'
 
 class ProfileContainer extends React.Component {
-  state = { user: null, entries: [], currentEntry: null, isDeleting: false };
+  state = { user: null, entries: [], currentEntry: null, isDeleting: false }
 
   handlePressInput = () => {
-    const user = this.props.navigation.getParam("user");
-    this.props.navigation.navigate("NewEntry", { user });
-  };
+    const user = this.props.navigation.getParam('user')
+    this.props.navigation.navigate('NewEntry', { user })
+  }
 
   handlePressEntry = entry => {
-    this.props.navigation.navigate("Entry", { entry });
-  };
+    this.props.navigation.navigate('Entry', { entry })
+  }
 
   handlePressDeleteCurrentEntry = async () => {
-    this.setState({ isDeleting: true });
-    await backend.deleteEntry(this.state.currentEntry);
-    const user = this.props.navigation.getParam("user");
-    const userEntryProps = await backend.getUserEntries(user.id);
-    this.setState({ ...userEntryProps, isDeleting: false });
-  };
+    this.setState({ isDeleting: true })
+    await backend.deleteEntry(this.state.currentEntry)
+    const user = this.props.navigation.getParam('user')
+    const userEntryProps = await backend.getUserEntries(user.id)
+    this.setState({ ...userEntryProps, isDeleting: false })
+  }
 
   handleWillFocus = async payload => {
-    if (payload.action.type !== "Navigation/BACK") {
-      const user = this.props.navigation.getParam("user");
-      const userEntryProps = await backend.getUserEntries(user.id);
-      this.setState({ ...userEntryProps });
+    if (payload.action.type !== 'Navigation/BACK') {
+      const user = this.props.navigation.getParam('user')
+      const userEntryProps = await backend.getUserEntries(user.id)
+      this.setState({ ...userEntryProps })
     }
-  };
+  }
 
   render() {
     return (
@@ -46,8 +46,8 @@ class ProfileContainer extends React.Component {
           isDeleting={this.state.isDeleting}
         />
       </>
-    );
+    )
   }
 }
 
-export default ProfileContainer;
+export default ProfileContainer
