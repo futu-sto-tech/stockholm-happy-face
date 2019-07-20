@@ -19,6 +19,7 @@
     { "src": "/api/gif(.*)", "dest": "api/src/routes/gif" },
     { "src": "/api/users(.*)", "dest": "api/src/routes/users" },
     { "src": "/api/entries(.*)", "dest": "api/src/routes/entries" },
+    { "src": "/api/notifications(.*)", "dest": "api/src/routes/notifications" },
     {
       "src": "/(.*)",
       "dest": "/next/$1"

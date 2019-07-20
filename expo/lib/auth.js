@@ -27,8 +27,7 @@ const registerForPushNotificationsAsync = async user => {
   // Get the token that uniquely identifies this device
   let token = await Notifications.getExpoPushTokenAsync()
 
-  const updatedUser = await backend.updateUser(user, { expoPushToken: token })
-  return updatedUser
+  return await backend.updateUser(user, { expoPushToken: token })
 }
 
 export const login = async username => {
@@ -40,8 +39,7 @@ export const login = async username => {
 
   if (user) {
     await AsyncStorage.setItem('user', JSON.stringify(user))
-    const updatedUser = await registerForPushNotificationsAsync(user)
-    return updatedUser || user
+    return (await registerForPushNotificationsAsync(user)) || user
   }
 
   return null
