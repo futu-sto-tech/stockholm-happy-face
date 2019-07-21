@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavigationEvents } from 'react-navigation'
+import * as Haptics from 'expo-haptics'
 
 import backend from '../../lib/backend'
 import ProfileScreen from './screen'
@@ -12,8 +13,9 @@ class ProfileContainer extends React.Component {
     this.props.navigation.navigate('NewEntry', { user })
   }
 
-  handlePressEntry = entry => {
+  handlePressEntry = async entry => {
     this.props.navigation.navigate('Entry', { entry })
+    await Haptics.selectionAsync()
   }
 
   handlePressDeleteCurrentEntry = async () => {
