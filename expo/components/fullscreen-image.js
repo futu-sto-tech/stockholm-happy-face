@@ -23,18 +23,16 @@ const FullscreenImage = ({ uri }) => {
   }, [uri])
 
   return (
-    <Animated.View style={{ width: imageWidth, height: imageHeight }}>
-      <Image
-        resizeMode="contain"
-        style={{
-          height: '100%',
-          width: '100%',
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          borderRadius: 4,
-        }}
-        source={{ uri }}
-      />
-    </Animated.View>
+    <Animated.Image
+      resizeMode="contain"
+      style={{
+        width: imageWidth,
+        height: imageHeight,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        borderRadius: 4,
+      }}
+      source={{ uri }}
+    />
   )
 }
 
