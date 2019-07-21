@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react'
-import { Image, Dimensions } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { Animated, Image, Dimensions } from 'react-native'
 
 import { useIsMounted } from '../lib/utils'
 
 const FullscreenImage = ({ uri }) => {
   const isMounted = useIsMounted()
-  const [imageSize, setImageSize] = useState({ width: null, height: 200 })
+  const imageWidth = Dimensions.get('screen').width - 8 * 2
+  const imageHeight = useRef(new Animated.Value(200)).current
 
   useEffect(() => {
     Image.getSize(uri, (width, height) => {
       if (isMounted.current) {
-        // calculate image width and height
-        const screenWidth = Dimensions.get('screen').width - 8 * 2
-        const scaleFactor = width / screenWidth
-        const imageHeight = height / scaleFactor
-        setImageSize({ width: screenWidth, height: imageHeight })
+        const scaleFactor = width / imageWidth
+        const realImageHeight = height / scaleFactor
+
+        Animated.timing(imageHeight, {
+          toValue: realImageHeight,
+          duration: 250,
+        }).start()
       }
     })
   }, [uri])
 
   return (
-    <Image
-      resizeMode="contain"
-      style={{
-        ...imageSize,
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        borderRadius: 4,
-      }}
-      source={{ uri }}
-    />
+    <Animated.View style={{ width: imageWidth, height: imageHeight }}>
+      <Image
+        resizeMode="contain"
+        style={{
+          height: '100%',
+          width: '100%',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          borderRadius: 4,
+        }}
+        source={{ uri }}
+      />
+    </Animated.View>
   )
 }
 
