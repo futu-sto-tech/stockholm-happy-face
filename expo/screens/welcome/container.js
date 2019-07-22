@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import backend from '../../lib/backend'
 import { login } from '../../lib/auth'
+import { registerForPushNotificationsAsync } from '../../lib/permission'
 import WelcomeScreen from './screen'
 
 const WAIT_INTERVAL = 750
@@ -32,8 +33,9 @@ const WelcomeContainer = ({ navigation }) => {
   async function handlePressLogin() {
     if (username.length > 0) {
       setLoading(true)
-      const user = await login(username)
+      let user = await login(username)
       if (user) {
+        user = (await registerForPushNotificationsAsync(user)) || user
         navigation.navigate('Profile', { user })
       }
       setLoading(false)
