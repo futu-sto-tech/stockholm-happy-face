@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import { AsyncStorage } from 'react-native'
 
+import { login } from '../../lib/auth'
 import AuthLoadingScreen from './screen'
 
 const AuthLoadingContainer = ({ navigation }) => {
   async function checkCurrentUser() {
-    const userJSON = await AsyncStorage.getItem('user')
-    if (userJSON) {
-      const user = JSON.parse(userJSON)
+    const username = await AsyncStorage.getItem('user')
+    if (username) {
+      const user = await login(username)
       navigation.navigate('Profile', { user })
     } else {
       navigation.navigate('Welcome')

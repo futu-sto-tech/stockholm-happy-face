@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { AsyncStorage } from 'react-native'
 
 import backend from '../../lib/backend'
 import { login } from '../../lib/auth'
@@ -65,18 +64,6 @@ const WelcomeContainer = ({ navigation }) => {
       }, WAIT_INTERVAL)
     )
   }, [username])
-
-  async function checkCurrentUser() {
-    const userJSON = await AsyncStorage.getItem('user')
-    if (userJSON) {
-      const user = JSON.parse(userJSON)
-      navigation.navigate('Profile', { user })
-    }
-  }
-
-  useEffect(() => {
-    checkCurrentUser()
-  }, [])
 
   return (
     <WelcomeScreen

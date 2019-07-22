@@ -38,7 +38,7 @@ export const login = async username => {
   }
 
   if (user) {
-    await AsyncStorage.setItem('user', JSON.stringify(user))
+    await AsyncStorage.setItem('user', user.name)
     return (await registerForPushNotificationsAsync(user)) || user
   }
 
