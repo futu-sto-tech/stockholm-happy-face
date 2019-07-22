@@ -2,10 +2,12 @@ import React, { useEffect, useRef } from 'react'
 import { Animated, Image, Dimensions } from 'react-native'
 
 import { useIsMounted } from '../lib/utils'
+import theme from '../theme'
 
 const FullscreenImage = ({ uri }) => {
   const isMounted = useIsMounted()
-  const imageWidth = Dimensions.get('screen').width - 8 * 2
+  const imageWidth =
+    Dimensions.get('screen').width - theme.global.space.xsmall * 2
   const imageHeight = useRef(new Animated.Value(200)).current
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const FullscreenImage = ({ uri }) => {
       style={{
         width: imageWidth,
         height: imageHeight,
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        backgroundColor: theme.global.colors.elevation[1],
         borderRadius: 4,
       }}
       source={{ uri }}

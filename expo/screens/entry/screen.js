@@ -32,21 +32,21 @@ const EntryScreen = ({ entry, onPressDelete, isDeleting }) => (
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.global.colors.background,
   },
   container: {
-    padding: 8,
+    padding: theme.global.space.xsmall,
   },
   deleteButton: {
-    backgroundColor: theme.colors.danger,
+    backgroundColor: theme.global.colors.status.critical,
     borderRadius: 4,
-    marginTop: 8,
-    height: 56,
+    marginTop: theme.global.space.xsmall,
+    height: theme.global.size.xxsmall,
     justifyContent: 'center',
   },
   deleteButtonLabel: {
-    color: '#000',
-    fontSize: 20,
+    color: theme.global.colors.black,
+    fontSize: theme.global.font.size.medium,
     fontWeight: '500',
     textAlign: 'center',
   },

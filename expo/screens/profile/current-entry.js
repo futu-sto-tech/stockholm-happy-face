@@ -43,35 +43,33 @@ const CurrentEntry = ({ gif, week, onPressDelete, isDeleting }) => (
 
 const styles = StyleSheet.create({
   surface: {
-    marginTop: 8,
-    padding: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    marginTop: theme.global.space.xsmall,
+    padding: theme.global.space.small,
+    backgroundColor: theme.global.colors.elevation[3],
     borderRadius: 4,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   weekLabel: {
-    color: 'rgba(255, 255, 255, 0.87)',
-    fontSize: 20,
+    color: theme.global.colors.text.high,
+    fontSize: theme.global.font.size.medium,
     fontWeight: '500',
   },
   currentLabel: {
-    color: 'rgba(255, 255, 255, 0.60)',
-    fontSize: 16,
+    color: theme.global.colors.text.medium,
+    fontSize: theme.global.font.size.small,
   },
   deleteButton: {
-    backgroundColor: theme.colors.danger,
+    backgroundColor: theme.global.colors.status.critical,
     borderRadius: 4,
-    paddingHorizontal: 16,
-    height: 40,
-    justifyContent: 'center',
+    padding: theme.global.space.small,
   },
   deleteButtonLabel: {
-    color: '#000',
+    color: theme.global.colors.black,
     fontWeight: '500',
     textTransform: 'uppercase',
-    fontSize: 16,
+    fontSize: theme.global.font.size.small,
   },
 })
 

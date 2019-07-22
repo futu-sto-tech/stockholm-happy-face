@@ -31,24 +31,24 @@ const ConfirmEntryScreen = ({ image, onPressSave, isSaving }) => (
 )
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: theme.colors.background },
+  safeArea: { flex: 1, backgroundColor: theme.global.colors.background },
   container: {
-    padding: 8,
+    padding: theme.global.space.xsmall,
   },
   image: {
     flex: 1,
     borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: theme.global.colors.elevation[1],
   },
   saveButton: {
-    backgroundColor: 'rgb(0, 159, 119)',
-    marginTop: 8,
+    backgroundColor: theme.global.colors.status.ok,
+    marginTop: theme.global.space.xsmall,
     borderRadius: 4,
-    height: 56,
+    height: theme.global.size.xxsmall,
     justifyContent: 'center',
   },
   saveButtonText: {
-    fontSize: 20,
+    fontSize: theme.global.font.size.medium,
     fontWeight: '500',
     textAlign: 'center',
   },

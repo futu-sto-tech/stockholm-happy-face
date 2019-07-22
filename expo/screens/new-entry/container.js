@@ -3,6 +3,7 @@ import { TextInput, StyleSheet, View } from 'react-native'
 
 import i18n from '../../lib/i18n'
 import backend from '../../lib/backend'
+import theme from '../../theme'
 import NewEntryScreen from './screen'
 
 const WAIT_INTERVAL = 750
@@ -51,19 +52,19 @@ const NewEntryContainer = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   textInputView: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: theme.global.colors.elevation[2],
     borderRadius: 4,
     flex: 1,
-    marginHorizontal: 16,
+    marginHorizontal: theme.global.space.small,
     alignSelf: 'stretch',
-    marginVertical: 4,
+    marginVertical: theme.global.space.xxsmall,
     justifyContent: 'center',
   },
   textInput: {
-    color: 'rgba(255, 255, 255, 0.87)',
-    fontSize: 20,
+    color: theme.global.colors.text.high,
+    fontSize: theme.global.font.size.medium,
     fontWeight: '500',
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.global.space.small,
   },
 })
 
@@ -74,7 +75,7 @@ NewEntryContainer.navigationOptions = ({ navigation }) => ({
         value={navigation.getParam('query', '')}
         onChangeText={navigation.getParam('onChangeQuery', null)}
         placeholder={i18n.t('newEntry.navigation.input.placeholder')}
-        placeholderTextColor="rgba(255, 255, 255, 0.38)"
+        placeholderTextColor={theme.global.colors.placeholder}
         style={styles.textInput}
         autoFocus={true}
       />

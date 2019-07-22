@@ -45,7 +45,7 @@ const WelcomeScreen = ({
               <TextInput
                 style={styles.usernameInput}
                 placeholder={i18n.t('welcome.input.placeholder')}
-                placeholderTextColor={'rgba(255, 255, 255, 0.38)'}
+                placeholderTextColor={theme.global.colors.placeholder}
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="go"
@@ -54,17 +54,12 @@ const WelcomeScreen = ({
                 value={username}
               />
 
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  right: 16,
-                  justifyContent: 'center',
-                }}
-              >
+              <View style={styles.usernameInputIndicatorContainer}>
                 {loading ? (
-                  <ActivityIndicator size="small" color="white" />
+                  <ActivityIndicator
+                    size="small"
+                    color={theme.global.colors.white}
+                  />
                 ) : (
                   username.length > 0 && (
                     <MaterialIcons
@@ -72,8 +67,8 @@ const WelcomeScreen = ({
                       size={24}
                       color={
                         isMatchingUser
-                          ? theme.colors.success
-                          : 'rgba(255, 255, 255, 0.87)'
+                          ? theme.global.colors.status.ok
+                          : theme.global.colors.text.high
                       }
                     />
                   )
@@ -98,15 +93,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'black',
+    backgroundColor: theme.global.colors.black,
     opacity: 0.5,
   },
-  gifContainer: {
-    ...StyleSheet.absoluteFill,
-  },
+  gifContainer: { ...StyleSheet.absoluteFill },
   gifImage: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.global.colors.background,
   },
   logoContainer: {
     flex: 1,
@@ -115,23 +108,23 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 60,
-    color: 'rgba(255, 255, 255, 0.87)',
+    color: theme.global.colors.text.high,
     textAlign: 'center',
     fontWeight: '700',
-    marginTop: 16,
-    textShadowColor: 'black',
+    marginTop: theme.global.space.small,
+    textShadowColor: theme.global.colors.black,
     textShadowRadius: 3,
     textShadowOffset: { height: 0, width: 0 },
   },
   footer: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-    backgroundColor: theme.colors.background,
+    marginHorizontal: theme.global.space.small,
+    marginBottom: theme.global.space.small,
+    backgroundColor: theme.global.colors.background,
     borderRadius: 4,
   },
   usernameInputContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
-    padding: 16,
+    backgroundColor: theme.global.colors.elevation[1],
+    padding: theme.global.space.small,
     borderRadius: 4,
     elevation: 1,
     shadowOpacity: 0.3,
@@ -140,7 +133,14 @@ const styles = StyleSheet.create({
   },
   usernameInput: {
     fontSize: 20,
-    color: 'rgba(255, 255, 255, 0.87)',
+    color: theme.global.colors.text.high,
+  },
+  usernameInputIndicatorContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: theme.global.space.small,
+    justifyContent: 'center',
   },
 })
 

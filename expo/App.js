@@ -12,6 +12,7 @@ import NewEntryScreen from './screens/new-entry'
 import EntryScreen from './screens/entry'
 import ConfirmEntryScreen from './screens/confirm-entry'
 import AuthLoadingScreen from './screens/auth-loading'
+import theme from './theme'
 
 Sentry.config(Constants.manifest.extra.sentryDSN, {
   environment: Constants.manifest.extra.sentryEnvironment,
@@ -26,7 +27,7 @@ const AuthenticatedNavigator = createStackNavigator(
         title: navigation.getParam('user', {}).name,
         headerBackTitle: 'Profile',
         headerRight: (
-          <View style={{ marginRight: 16 }}>
+          <View style={{ marginRight: theme.global.space.small }}>
             <TouchableOpacity
               onPress={async () => {
                 await AsyncStorage.removeItem('user')
@@ -34,7 +35,7 @@ const AuthenticatedNavigator = createStackNavigator(
               }}
             >
               <Text
-                style={{ color: 'rgba(255, 255, 255, 0.87)', fontSize: 16 }}
+                style={{ color: theme.global.colors.text.high, fontSize: 16 }}
               >
                 {i18n.t('profile.navigation.logoutButton')}
               </Text>

@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 import i18n from '../../lib/i18n'
+import theme from '../../theme'
 
 const EntryForm = ({ onPress }) => (
   <View style={styles.container}>
@@ -16,26 +17,25 @@ const EntryForm = ({ onPress }) => (
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: theme.global.colors.elevation[2],
     borderRadius: 4,
-    paddingHorizontal: 24,
-    height: 160,
-    justifyContent: 'center',
+    paddingHorizontal: theme.global.space.medium,
+    paddingVertical: theme.global.space.large,
   },
   label: {
-    color: 'rgba(255, 255, 255, 0.87)',
+    color: theme.global.colors.text.high,
     fontSize: 20,
     fontWeight: '500',
     textAlign: 'center',
   },
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.09)',
-    marginTop: 16,
-    padding: 8,
+    backgroundColor: theme.global.colors.elevation[3],
+    marginTop: theme.global.space.small,
+    padding: theme.global.space.small,
     borderRadius: 4,
   },
   placeholder: {
-    color: 'rgba(255, 255, 255, 0.38)',
+    color: theme.global.colors.placeholder,
     fontSize: 20,
   },
 })
