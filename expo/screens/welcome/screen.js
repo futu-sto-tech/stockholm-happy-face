@@ -31,7 +31,7 @@ const WelcomeScreen = ({
         resizeMode="cover"
       />
     </View>
-    <BlurView tint="default" intensity={95} style={StyleSheet.absoluteFill} />
+    <BlurView tint="dark" intensity={50} style={StyleSheet.absoluteFill} />
     <View style={styles.cover} />
     <View style={styles.container}>
       <SafeAreaView style={{ flex: 1 }}>

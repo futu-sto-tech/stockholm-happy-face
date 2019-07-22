@@ -6,6 +6,7 @@ import backend from '../../lib/backend'
 import ProfileScreen from './screen'
 
 const ProfileContainer = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false)
   const [entries, setEntries] = useState([])
   const [currentEntry, setCurrentEntry] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -23,9 +24,11 @@ const ProfileContainer = ({ navigation }) => {
   const updateEntries = async () => {
     const user = navigation.getParam('user')
     if (user) {
+      setIsLoading(true)
       const userData = await backend.getUserEntries(user.id)
       setEntries(userData.entries)
       setCurrentEntry(userData.currentEntry)
+      setIsLoading(false)
     }
   }
 
@@ -52,6 +55,7 @@ const ProfileContainer = ({ navigation }) => {
         onPressEntry={handlePressEntry}
         onPressDeleteCurrentEntry={handlePressDeleteCurrentEntry}
         isDeleting={isDeleting}
+        loading={isLoading}
       />
     </>
   )

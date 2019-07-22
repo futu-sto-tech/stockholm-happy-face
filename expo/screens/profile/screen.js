@@ -9,6 +9,7 @@ import {
   FlatList,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native'
 
 import theme from '../../theme'
@@ -22,12 +23,15 @@ const ProfileScreen = ({
   onPressEntry,
   onPressDeleteCurrentEntry,
   isDeleting,
+  loading,
 }) => (
   <SafeAreaView style={styles.safeArea}>
     <StatusBar barStyle="light-content" />
     <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
-        {currentEntry ? (
+        {loading ? (
+          <ActivityIndicator style={{ marginTop: 32, marginBottom: 28 }} size="small" color="rgba(255, 255, 255, 0.87)" />
+        ) : currentEntry ? (
           <CurrentEntry
             {...currentEntry}
             onPressDelete={onPressDeleteCurrentEntry}

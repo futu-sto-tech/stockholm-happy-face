@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: theme.colors.danger,
     borderRadius: 4,
-    marginTop: 16,
+    marginTop: 8,
     height: 56,
     justifyContent: 'center',
   },
