@@ -16,3 +16,7 @@ export const login = async username => {
 
   return null
 }
+
+export const logout = async () => {
+  await AsyncStorage.removeItem('user')
+}

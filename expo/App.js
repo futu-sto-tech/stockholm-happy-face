@@ -6,6 +6,7 @@ import Sentry from 'sentry-expo'
 import * as Amplitude from 'expo-analytics-amplitude'
 
 import i18n from './lib/i18n'
+import { logout } from './lib/auth'
 import WelcomeScreen from './screens/welcome'
 import ProfileScreen from './screens/profile'
 import NewEntryScreen from './screens/new-entry'
@@ -30,7 +31,7 @@ const AuthenticatedNavigator = createStackNavigator(
           <View style={{ marginRight: theme.global.space.small }}>
             <TouchableOpacity
               onPress={async () => {
-                await AsyncStorage.removeItem('user')
+                await logout()
                 navigation.navigate('Welcome')
               }}
             >

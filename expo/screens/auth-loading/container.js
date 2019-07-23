@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { AsyncStorage } from 'react-native'
 
-import { login } from '../../lib/auth'
+import backend from '../../lib/backend'
+import { logout } from '../../lib/auth'
 import AuthLoadingScreen from './screen'
 
 const AuthLoadingContainer = ({ navigation }) => {
@@ -10,12 +11,13 @@ const AuthLoadingContainer = ({ navigation }) => {
 
     let user = null
     if (username) {
-      user = await login(username)
+      user = await backend.getUser(username)
     }
 
     if (user) {
       navigation.navigate('Profile', { user })
     } else {
+      await logout()
       navigation.navigate('Welcome')
     }
   }
