@@ -7,8 +7,13 @@ import AuthLoadingScreen from './screen'
 const AuthLoadingContainer = ({ navigation }) => {
   async function checkCurrentUser() {
     const username = await AsyncStorage.getItem('user')
+
+    let user = null
     if (username) {
-      const user = await login(username)
+      user = await login(username)
+    }
+
+    if (user) {
       navigation.navigate('Profile', { user })
     } else {
       navigation.navigate('Welcome')
