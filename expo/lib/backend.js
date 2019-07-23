@@ -55,9 +55,11 @@ apiClient.getUserEntries = async userId => {
   }
 }
 
-apiClient.searchGifImages = async query => {
+apiClient.searchGifImages = async (query, { offset = 0 } = {}) => {
   try {
-    const response = await apiClient.get('/gif/search', { params: { query } })
+    const response = await apiClient.get('/gif/search', {
+      params: { query, offset },
+    })
     return response.data.images
   } catch (error) {
     console.log(error)

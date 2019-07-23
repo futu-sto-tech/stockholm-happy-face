@@ -12,6 +12,7 @@ const NewEntryContainer = ({ navigation }) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [timer, setTimer] = useState(null)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   useEffect(() => {
     navigation.setParams({
@@ -47,7 +48,23 @@ const NewEntryContainer = ({ navigation }) => {
     navigation.navigate('ConfirmEntry', { user, image })
   }
 
-  return <NewEntryScreen results={results} onPressResult={handlePressResult} />
+  const handleLoadMore = async () => {
+    setIsLoadingMore(true)
+    const newResults = await backend.searchGifImages(query, {
+      offset: results.length,
+    })
+    setResults([...results, ...newResults])
+    setIsLoadingMore(false)
+  }
+
+  return (
+    <NewEntryScreen
+      results={results}
+      onPressResult={handlePressResult}
+      onLoadMore={handleLoadMore}
+      loadingMore={isLoadingMore}
+    />
+  )
 }
 
 const styles = StyleSheet.create({

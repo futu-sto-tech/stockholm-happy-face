@@ -61,6 +61,13 @@ const ProfileScreen = ({
           />
         </TouchableOpacity>
       )}
+      columnWrapperStyle={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+      ItemSeparatorComponent={() => (
+        <View style={{ height: theme.global.space.xsmall }} />
+      )}
       ListFooterComponent={<SafeAreaView />}
     />
   </ScrollView>
@@ -75,26 +82,23 @@ const styles = StyleSheet.create({
     backgroundColor: theme.global.colors.background,
   },
   topContainer: {
-    marginTop: theme.global.space.xsmall,
-    paddingHorizontal: theme.global.space.xsmall,
-    marginBottom: theme.global.space.xsmall,
+    paddingHorizontal: theme.global.space.xxsmall,
+    marginVertical: theme.global.space.xsmall,
   },
   loadingIndicator: {
     marginTop: theme.global.space.medium,
     marginBottom: theme.global.space.medium - theme.global.space.xsmall,
   },
   historyList: {
-    marginTop: -theme.global.space.xsmall / 2,
-    paddingHorizontal: theme.global.space.xsmall / 2,
+    paddingHorizontal: theme.global.space.xxsmall,
   },
   historyImageButton: {
-    flex: 1,
+    height:
+      (Dimensions.get('screen').width - theme.global.space.xsmall * 2) / 2,
+    width: (Dimensions.get('screen').width - theme.global.space.xsmall * 2) / 2,
   },
   historyImage: {
-    height:
-      (Dimensions.get('screen').width - theme.global.space.xsmall * 3) / 2,
-    width: (Dimensions.get('screen').width - theme.global.space.xsmall * 3) / 2,
-    margin: theme.global.space.xsmall / 2,
+    flex: 1,
     borderRadius: 4,
     backgroundColor: theme.global.colors.elevation[1],
   },
