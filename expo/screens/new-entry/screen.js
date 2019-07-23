@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import theme from '../../theme'
 
@@ -25,6 +26,20 @@ const NewEntryScreen = ({
     numColumns={2}
     data={results}
     keyExtractor={item => item.id}
+    keyboardDismissMode="on-drag"
+    refreshing={loadingMore}
+    ListEmptyComponent={() => (
+      <View style={styles.emptyContainer}>
+        <View style={styles.emptyIcon}>
+          <MaterialIcons
+            name="arrow-upward"
+            size={24}
+            color={theme.global.colors.text.medium}
+          />
+        </View>
+        <Text style={styles.emptyText}>Search for a GIF</Text>
+      </View>
+    )}
     ItemSeparatorComponent={() => (
       <View style={{ height: theme.global.space.xsmall }} />
     )}
@@ -64,6 +79,15 @@ const NewEntryScreen = ({
 )
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    alignItems: 'center',
+    paddingTop: theme.global.space.small,
+  },
+  emptyText: {
+    marginTop: theme.global.space.xsmall,
+    color: theme.global.colors.text.medium,
+    fontSize: theme.global.font.size.small,
+  },
   resultList: {
     flex: 1,
     backgroundColor: theme.global.colors.background,

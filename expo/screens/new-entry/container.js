@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TextInput, StyleSheet, View } from 'react-native'
+import { TextInput, StyleSheet, View, Keyboard } from 'react-native'
 
 import i18n from '../../lib/i18n'
 import backend from '../../lib/backend'
@@ -95,6 +95,7 @@ NewEntryContainer.navigationOptions = ({ navigation }) => ({
         placeholderTextColor={theme.global.colors.placeholder}
         style={styles.textInput}
         autoFocus={true}
+        onSubmitEditing={Keyboard.dismiss}
       />
     </View>
   ),
