@@ -13,27 +13,28 @@ import theme from '../../theme'
 import FullscreenImage from '../../components/fullscreen-image'
 
 const EntryScreen = ({ entry, onPressDelete, deleting }) => (
-  <SafeAreaView style={styles.safeArea}>
-    <View style={styles.container}>
-      <FullscreenImage uri={entry.gif.url} />
-      <TouchableOpacity style={styles.deleteButton} onPress={onPressDelete}>
-        {deleting ? (
-          <ActivityIndicator size="small" color="#000000" />
-        ) : (
-          <Text style={styles.deleteButtonLabel}>
-            {i18n.t('entry.deleteButton')}
-          </Text>
-        )}
-      </TouchableOpacity>
-    </View>
-  </SafeAreaView>
+  <ScrollView
+    style={{ flex: 1, backgroundColor: theme.global.colors.background }}
+  >
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <FullscreenImage uri={entry.gif.url} />
+        <TouchableOpacity style={styles.deleteButton} onPress={onPressDelete}>
+          {deleting ? (
+            <ActivityIndicator size="small" color={theme.global.colors.black} />
+          ) : (
+            <Text style={styles.deleteButtonLabel}>
+              {i18n.t('entry.deleteButton')}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  </ScrollView>
 )
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: theme.global.colors.background,
-  },
+  safeArea: { flex: 1 },
   container: {
     padding: theme.global.space.xsmall,
   },
