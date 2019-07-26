@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import backend from '../../lib/backend'
-import { login } from '../../lib/auth'
-import { registerForPushNotificationsAsync } from '../../lib/permission'
+import { queryUsers, login } from '../../store/actions'
+import { PROFILE_ROUTE } from '../../navigator/routes'
 import WelcomeScreen from './screen'
 
 const WAIT_INTERVAL = 750
@@ -25,56 +25,47 @@ const BACKDROPS = [
 const BACKDROP = BACKDROPS[Math.floor(Math.random() * BACKDROPS.length)]
 
 const WelcomeContainer = ({ navigation }) => {
-  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const users = useSelector(state => state.queryUsers.value)
+  const user = useSelector(state => state.userData.value)
+  const loadingUser = useSelector(state => state.userData.loading)
+  const loadingUsers = useSelector(state => state.queryUsers.loading)
+
   const [username, setUsername] = useState('')
-  const [isMatchingUser, setIsMatchingUser] = useState(false)
   const [timer, setTimer] = useState(null)
 
-  async function handlePressLogin() {
+  const handlePressLogin = async () => {
     if (username.length > 0) {
-      setLoading(true)
-      let user = await login(username)
-      if (user) {
-        user = (await registerForPushNotificationsAsync(user)) || user
-        navigation.navigate('Profile', { user })
-      }
-      setLoading(false)
+      dispatch(login(username))
     }
   }
 
-  function handleChangeUsername(newUsername) {
-    setUsername(newUsername)
-  }
-
-  async function queryUsers() {
-    setLoading(true)
-    const results = await backend.queryUsers(username)
-    setIsMatchingUser(results.find(name => name === username))
-    setLoading(false)
-  }
+  const handleChangeUsername = newUsername => setUsername(newUsername)
 
   useEffect(() => {
     clearTimeout(timer)
 
     setTimer(
       setTimeout(() => {
-        if (username.length === 0) {
-          setIsMatchingUser(false)
-        } else {
-          queryUsers()
-        }
+        dispatch(queryUsers(username))
       }, WAIT_INTERVAL)
     )
   }, [username])
 
+  useEffect(() => {
+    if (user) {
+      navigation.navigate(PROFILE_ROUTE)
+    }
+  }, [user])
+
   return (
     <WelcomeScreen
       onPressLogin={handlePressLogin}
-      loading={loading}
+      loading={loadingUser || loadingUsers}
       backdropUrl={BACKDROP}
       username={username}
       onChangeUsername={handleChangeUsername}
-      isMatchingUser={isMatchingUser}
+      isMatchingUser={users.find(name => name === username)}
     />
   )
 }

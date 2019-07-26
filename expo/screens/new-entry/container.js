@@ -3,6 +3,7 @@ import { TextInput, StyleSheet, View, Keyboard } from 'react-native'
 
 import i18n from '../../lib/i18n'
 import backend from '../../lib/backend'
+import { CONFIRM_ENTRY_ROUTE } from '../../navigator/routes'
 import theme from '../../theme'
 import NewEntryScreen from './screen'
 
@@ -43,10 +44,8 @@ const NewEntryContainer = ({ navigation }) => {
     )
   }, [query])
 
-  function handlePressResult(image) {
-    const user = navigation.getParam('user')
-    navigation.navigate('ConfirmEntry', { user, image })
-  }
+  const handlePressResult = image =>
+    navigation.navigate(CONFIRM_ENTRY_ROUTE, { image })
 
   const handleLoadMore = async () => {
     setIsLoadingMore(true)

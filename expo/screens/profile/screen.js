@@ -2,14 +2,13 @@ import React from 'react'
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   Image,
   ScrollView,
   StatusBar,
   FlatList,
   TouchableOpacity,
   Dimensions,
-  ActivityIndicator,
+  Text,
 } from 'react-native'
 
 import theme from '../../theme'
@@ -23,18 +22,11 @@ const ProfileScreen = ({
   onPressEntry,
   onPressDeleteCurrentEntry,
   isDeleting,
-  loading,
 }) => (
   <ScrollView style={styles.container}>
     <StatusBar barStyle="light-content" />
     <View style={styles.topContainer}>
-      {loading ? (
-        <ActivityIndicator
-          style={styles.loadingIndicator}
-          size="small"
-          color={theme.global.colors.white}
-        />
-      ) : currentEntry ? (
+      {currentEntry ? (
         <CurrentEntry
           {...currentEntry}
           onPressDelete={onPressDeleteCurrentEntry}
@@ -47,6 +39,7 @@ const ProfileScreen = ({
 
     <FlatList
       style={styles.historyList}
+      contentContainerStyle={{ paddingBottom: theme.global.space.xsmall }}
       numColumns={2}
       data={entries.map(entry => ({ key: entry.id, ...entry }))}
       renderItem={({ item }) => (
@@ -68,34 +61,36 @@ const ProfileScreen = ({
       ItemSeparatorComponent={() => (
         <View style={{ height: theme.global.space.xsmall }} />
       )}
-      ListFooterComponent={<SafeAreaView />}
+      ListHeaderComponent={() => (
+        <Text style={styles.prevHeading}>Previous weeks</Text>
+      )}
     />
   </ScrollView>
 )
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   container: {
+    flex: 1,
     overflow: 'scroll',
     backgroundColor: theme.global.colors.background,
+    paddingHorizontal: theme.global.space.xsmall,
   },
   topContainer: {
-    paddingHorizontal: theme.global.space.xxsmall,
-    marginVertical: theme.global.space.xsmall,
+    paddingTop: theme.global.space.xsmall,
   },
-  loadingIndicator: {
-    marginTop: theme.global.space.medium,
-    marginBottom: theme.global.space.medium - theme.global.space.xsmall,
+  prevHeading: {
+    fontSize: theme.global.font.size.large,
+    color: theme.global.colors.text.medium,
+    marginBottom: theme.global.space.small,
+    textAlign: 'center',
   },
   historyList: {
-    paddingHorizontal: theme.global.space.xxsmall,
+    marginTop: theme.global.space.large,
   },
   historyImageButton: {
     height:
-      (Dimensions.get('screen').width - theme.global.space.xsmall * 2) / 2,
-    width: (Dimensions.get('screen').width - theme.global.space.xsmall * 2) / 2,
+      (Dimensions.get('screen').width - theme.global.space.xsmall * 3) / 2,
+    width: (Dimensions.get('screen').width - theme.global.space.xsmall * 3) / 2,
   },
   historyImage: {
     flex: 1,

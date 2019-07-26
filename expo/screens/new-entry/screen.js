@@ -91,15 +91,15 @@ const styles = StyleSheet.create({
   resultList: {
     flex: 1,
     backgroundColor: theme.global.colors.background,
+    paddingHorizontal: theme.global.space.xsmall,
   },
   resultListContentContainer: {
-    paddingHorizontal: theme.global.space.xxsmall,
-    marginTop: theme.global.space.xsmall,
+    paddingVertical: theme.global.space.xsmall,
   },
   resultListItem: {
     height:
-      (Dimensions.get('screen').width - theme.global.space.xsmall * 2) / 2,
-    width: (Dimensions.get('screen').width - theme.global.space.xsmall * 2) / 2,
+      (Dimensions.get('screen').width - theme.global.space.xsmall * 3) / 2,
+    width: (Dimensions.get('screen').width - theme.global.space.xsmall * 3) / 2,
   },
   resultListImage: {
     flex: 1,

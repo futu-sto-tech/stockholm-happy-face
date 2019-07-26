@@ -1,64 +1,38 @@
-import React, { useState } from 'react'
-import { NavigationEvents } from 'react-navigation'
-import * as Haptics from 'expo-haptics'
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-import backend from '../../lib/backend'
+import { deleteCurrentEntry } from '../../store/actions'
+import { NEW_ENTRY_ROUTE, ENTRY_ROUTE } from '../../navigator/routes'
+import ProfileNavigationTitle from './navigation-title'
 import ProfileScreen from './screen'
 
 const ProfileContainer = ({ navigation }) => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [entries, setEntries] = useState([])
-  const [currentEntry, setCurrentEntry] = useState(null)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.userData.value)
+  const entries = useSelector(state => state.userEntries.value)
+  const currentEntry = useSelector(state => state.userCurrentEntry.value)
+  const deletingCurrentEntry = useSelector(
+    state => state.userCurrentEntry.deleting
+  )
 
-  const handlePressInput = () => {
-    const user = navigation.getParam('user')
-    if (user) navigation.navigate('NewEntry', { user })
-  }
-
-  const handlePressEntry = async entry => {
-    navigation.navigate('Entry', { entry })
-    await Haptics.selectionAsync()
-  }
-
-  const updateEntries = async () => {
-    const user = navigation.getParam('user')
-    if (user) {
-      setIsLoading(true)
-      const userData = await backend.getUserEntries(user.id)
-      setEntries(userData.entries)
-      setCurrentEntry(userData.currentEntry)
-      setIsLoading(false)
-    }
-  }
-
-  const handlePressDeleteCurrentEntry = async () => {
-    setIsDeleting(true)
-    await backend.deleteEntry(currentEntry)
-    setIsDeleting(false)
-    await updateEntries()
-  }
-
-  const handleWillFocus = async payload => {
-    if (payload.action.type !== 'Navigation/BACK') {
-      await updateEntries()
-    }
-  }
+  const handlePressInput = () => navigation.navigate(NEW_ENTRY_ROUTE)
+  const handlePressEntry = entry => navigation.navigate(ENTRY_ROUTE, { entry })
+  const handlePressDeleteCurrentEntry = () => dispatch(deleteCurrentEntry())
 
   return (
-    <>
-      <NavigationEvents onWillFocus={handleWillFocus} />
-      <ProfileScreen
-        currentEntry={currentEntry}
-        entries={entries}
-        onPressInput={handlePressInput}
-        onPressEntry={handlePressEntry}
-        onPressDeleteCurrentEntry={handlePressDeleteCurrentEntry}
-        isDeleting={isDeleting}
-        loading={isLoading}
-      />
-    </>
+    <ProfileScreen
+      currentEntry={currentEntry}
+      entries={entries}
+      onPressInput={handlePressInput}
+      onPressEntry={handlePressEntry}
+      onPressDeleteCurrentEntry={handlePressDeleteCurrentEntry}
+      isDeleting={deletingCurrentEntry}
+    />
   )
+}
+
+ProfileContainer.navigationOptions = {
+  headerTitle: <ProfileNavigationTitle />,
 }
 
 export default ProfileContainer

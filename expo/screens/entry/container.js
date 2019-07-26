@@ -1,25 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import backend from '../../lib/backend'
+import { PROFILE_ROUTE } from '../../navigator/routes'
 import EntryScreen from './screen'
+import { deleteEntry } from '../../store/actions'
 
 const EntryContainer = ({ navigation }) => {
-  const [isDeleting, setIsDeleting] = useState(false)
-  const entry = navigation.getParam('entry')
+  const dispatch = useDispatch()
+  const deleting = useSelector(state => state.userEntries.deleting)
+  const { entry } = navigation.state.params
 
-  async function handlePressDelete() {
-    console.log('Pressed delete')
-    setIsDeleting(true)
-    await backend.deleteEntry(entry)
-    setIsDeleting(false)
-    navigation.navigate('Profile')
+  const handlePressDelete = async () => {
+    dispatch(deleteEntry(entry))
+    navigation.navigate(PROFILE_ROUTE)
   }
 
   return (
     <EntryScreen
       entry={entry}
       onPressDelete={handlePressDelete}
-      isDeleting={isDeleting}
+      deleting={deleting}
     />
   )
 }

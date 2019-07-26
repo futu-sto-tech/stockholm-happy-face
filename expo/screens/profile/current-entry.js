@@ -30,7 +30,7 @@ const CurrentEntry = ({ gif, week, onPressDelete, isDeleting }) => (
         disabled={isDeleting}
       >
         {isDeleting ? (
-          <ActivityIndicator size="small" color="#000000" />
+          <ActivityIndicator size="small" color={theme.global.colors.black} />
         ) : (
           <Text style={styles.deleteButtonLabel}>
             {i18n.t('profile.currentEntry.deleteButton')}
@@ -61,9 +61,11 @@ const styles = StyleSheet.create({
     fontSize: theme.global.font.size.small,
   },
   deleteButton: {
+    height: theme.global.size.xxsmall,
+    justifyContent: 'center',
     backgroundColor: theme.global.colors.status.critical,
     borderRadius: 4,
-    padding: theme.global.space.small,
+    paddingHorizontal: theme.global.space.small,
   },
   deleteButtonLabel: {
     color: theme.global.colors.black,

@@ -12,12 +12,12 @@ import i18n from '../../lib/i18n'
 import theme from '../../theme'
 import FullscreenImage from '../../components/fullscreen-image'
 
-const EntryScreen = ({ entry, onPressDelete, isDeleting }) => (
+const EntryScreen = ({ entry, onPressDelete, deleting }) => (
   <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
       <FullscreenImage uri={entry.gif.url} />
       <TouchableOpacity style={styles.deleteButton} onPress={onPressDelete}>
-        {isDeleting ? (
+        {deleting ? (
           <ActivityIndicator size="small" color="#000000" />
         ) : (
           <Text style={styles.deleteButtonLabel}>

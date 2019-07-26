@@ -1,30 +1,36 @@
 import React, { useEffect } from 'react'
-import { AsyncStorage } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 
-import backend from '../../lib/backend'
+import { checkExistingUser } from '../../store/actions'
+import { PROFILE_ROUTE, WELCOME_ROUTE } from '../../navigator/routes'
 import { logout } from '../../lib/auth'
 import AuthLoadingScreen from './screen'
 
 const AuthLoadingContainer = ({ navigation }) => {
-  async function checkCurrentUser() {
-    const username = await AsyncStorage.getItem('user')
+  const dispatch = useDispatch()
+  const hasCheckedExistingUser = useSelector(
+    state => state.hasCheckedExistingUser
+  )
+  const user = useSelector(state => state.userData.value)
 
-    let user = null
-    if (username) {
-      user = await backend.getUser(username)
-    }
+  useEffect(() => {
+    dispatch(checkExistingUser())
+  }, [])
 
-    if (user) {
-      navigation.navigate('Profile', { user })
-    } else {
-      await logout()
-      navigation.navigate('Welcome')
+  const navigateBasedOnAuthState = async () => {
+    if (hasCheckedExistingUser) {
+      if (user) {
+        navigation.navigate(PROFILE_ROUTE, { user })
+      } else {
+        await logout()
+        navigation.navigate(WELCOME_ROUTE)
+      }
     }
   }
 
   useEffect(() => {
-    checkCurrentUser()
-  }, [])
+    navigateBasedOnAuthState()
+  }, [hasCheckedExistingUser])
 
   return <AuthLoadingScreen />
 }

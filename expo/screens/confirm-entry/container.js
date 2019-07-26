@@ -1,37 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import backend from "../../lib/backend";
-import ConfirmEntryScreen from "./screen";
+import { saveNewEntry } from '../../store/actions'
+import { PROFILE_ROUTE } from '../../navigator/routes'
+import ConfirmEntryScreen from './screen'
 
 const ConfirmEntryContainer = ({ navigation }) => {
-  const [isSaving, setIsSaving] = useState(false);
-  const image = navigation.getParam("image");
+  const dispatch = useDispatch()
+  const saving = useSelector(state => state.userCurrentEntry.saving)
+  const currentEntry = useSelector(state => state.userCurrentEntry.value)
+  const { image } = navigation.state.params
 
-  async function handlePressSave() {
-    setIsSaving(true);
-    const user = navigation.getParam("user");
-    const { id: giphyId, ...imageData } = image;
-    const newEntry = await backend.saveEntry(user, {
-      giphyId,
-      ...imageData.original
-    });
+  const handlePressSave = () => dispatch(saveNewEntry(image))
 
-    if (newEntry) {
-      navigation.navigate("Profile");
-    } else {
-      console.warning("entry not saved!");
+  useEffect(() => {
+    if (currentEntry) {
+      navigation.navigate(PROFILE_ROUTE)
     }
-
-    setIsSaving(false);
-  }
+  }, [currentEntry])
 
   return (
     <ConfirmEntryScreen
       image={image}
       onPressSave={handlePressSave}
-      isSaving={isSaving}
+      saving={saving}
     />
-  );
-};
+  )
+}
 
-export default ConfirmEntryContainer;
+export default ConfirmEntryContainer

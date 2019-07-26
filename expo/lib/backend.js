@@ -72,7 +72,7 @@ apiClient.deleteEntry = async entry => {
     await apiClient.delete(`/entries/${entry.id}`)
     return entry
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return null
   }
 }
@@ -97,6 +97,18 @@ apiClient.updateUser = async (user, { expoPushToken }) => {
   } catch (error) {
     console.error(error)
     return null
+  }
+}
+
+apiClient.getWeeklyEntries = async () => {
+  try {
+    const response = await apiClient.get('/entries', {
+      params: { week: 'current' },
+    })
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return []
   }
 }
 
