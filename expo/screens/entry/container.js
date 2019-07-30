@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Alert } from 'react-native'
 
 import { PROFILE_ROUTE } from '../../navigator/routes'
 import EntryScreen from './screen'
@@ -11,8 +12,27 @@ const EntryContainer = ({ navigation }) => {
   const { entry } = navigation.state.params
 
   const handlePressDelete = async () => {
-    dispatch(deleteEntry(entry))
-    navigation.navigate(PROFILE_ROUTE)
+    Alert.alert(
+      'Delete entry?',
+      'This entry will be removed completely. You will not be able to undo this action.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => {
+            console.log('cancelled')
+          },
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            dispatch(deleteEntry(entry))
+            navigation.navigate(PROFILE_ROUTE)
+          },
+        },
+      ]
+    )
   }
 
   return (
