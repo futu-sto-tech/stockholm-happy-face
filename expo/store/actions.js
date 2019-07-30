@@ -189,12 +189,12 @@ const fetchWeekEntriesError = error => ({
   payload: { error },
 })
 
-export const getWeekEntries = () => async (dispatch, getState, { api }) => {
+export const getWeekEntries = () => async (dispatch, _, { api }) => {
   dispatch(fetchWeekEntries())
-  const entries = await api.getWeeklyEntries()
-  if (getState().weekEntries.value.length !== 0 && entries.length === 0) {
-    dispatch(fetchWeekEntriesError("Unable to fetch week's entries"))
-  } else {
+  try {
+    const entries = await api.getWeeklyEntries()
     dispatch(fetchWeekEntriesSuccess(entries))
+  } catch (error) {
+    dispatch(fetchWeekEntriesError(error))
   }
 }

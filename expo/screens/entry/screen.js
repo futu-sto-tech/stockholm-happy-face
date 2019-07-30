@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native'
 
 import i18n from '../../lib/i18n'

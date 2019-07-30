@@ -79,9 +79,10 @@ const styles = StyleSheet.create({
     paddingTop: theme.global.space.xsmall,
   },
   prevHeading: {
-    fontSize: theme.global.font.size.large,
+    fontSize: theme.global.font.size.medium,
     color: theme.global.colors.text.medium,
     marginBottom: theme.global.space.small,
+    fontWeight: '500',
     textAlign: 'center',
   },
   historyList: {

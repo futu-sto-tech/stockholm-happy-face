@@ -5,7 +5,7 @@ import theme from '../../theme'
 
 const AuthLoadingScreen = () => (
   <View style={styles.container}>
-    <ActivityIndicator size="small" color={theme.global.colors.white} />
+    <ActivityIndicator color={theme.global.colors.white} />
   </View>
 )
 
@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.global.colors.background,
     justifyContent: 'center',
-    alignItems: 'center',
   },
 })
 

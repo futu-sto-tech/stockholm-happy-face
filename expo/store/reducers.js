@@ -51,6 +51,7 @@ const INITIAL_STATE = {
     value: [],
   },
   weekEntries: {
+    hasLoaded: false,
     loading: false,
     error: null,
     value: [],
@@ -232,6 +233,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         weekEntries: {
           ...state.weekEntries,
+          hasLoaded: true,
           loading: false,
           error: null,
           value: action.payload.entries,
