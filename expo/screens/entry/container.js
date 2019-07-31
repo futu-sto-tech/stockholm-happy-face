@@ -19,9 +19,6 @@ const EntryContainer = ({ navigation }) => {
         {
           text: 'Cancel',
           style: 'cancel',
-          onPress: () => {
-            console.log('cancelled')
-          },
         },
         {
           text: 'Delete',
