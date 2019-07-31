@@ -1,7 +1,4 @@
 import {
-  FETCH_USER,
-  FETCH_USER_SUCCESS,
-  FETCH_USER_ERROR,
   MARK_CHECKED_EXISTING_USER,
   FETCH_USER_QUERY,
   FETCH_USER_QUERY_DONE,
@@ -72,35 +69,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         userCurrentEntry: {
           ...state.userCurrentEntry,
           value: action.payload.currentEntry,
-        },
-      }
-
-    case FETCH_USER:
-      return { ...state, userData: { ...state.userData, loading: true } }
-
-    case FETCH_USER_SUCCESS:
-      return {
-        ...state,
-        userData: { loading: false, error: null, value: action.payload.user },
-        userEntries: {
-          ...state.userEntries,
-          error: null,
-          value: action.payload.entries,
-        },
-        userCurrentEntry: {
-          ...state.userCurrentEntry,
-          error: null,
-          value: action.payload.currentEntry,
-        },
-      }
-
-    case FETCH_USER_ERROR:
-      return {
-        ...state,
-        userData: {
-          ...state.userData,
-          loading: false,
-          error: action.payload.error,
         },
       }
 

@@ -3,9 +3,6 @@ import { AsyncStorage } from 'react-native'
 import * as auth from '../lib/auth'
 import { registerForPushNotificationsAsync } from '../lib/permission'
 import {
-  FETCH_USER,
-  FETCH_USER_SUCCESS,
-  FETCH_USER_ERROR,
   MARK_CHECKED_EXISTING_USER,
   FETCH_USER_QUERY,
   FETCH_USER_QUERY_DONE,
@@ -26,24 +23,6 @@ import {
   FETCH_WEEK_ENTRIES_SUCCESS,
   FETCH_WEEK_ENTRIES_ERROR,
 } from './action-types'
-
-const fetchUser = () => ({ type: FETCH_USER })
-const fetchUserSuccess = ({ user, entries, currentEntry }) => ({
-  type: FETCH_USER_SUCCESS,
-  payload: { user, entries, currentEntry },
-})
-const fetchUserError = error => ({ type: FETCH_USER_ERROR, payload: { error } })
-
-export const getUser = username => async (dispatch, _, { api }) => {
-  dispatch(fetchUser())
-  const user = await api.getUser(username)
-  if (user) {
-    const { entries, currentEntry } = await api.getUserEntries(user.id)
-    dispatch(fetchUserSuccess({ user, entries, currentEntry }))
-  } else {
-    dispatch(fetchUserError('Unable to fetch user'))
-  }
-}
 
 const markCheckedExistingUser = ({
   user = null,

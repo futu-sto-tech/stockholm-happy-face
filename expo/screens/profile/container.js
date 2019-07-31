@@ -8,7 +8,6 @@ import ProfileScreen from './screen'
 
 const ProfileContainer = ({ navigation }) => {
   const dispatch = useDispatch()
-  const user = useSelector(state => state.userData.value)
   const entries = useSelector(state => state.userEntries.value)
   const currentEntry = useSelector(state => state.userCurrentEntry.value)
   const deletingCurrentEntry = useSelector(
