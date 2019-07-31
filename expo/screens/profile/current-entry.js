@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     fontSize: theme.global.font.size.small,
   },
   deleteButton: {
-    height: theme.global.size.xxsmall,
+    height: 40,
     justifyContent: 'center',
     backgroundColor: theme.global.colors.status.critical,
     borderRadius: 4,

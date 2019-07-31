@@ -15,7 +15,7 @@
           <string>software-package</string>
           <!-- required. the URL of the file to download. -->
           <key>url</key>
-          <string>https://expo.io/artifacts/09bff9e3-8d0f-48ee-a596-7993281bc9ef</string>
+          <string>https://expo.io/artifacts/15bcb209-c0d2-4256-8487-55553c620beb</string>
         </dict>
 
         <!-- display-image: the icon to display during download.-->
