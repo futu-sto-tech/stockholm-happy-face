@@ -128,6 +128,12 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           value: null,
           deleteError: null,
         },
+        weekEntries: {
+          ...state.weekEntries,
+          value: state.weekEntries.value.filter(
+            entry => entry.id !== state.userCurrentEntry.value.id
+          ),
+        },
       }
 
     case DELETE_CURRENT_ENTRY_ERROR:
@@ -180,6 +186,12 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           saving: false,
           value: action.payload.entry,
           saveError: null,
+        },
+        weekEntries: {
+          ...state.weekEntries,
+          value: state.weekEntries.hasLoaded
+            ? [...state.weekEntries.value, action.payload.entry]
+            : state.weekEntries.value,
         },
       }
 

@@ -1,11 +1,9 @@
 import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import ArchiveScreen from './screen'
 import { getWeekEntries } from '../../store/actions'
 import { NEW_ENTRY_ROUTE } from '../../navigator/routes'
-
-const INTERVAL_TIME = 5000
+import ArchiveScreen from './screen'
 
 const ArchiveContainer = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -17,13 +15,9 @@ const ArchiveContainer = ({ navigation }) => {
   )
 
   useEffect(() => {
-    dispatch(getWeekEntries())
-
-    const interval = setInterval(() => {
+    if (!hasLoaded) {
       dispatch(getWeekEntries())
-    }, INTERVAL_TIME)
-
-    return () => clearInterval(interval)
+    }
   }, [])
 
   return (
