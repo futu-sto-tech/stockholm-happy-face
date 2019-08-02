@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest"
+    "test": "jest",
+    "debug": "open rndebugger://set-debugger-loc?host=localhost&port=19001 && npm start"
   },
   "dependencies": {
     "axios": "^0.19.0",

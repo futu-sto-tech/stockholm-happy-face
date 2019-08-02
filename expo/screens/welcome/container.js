@@ -47,7 +47,9 @@ const WelcomeContainer = ({ navigation }) => {
 
     setTimer(
       setTimeout(() => {
-        dispatch(queryUsers(username))
+        if (username.length > 0) {
+          dispatch(queryUsers(username))
+        }
       }, WAIT_INTERVAL)
     )
   }, [username])
