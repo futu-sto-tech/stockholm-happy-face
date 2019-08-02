@@ -25,7 +25,7 @@ const en = {
   },
   entry: {
     navigation: {
-      titlePrefix: 'Week',
+      title: 'Week %{week}',
     },
     deleteButton: 'Delete',
     deletePrompt: {

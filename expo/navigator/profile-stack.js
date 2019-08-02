@@ -20,9 +20,9 @@ const ProfileStackNavigator = createStackNavigator(
     [ENTRY_ROUTE]: {
       screen: EntryContainer,
       navigationOptions: ({ navigation }) => ({
-        title: `${i18n.t('entry.navigation.titlePrefix')} ${
-          navigation.getParam('entry').week
-        }`,
+        title: i18n.t('entry.navigation.title', {
+          week: navigation.getParam('entry').week,
+        }),
       }),
     },
   },
