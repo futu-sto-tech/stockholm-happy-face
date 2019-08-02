@@ -1,14 +1,17 @@
 const { Router } = require('express')
 
 const app = require('../../utils/app')
+const log = require('../../lib/log')
 const { prisma } = require('../../generated/prisma-client')
 
 const router = Router()
 
 router.get('/', async (req, res) => {
   if (req.query.query) {
+    log.info(`get.users.withQuery.${req.query.query}`)
     res.json(await prisma.users({ where: { name_contains: req.query.query } }))
   } else {
+    log.info('get.users.all')
     res.json(await prisma.users())
   }
 })
