@@ -13,6 +13,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons'
 
 import theme from '../../theme'
+import i18n from '../../lib/i18n'
 
 const NewEntryScreen = ({
   results,
@@ -37,7 +38,9 @@ const NewEntryScreen = ({
             color={theme.global.colors.text.medium}
           />
         </View>
-        <Text style={styles.emptyText}>Search for a GIF</Text>
+        <Text style={styles.emptyText}>
+          {i18n.t('newEntry.emptyHelpMessage')}
+        </Text>
       </View>
     )}
     ItemSeparatorComponent={() => (
@@ -69,7 +72,9 @@ const NewEntryScreen = ({
                 color={theme.global.colors.black}
               />
             ) : (
-              <Text style={styles.loadMoreButtonText}>Load more</Text>
+              <Text style={styles.loadMoreButtonText}>
+                {i18n.t('newEntry.loadMoreButton')}
+              </Text>
             )}
           </TouchableOpacity>
         )}

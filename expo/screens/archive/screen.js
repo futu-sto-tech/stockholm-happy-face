@@ -10,6 +10,7 @@ import {
 import theme from '../../theme'
 import FullscreenImage from '../../components/fullscreen-image'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import i18n from '../../lib/i18n'
 
 const ArchiveScreen = ({ entries, hasLoaded, onPressNewEntry }) => (
   <FlatList
@@ -29,13 +30,15 @@ const ArchiveScreen = ({ entries, hasLoaded, onPressNewEntry }) => (
         {hasLoaded ? (
           <View>
             <Text style={styles.listEmptyText}>
-              Be the first to submit an entry this week!
+              {i18n.t('archive.submitEntry.message')}
             </Text>
             <TouchableOpacity
               style={styles.newEntryButton}
               onPress={onPressNewEntry}
             >
-              <Text style={styles.newEntryButtonLabel}>Find a GIF</Text>
+              <Text style={styles.newEntryButtonLabel}>
+                {i18n.t('archive.submitEntry.button')}
+              </Text>
             </TouchableOpacity>
           </View>
         ) : (

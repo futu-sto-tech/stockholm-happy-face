@@ -6,6 +6,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons'
 
 import theme from '../theme'
+import i18n from '../lib/i18n'
 import ArchiveContainer from '../screens/archive'
 import { PROFILE_ROUTE, ARCHIVE_ROUTE } from './routes'
 import defaultNavigationOptions from './default-navigation-options'
@@ -21,7 +22,9 @@ const UserTabNavigator = createBottomTabNavigator(
         {
           [ARCHIVE_ROUTE]: {
             screen: ArchiveContainer,
-            navigationOptions: { title: 'This week in GIFs' },
+            navigationOptions: {
+              title: i18n.t('archive.navigation.title'),
+            },
           },
         },
         {

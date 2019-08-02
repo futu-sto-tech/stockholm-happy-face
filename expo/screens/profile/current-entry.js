@@ -17,7 +17,7 @@ const CurrentEntry = ({ gif, week, onPressDelete, isDeleting }) => (
     <View style={styles.surface}>
       <View>
         <Text style={styles.weekLabel}>
-          {i18n.t('profile.currentEntry.weekLabel')} {week}
+          {i18n.t('profile.currentEntry.weekLabel', { week })}
         </Text>
         <Text style={styles.currentLabel}>
           {i18n.t('profile.currentEntry.currentLabel')}

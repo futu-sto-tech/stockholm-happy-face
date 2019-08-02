@@ -10,9 +10,10 @@ const en = {
   profile: {
     navigation: {
       logoutButton: 'Logout',
+      headerBackTitle: 'Profile',
     },
     currentEntry: {
-      weekLabel: 'Week',
+      weekLabel: 'Week %{week}',
       currentLabel: 'Current',
       deleteButton: 'Delete',
     },
@@ -20,11 +21,19 @@ const en = {
       title: "How's your week?",
       placeholder: 'Happy, sad, crazy...',
     },
+    prevWeeksHeading: 'Previous weeks',
   },
   entry: {
-    deleteButton: 'Delete',
     navigation: {
       titlePrefix: 'Week',
+    },
+    deleteButton: 'Delete',
+    deletePrompt: {
+      title: 'Delete entry?',
+      message:
+        'This entry will be removed completely. You will not be able to undo this action.',
+      cancelButton: 'Cancel',
+      deleteButton: 'Delete',
     },
   },
   newEntry: {
@@ -35,11 +44,22 @@ const en = {
       title: "How's your week?",
       backTitle: 'Search',
     },
+    emptyHelpMessage: 'Search for a GIF',
+    loadMoreButton: 'Load more',
   },
   confirmEntry: {
     saveButton: 'Save',
     navigation: {
       title: 'Your week was like...',
+    },
+  },
+  archive: {
+    navigation: {
+      title: 'This week in GIFs',
+    },
+    submitEntry: {
+      message: 'Be the first to submit an entry this week!',
+      button: 'Find a GIF',
     },
   },
 }
@@ -53,9 +73,10 @@ const sv = {
   profile: {
     navigation: {
       logoutButton: 'Logga ut',
+      headerBackTitle: 'Profil',
     },
     currentEntry: {
-      weekLabel: 'Vecka',
+      weekLabel: 'Vecka %{week}',
       currentLabel: 'Nuvarande',
       deleteButton: 'Radera',
     },
@@ -63,11 +84,19 @@ const sv = {
       title: 'Hur är din vecka?',
       placeholder: 'Glad, ledsen, galen...',
     },
+    prevWeeksHeading: 'Tidigare veckor',
   },
   entry: {
-    deleteButton: 'Radera',
     navigation: {
       titlePrefix: 'Vecka',
+    },
+    deleteButton: 'Radera',
+    deletePrompt: {
+      title: 'Radera inlägg?',
+      message:
+        'Inlägget kommer att raderas helt. Du kommer inte kunna återskapa inlägget.',
+      cancelButton: 'Avbryt',
+      deleteButton: 'Radera',
     },
   },
   newEntry: {
@@ -78,11 +107,22 @@ const sv = {
       title: 'Hur är din vecka?',
       backTitle: 'Sök',
     },
+    emptyHelpMessage: 'Sök efter en GIF',
+    loadMoreButton: 'Ladda fler',
   },
   confirmEntry: {
     saveButton: 'Spara',
     navigation: {
       title: 'Din vecka var som...',
+    },
+  },
+  archive: {
+    navigation: {
+      title: 'Veckan i GIFs',
+    },
+    submitEntry: {
+      message: 'Bli den första att posta ett inlägg den här veckan!',
+      button: 'Hitta en GIF',
     },
   },
 }

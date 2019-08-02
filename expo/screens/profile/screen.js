@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 
 import theme from '../../theme'
+import i18n from '../../lib/i18n'
 import EntryForm from './entry-form'
 import CurrentEntry from './current-entry'
 
@@ -62,7 +63,9 @@ const ProfileScreen = ({
         <View style={{ height: theme.global.space.xsmall }} />
       )}
       ListHeaderComponent={() => (
-        <Text style={styles.prevHeading}>Previous weeks</Text>
+        <Text style={styles.prevHeading}>
+          {i18n.t('profile.prevWeeksHeading')}
+        </Text>
       )}
     />
   </ScrollView>

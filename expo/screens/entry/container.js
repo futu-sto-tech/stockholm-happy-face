@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Alert } from 'react-native'
 
 import { PROFILE_ROUTE } from '../../navigator/routes'
+import i18n from '../../lib/i18n'
 import EntryScreen from './screen'
 import { deleteEntry } from '../../store/actions'
 
@@ -13,15 +14,15 @@ const EntryContainer = ({ navigation }) => {
 
   const handlePressDelete = async () => {
     Alert.alert(
-      'Delete entry?',
-      'This entry will be removed completely. You will not be able to undo this action.',
+      i18n.t('entry.deletePrompt.title'),
+      i18n.t('entry.deletePrompt.message'),
       [
         {
-          text: 'Cancel',
+          text: i18n.t('entry.deletePrompt.cancelButton'),
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: i18n.t('entry.deletePrompt.deleteButton'),
           style: 'destructive',
           onPress: () => {
             dispatch(deleteEntry(entry))

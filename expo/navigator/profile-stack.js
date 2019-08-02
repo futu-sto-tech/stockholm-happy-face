@@ -13,7 +13,7 @@ const ProfileStackNavigator = createStackNavigator(
     [PROFILE_ROUTE]: {
       screen: ProfileContainer,
       navigationOptions: ({ navigation }) => ({
-        headerBackTitle: 'Profile',
+        headerBackTitle: i18n.t('profile.navigation.headerBackTitle'),
         headerRight: <ProfileHeaderRightContainer navigation={navigation} />,
       }),
     },
