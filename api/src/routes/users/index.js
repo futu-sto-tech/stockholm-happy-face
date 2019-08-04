@@ -1,8 +1,8 @@
 const { Router } = require('express')
 
 const app = require('../../utils/app')
-const log = require('../../lib/log')
 const { prisma } = require('../../generated/prisma-client')
+const { log } = require('../../lib/log')
 
 const router = Router()
 
@@ -17,8 +17,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const result = await prisma.createUser({ ...req.body })
-  res.json(result)
+  res.json(await prisma.createUser({ ...req.body }))
 })
 
 router.get('/:id', async (req, res) => {

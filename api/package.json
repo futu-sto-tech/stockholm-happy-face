@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@timberio/node": "^0.34.1",
+    "@timberio/winston": "^0.34.1",
     "axios": "^0.18.1",
     "axios-debug-log": "^0.4.0",
     "body-parser": "^1.19.0",
