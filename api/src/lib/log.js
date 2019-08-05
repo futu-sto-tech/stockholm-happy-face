@@ -12,7 +12,7 @@ const log = IS_DEV
 const logMiddleware = () =>
   expressWinston.logger({
     transports: [
-      IS_DEV ? new winston.transports.Console() : new TimberTransport(timber),
+      IS_DEV ? new winston.transports.Console() : new TimberTransport(log),
     ],
     meta: !IS_DEV,
     expressFormat: true,
