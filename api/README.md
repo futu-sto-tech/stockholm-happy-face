@@ -6,6 +6,10 @@ The backend of the Futurice Stockholm Smiley project.
 
 The solution is based on [Prisma][prisma]. It uses the hosted database solution and the generated client code to support a REST API which exposes all functionality.
 
+## Authentication
+
+The API does not enforce any authentication at this point. This will change in the future.
+
 ## REST API Documentation
 
 <details><summary>GET <code>/api/users</code></summary>
