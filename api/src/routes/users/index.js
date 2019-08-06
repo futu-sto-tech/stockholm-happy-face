@@ -21,7 +21,12 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  res.json(await prisma.user({ id: req.params.id }))
+  const user = await prisma.user({ id: req.params.id })
+  if (user) {
+    res.json(user)
+  } else {
+    res.status(404).send('Not found')
+  }
 })
 
 router.put('/:id', async (req, res) => {
@@ -35,7 +40,12 @@ router.put('/:id', async (req, res) => {
 })
 
 router.get('/name/:name', async (req, res) => {
-  res.json(await prisma.user({ name: req.params.name }))
+  const user = await prisma.user({ name: req.params.name })
+  if (user) {
+    res.json(user)
+  } else {
+    res.status(404).send('Not found')
+  }
 })
 
 app.use('/api/users', router)

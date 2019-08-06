@@ -17,9 +17,13 @@ class HomePageContainer extends React.Component {
     this.setState({ loading: true })
     try {
       const response = await backend.get(`/users/name/${this.state.username}`)
-      login({ token: response.data })
+      login({ token: response.data.id })
     } catch (error) {
-      console.log(error)
+      console.log('Create new user')
+      const postResponse = await backend.post('/users', {
+        name: this.state.username,
+      })
+      login({ token: postResponse.data.id })
     }
   }
 

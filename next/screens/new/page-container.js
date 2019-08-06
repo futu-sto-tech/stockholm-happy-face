@@ -2,17 +2,14 @@ import React from 'react'
 import { withRouter } from 'next/router'
 
 import backend from '../../lib/backend'
-import { auth } from '../../lib/auth'
 import NewPage from './page'
 
 const WAIT_INTERVAL = 750
 const ENTER_KEY = 13
 
 class NewPageContainer extends React.Component {
-  static async getInitialProps(context) {
-    const token = auth(context)
-    const user = JSON.parse(token)
-    return { query: context.query.query, user }
+  static getInitialProps(context) {
+    return { query: context.query.query }
   }
 
   state = {

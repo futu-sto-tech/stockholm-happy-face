@@ -3,11 +3,11 @@
   "version": 2,
   "env": {
     "GIPHY_API_KEY": "@giphy-api-key",
-    "TIMBER_API_KEY": "@timber-api-key",
-    "TIMBER_SOURCE_ID": "@timber-source-id",
-    "PRISMA_ENDPOINT": "@prisma-endpoint"
+    "TIMBER_API_KEY": "@timber-api-key-staging",
+    "TIMBER_SOURCE_ID": "@timber-source-id-staging",
+    "PRISMA_ENDPOINT": "@prisma-endpoint-staging"
   },
-  "alias": "smileys",
+  "alias": "smileys-staging",
   "builds": [
     { "src": "api/src/routes/**/*.js", "use": "@now/node" },
     { "src": "next/next.config.js", "use": "@now/next" }

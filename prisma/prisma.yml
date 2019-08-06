@@ -1,4 +1,4 @@
-endpoint: https://eu1.prisma.sh/robin-andeer-8f9ca5/backend/dev
+endpoint: ${env:PRISMA_ENDPOINT}
 datamodel: datamodel.prisma
 
 # Specifies the language and directory for the generated Prisma client.

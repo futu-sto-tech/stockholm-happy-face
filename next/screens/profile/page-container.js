@@ -2,7 +2,7 @@ import React from 'react'
 import { withRouter } from 'next/router'
 
 import backend from '../../lib/backend'
-import { auth, logout } from '../../lib/auth'
+import { logout } from '../../lib/auth'
 import ProfilePage from './page'
 
 const fetchEntries = async userId => {
@@ -30,14 +30,7 @@ class ProfilePageContainer extends React.Component {
   state = { query: '', isDeletingEntry: false }
 
   static async getInitialProps(context) {
-    const token = auth(context)
-    const user = JSON.parse(token)
-
-    const entryProps = await fetchEntries(user.id)
-    return {
-      user,
-      ...entryProps,
-    }
+    return await fetchEntries(context.user.id)
   }
 
   handleSubmitQuery = async event => {

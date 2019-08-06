@@ -3,16 +3,17 @@ import Router from 'next/router'
 import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
 
+import backend from './backend'
+
 const TOKEN_KEY = 'token'
 
 export const login = ({ token }) => {
-  cookie.set(TOKEN_KEY, JSON.stringify(token), { expires: 1 })
+  cookie.set(TOKEN_KEY, token, { expires: 1 })
   Router.push('/profile')
 }
 
 export const logout = () => {
   cookie.remove(TOKEN_KEY)
-
   window.localStorage.setItem('logout', Date.now())
   Router.push('/')
 }
@@ -25,13 +26,14 @@ export const withAuthSync = WrappedComponent =>
     static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`
 
     static async getInitialProps(context) {
-      const token = auth(context)
+      const user = await auth(context)
 
+      context.user = user
       const componentProps =
         WrappedComponent.getInitialProps &&
         (await WrappedComponent.getInitialProps(context))
 
-      return { ...componentProps, token, user: JSON.parse(token) }
+      return { ...componentProps, user }
     }
 
     componentDidMount() {
@@ -55,24 +57,28 @@ export const withAuthSync = WrappedComponent =>
     }
   }
 
-export const auth = context => {
-  const { token } = nextCookie(context)
+export const auth = async context => {
+  const { token: userId } = nextCookie(context)
 
-  /*
-   * This happens on server only, context.req is available means it's being
-   * rendered on server. If we are on server and token is not available,
-   * means user is not logged in.
-   */
-  if (context.req && !token) {
+  let user = null
+  if (userId) {
+    try {
+      const response = await backend.get(`/users/${userId}`)
+      user = response.data
+    } catch (error) {
+      console.log('User not found')
+    }
+  }
+
+  if (context.req && !user) {
     context.res.writeHead(302, { Location: '/' })
     context.res.end()
     return
   }
 
-  // We already checked for server. This should only happen on client.
-  if (!token) {
+  if (!user) {
     Router.push('/')
   }
 
-  return token
+  return user
 }
