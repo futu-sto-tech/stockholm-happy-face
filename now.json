@@ -4,13 +4,7 @@
   "env": {
     "GIPHY_API_KEY": "@giphy-api-key",
     "TIMBER_API_KEY": "@timber-api-key",
-    "TIMBER_SOURCE_ID": "22402",
-    "API_BASE_URL": "https://smileys.now.sh/api"
-  },
-  "build": {
-    "env": {
-      "API_BASE_URL": "https://smileys.now.sh/api"
-    }
+    "TIMBER_SOURCE_ID": "@timber-source-id"
   },
   "alias": "smileys",
   "builds": [

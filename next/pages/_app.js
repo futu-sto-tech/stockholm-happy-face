@@ -2,6 +2,7 @@ import App, { Container } from 'next/app'
 import React from 'react'
 import { Grommet } from 'grommet'
 
+import backend from '../lib/backend'
 import GlobalStyle from '../components/global-style'
 
 const theme = {
@@ -33,6 +34,15 @@ const theme = {
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
+
+    if (ctx.req && !backend.defaults.baseURL.startsWith('http')) {
+      const proto = ctx.req.headers['x-forwarded-proto']
+      const host = ctx.req.headers['x-forwarded-host']
+      const baseURL = backend.defaults.baseURL
+      if (proto && host) {
+        backend.defaults.baseURL = `${proto}://${host}${baseURL}`
+      }
+    }
 
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
