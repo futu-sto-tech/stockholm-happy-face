@@ -48,7 +48,7 @@ The project can be divided into the following:
 
 ## Deployment
 
-If you want to setup and use this project for your own team - this is the part for you. In order to run all the services, you will need to sign up for a few services. However, with basic usage you can stick to the free tiers. The only exception is that you will need an Enterprise certificate to distribute the iOS app.
+If you want to setup this project yourself - this is the part for you. You will need to sign up for a few services to get everything working, however, with basic usage you can stick to the free tiers. The only exception is that you need an Enterprise certificate to distribute the iOS app to your colleagues. It's perfectly possible to skip the native apps though and just use the web app.
 
 The first thing you need to do is to clone the project.
 
@@ -64,6 +64,8 @@ The REST API and web app are deployed together. Before we start, let's sign up f
 1. Go to [Prisma][prisma] and sign up for an account.
 
 1. Go to [Zeit Now][now] and sign up for an account.
+
+1. Go to [Timber][timber] and sign up for an account.
 
 1. Go to [Giphy][giphy-dev] and generate an API key.
 
@@ -81,6 +83,14 @@ The REST API and web app are deployed together. Before we start, let's sign up f
    npm install --prefix ./next
    ```
 
+1. Manually update the Prisma "endpoint" config:
+
+   ```yaml
+   # /prisma/prisma.yml
+   endpoint: YOUR_PRISMA_ENDPOINT_HERE
+   datamodel: datamodel.prisma
+   ```
+
 1. We are now ready to setup our database in Prisma
 
    ```bash
@@ -89,10 +99,12 @@ The REST API and web app are deployed together. Before we start, let's sign up f
 
    Select "Demo server" when prompted and authenticate with Prisma.
 
-1. Configure Zeit Now to use our Giphy credentials
+1. Configure Zeit Now to use our 3rd party service credentials
 
    ```bash
    now secret add giphy-api-key {GIPHY API KEY}
+   now secrets add timber-api-key {TIMBER_API_KEY}
+   now secrets add timber-source-id {TIMBER_SOURCE_ID}
    ```
 
 1. Finally, we are gonna use [Zeit Now][now] to deploy our services.
@@ -120,3 +132,4 @@ See [API documentation](api/README.md).
 [prisma]: https://www.prisma.io
 [now]: https://zeit.co/now
 [giphy-dev]: https://developers.giphy.com/dashboard/
+[timber]: https://timber.io/
