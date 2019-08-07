@@ -83,18 +83,10 @@ The REST API and web app are deployed together. Before we start, let's sign up f
    npm install --prefix ./next
    ```
 
-1. Manually update the Prisma "endpoint" config:
-
-   ```yaml
-   # /prisma/prisma.yml
-   endpoint: YOUR_PRISMA_ENDPOINT_HERE
-   datamodel: datamodel.prisma
-   ```
-
 1. We are now ready to setup our database in Prisma
 
    ```bash
-   prisma deploy
+   PRISMA_ENDPOINT=${YOUR PRISMA ENDPOINT HERE} prisma deploy
    ```
 
    Select "Demo server" when prompted and authenticate with Prisma.
@@ -105,6 +97,7 @@ The REST API and web app are deployed together. Before we start, let's sign up f
    now secret add giphy-api-key {GIPHY API KEY}
    now secrets add timber-api-key {TIMBER_API_KEY}
    now secrets add timber-source-id {TIMBER_SOURCE_ID}
+   now secrets add prisma-endpoint {PRISMA_ENDPOINT}
    ```
 
 1. Finally, we are gonna use [Zeit Now][now] to deploy our services.
