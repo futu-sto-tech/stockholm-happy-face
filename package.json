@@ -1,0 +1,31 @@
+{
+  "name": "stockholm-happy-face",
+  "version": "1.0.0",
+  "description": "Choose a GIF to represent how your week has been.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest ./test",
+    "start": "now dev",
+    "ci": "start-server-and-test 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/futurice/stockholm-happy-face.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/futurice/stockholm-happy-face/issues"
+  },
+  "homepage": "https://github.com/futurice/stockholm-happy-face#readme",
+  "devDependencies": {
+    "jest": "^24.8.0",
+    "start-server-and-test": "^1.9.2"
+  },
+  "dependencies": {
+    "axios": "^0.19.0"
+  }
+}
