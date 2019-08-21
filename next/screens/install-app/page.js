@@ -1,12 +1,8 @@
 import React from 'react'
 import {
   Button,
-  Form,
-  TextInput,
-  Text,
   Box,
   Heading,
-  Stack,
   Grid,
   ResponsiveContext,
 } from 'grommet'

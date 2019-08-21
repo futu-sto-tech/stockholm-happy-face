@@ -7,7 +7,6 @@
     "TIMBER_SOURCE_ID": "@timber-source-id",
     "PRISMA_ENDPOINT": "@prisma-endpoint"
   },
-  "alias": "smileys",
   "builds": [
     { "src": "api/src/routes/**/*.js", "use": "@now/node" },
     { "src": "next/next.config.js", "use": "@now/next" }

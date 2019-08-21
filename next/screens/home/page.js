@@ -12,6 +12,7 @@ import {
 import { FormNextLink } from 'grommet-icons'
 
 import Spinner from '../../components/spinner'
+import InstallAppOptions from './install-app-options'
 
 const Button = styled(GrommetButton)`
   padding: ${props => props.theme.global.edgeSize.xsmall};
@@ -66,6 +67,8 @@ const Home = ({
         </Stack>
       </Form>
     </Box>
+
+    <InstallAppOptions />
   </Box>
 )
 
