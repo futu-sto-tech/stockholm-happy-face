@@ -1,7 +1,0 @@
-endpoint: ${env:PRISMA_ENDPOINT}
-datamodel: datamodel.prisma
-
-# Specifies the language and directory for the generated Prisma client.
-generate:
-  - generator: javascript-client
-    output: ../api/src/generated/prisma-client/

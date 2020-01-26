@@ -1,1 +1,0 @@
-# Smileys Native Apps

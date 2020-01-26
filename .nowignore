@@ -1,4 +1,6 @@
+# Optimize speed/size of deployments by not uploading those files
+.vscode/
 node_modules/
-expo/
-.next/
-prisma/
+coverage/
+README.md
+yarn-error.log
