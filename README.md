@@ -18,31 +18,26 @@ Smileys is a weekly session where team members share the ups and downs from the 
 
 It roughly works like this:
 
-1. Use the native/web app to find a suitable GIF that represents your week
+1. Use the web app to find a suitable GIF that represents your week
 1. On Friday, gather your team and go through everyone's entries in the use the Apple TV app (separate repo)
 
 ### Built with
 
 - [Zeit Now](https://zeit.co/now) - serverless deployment
-- [Expo](https://expo.io/) - managed React Native workflow
-- [Prisma](https://www.prisma.io) - database
 - [Next.js](https://nextjs.org) - React framework
+- [MongoDB Atlas][mongodb-atlas] - Managed MongoDB
 
 ### Major components
 
-The project can be divided into the following:
+The project can be divided into the following pieces:
 
 - REST API
 
-  The shared backend for all clients. Uses Prisma to interact with the database. It's deployed using Zeit Now and each endpoint runs as a serverless function. Everything is implemented in Node.js.
-
-- Native apps - iOS and Android
-
-  The native clients are implemented in React Native in the managed Expo workflow. The same codebase is shared between both platforms.
+  The shared backend for all clients. Connects to a MongoDB instance for persistance. It's implemented in Node.js/TypeScript using Next.js API routes.
 
 - Web app
 
-  The web application is a React/Next.js application. It aims to offer the same features as the native apps. It's deployed using Zeit Now on the same domain.
+  The web application is a React/Next.js/TypeScript application.
 
 - AppleTV app
 
@@ -50,7 +45,9 @@ The project can be divided into the following:
 
 ## Deployment
 
-If you want to setup this project yourself - this is the part for you. You will need to sign up for a few services to get everything working, however, with basic usage you can stick to the free tiers. The only exception is that you need an Enterprise certificate to distribute the iOS app to your colleagues. It's perfectly possible to skip the native apps though and just use the web app.
+Both the REST API and web app are deployed to a single domain using Next.js. I highly recommend Zeit Now which makes the process painless.
+
+If you want to setup this project yourself - this is the part for you. You will need to sign up for a few services to get everything working, however, with basic usage you can stick to the free tiers.
 
 The first thing you need to do is to clone the project.
 
@@ -63,43 +60,31 @@ cd stockholm-happy-face
 
 The REST API and web app are deployed together. Before we start, let's sign up for some services:
 
-1. Go to [Prisma][prisma] and sign up for an account.
+1. Go to [MongoDB Atlas][mongodb-atlas] and sign up for an account
 
-1. Go to [Zeit Now][now] and sign up for an account.
+1. Go to [Zeit Now][now] and sign up for an account
 
-1. Go to [Timber][timber] and sign up for an account.
-
-1. Go to [Giphy][giphy-dev] and generate an API key.
+1. Go to [Giphy][giphy-dev] and generate an API key
 
 1. Next we need to install some dependencies - for this you need Node.js.
 
    ```bash
-   # install the Prisma CLI
-   npm install -g prisma
-
    # install the Zeit Now CLI
-   npm install -g now
+   yarn global add now
 
-   # install dependencies for the API and web app
-   npm install --prefix ./api
-   npm install --prefix ./next
+   # install local dependencies
+   yarn
    ```
 
-1. We are now ready to setup our database in Prisma
-
-   ```bash
-   PRISMA_ENDPOINT=${YOUR PRISMA ENDPOINT HERE} prisma deploy
-   ```
-
-   Select "Demo server" when prompted and authenticate with Prisma.
+1. Now go to MongoDB Atlas and spin up a new instance and copy the connection string. You can get far just using the free tier.
 
 1. Configure Zeit Now to use our 3rd party service credentials
 
    ```bash
    now secret add giphy-api-key {GIPHY API KEY}
-   now secrets add timber-api-key {TIMBER_API_KEY}
-   now secrets add timber-source-id {TIMBER_SOURCE_ID}
-   now secrets add prisma-endpoint {PRISMA_ENDPOINT}
+   now secret add mongo-url {MONGODB CONNECTION STRING}
+   now secret add mongo-db-name {MONGODB DATABASE NAME}
+   now secret add ga-tracking-id {GOOGLE ANALYTICS ID}
    ```
 
 1. Finally, we are gonna use [Zeit Now][now] to deploy our services.
@@ -124,7 +109,6 @@ The REST API and web app are deployed together. Before we start, let's sign up f
 
 See [API documentation](api/README.md).
 
-[prisma]: https://www.prisma.io
 [now]: https://zeit.co/now
 [giphy-dev]: https://developers.giphy.com/dashboard/
-[timber]: https://timber.io/
+[mongodb-atlas]: https://www.mongodb.com/cloud/atlas

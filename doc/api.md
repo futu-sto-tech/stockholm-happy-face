@@ -4,11 +4,11 @@ The backend of the Futurice Stockholm Smiley project.
 
 ## Tech overview
 
-The solution is based on [Prisma][prisma]. It uses the hosted database solution and the generated client code to support a REST API which exposes all functionality.
+The solution is base on Next.js API routes. It uses a MongoDB database for persistance. A REST API exposes all functionality.
 
 ## Authentication
 
-The API does not enforce any authentication at this point. This will change in the future.
+The API does not enforce any authentication at this point. I might consider adding it at some point.
 
 ## REST API Documentation
 
@@ -24,18 +24,14 @@ List users in the database.
 ```json
 [
   {
-    "id": "jja89wdj98ajdwj2198jd",
+    "id": "5e282aa29b52422c1654178d",
     "name": "Eric",
-    "createdAt": "2019-04-07T10:54:53.629Z",
-    "updatedAt": "2019-07-24T08:05:08.998Z",
-    "expoPushToken": "ExponentPushToken[k09kkd0aw9aw0d9a0w8ad]"
+    "createdAt": "2019-04-07T10:54:53.629Z"
   },
   {
-    "id": "dawiaiwdja98w98ajwoaiw",
+    "id": "5e282aa29b52422c165417a4",
     "name": "Patricia",
-    "createdAt": "2019-02-07T10:54:53.629Z",
-    "updatedAt": "2019-10-24T08:05:08.998Z",
-    "expoPushToken": null
+    "createdAt": "2019-02-07T10:54:53.629Z"
   }
 ]
 ```
@@ -52,31 +48,9 @@ Fetch a user by ID.
 
 ```json
 {
-  "id": "dawiaiwdja98w98ajwoaiw",
+  "id": "5e282aa29b52422c165417a4",
   "name": "Patricia",
-  "createdAt": "2019-02-07T10:54:53.629Z",
-  "updatedAt": "2019-10-24T08:05:08.998Z",
-  "expoPushToken": null
-}
-```
-
-</p>
-</details>
-
-<details><summary>GET <code>/api/users/name/:name</code></summary>
-<p>
-
-Fetch a user by name.
-
-**Success Response**: 200
-
-```json
-{
-  "id": "dawiaiwdja98w98ajwoaiw",
-  "name": "Patricia",
-  "createdAt": "2019-02-07T10:54:53.629Z",
-  "updatedAt": "2019-10-24T08:05:08.998Z",
-  "expoPushToken": null
+  "createdAt": "2019-02-07T10:54:53.629Z"
 }
 ```
 
@@ -103,36 +77,6 @@ Create a new user in the database.
   "id": "jaw98djwd89ajwd89a98wdj",
   "name": "Paul",
   "createdAt": "2019-02-07T10:54:53.629Z",
-  "updatedAt": "2019-10-24T08:05:08.998Z",
-  "expoPushToken": null
-}
-```
-
-</p>
-</details>
-
-<details><summary>PUT <code>/api/users/:id</code></summary>
-<p>
-
-Update a user with a new Expo push notification token.
-
-**Data example**: body
-
-```json
-{
-  "expoPushToken": "ExponentPushToken[k09kkd0aw9aw0d9a0w8ad]"
-}
-```
-
-**Success Response**: 200
-
-```json
-{
-  "id": "jaw98djwd89ajwd89a98wdj",
-  "name": "Paul",
-  "createdAt": "2019-02-07T10:54:53.629Z",
-  "updatedAt": "2019-10-26T08:05:08.998Z",
-  "expoPushToken": "ExponentPushToken[k09kkd0aw9aw0d9a0w8ad]"
 }
 ```
 
@@ -155,40 +99,42 @@ List entries in the database.
 ```json
 [
   {
-    "id": "cjud2cbs9ccvy0b92ib3cnk8d",
+    "id": "5e2ae7ad3b29dc00071e869d",
     "createdAt": "2019-04-11T19:56:22.569Z",
     "updatedAt": "2019-04-11T19:56:22.569Z",
+    "images": {
+      "giphyId": "euyLJkWydUslG",
+      "original": {
+        "url": "https://media3.giphy.com/media/euyLJkWydUslG/giphy.gif"
+      },
+      "preview": {
+        "url": "https://media1.giphy.com/media/euyLJkWydUslG/giphy-preview.gif"
+      }
+    },
     "user": {
-      "id": "jaw98djwd89ajwd89a98wdj",
-      "name": "Paul"
+      "id": "5e223aa19b05942c16541766",
+      "name": "patricia"
     },
-    "gif": {
-      "id": "cjud2cbscccvz0b92mya4jbmd",
-      "giphyId": "ycCorcEg3i946QRkAQ",
-      "url": "https://media0.giphy.com/media/ycCorcEg3i946QRkAQ/giphy.gif",
-      "height": "480",
-      "width": "480"
-    },
-    "fromNow": "4 months ago",
-    "week": 15
+    "fromNow": "3 days ago",
+    "week": 4,
+    "year": 2020
   },
   {
-    "id": "cjudw0yht398c0b26a568w32i",
+    "id": "5e282b119b52422c16541856",
     "createdAt": "2019-04-12T09:47:20.609Z",
     "updatedAt": "2019-04-12T09:47:20.609Z",
     "user": {
       "id": "dawiaiwdja98w98ajwoaiw",
-      "name": "Patricia"
+      "name": "Gavin"
     },
-    "gif": {
-      "id": "cjudw0yhz398d0b26axrrctc7",
-      "giphyId": null,
-      "url": "https://media.giphy.com/media/uyWTOgNGGWfks/giphy.gif",
-      "height": null,
-      "width": null
+     "images": {
+      "original": {
+        "url": "https://media.giphy.com/media/QTlV1NoKgzwGo4Uxd3/giphy.gif"
+      }
     },
     "fromNow": "4 months ago",
-    "week": 15
+    "week": 40,
+    "year": 2019
   }
 ]
 ```
@@ -205,22 +151,25 @@ Fetch a single entry.
 
 ```json
 {
-  "id": "cjudw0yht398c0b26a568w32i",
-  "createdAt": "2019-04-12T09:47:20.609Z",
-  "updatedAt": "2019-04-12T09:47:20.609Z",
+  "id": "5e2ae7ad3b29dc00071e869d",
+  "createdAt": "2019-04-11T19:56:22.569Z",
+  "updatedAt": "2019-04-11T19:56:22.569Z",
+  "images": {
+    "giphyId": "euyLJkWydUslG",
+    "original": {
+      "url": "https://media3.giphy.com/media/euyLJkWydUslG/giphy.gif"
+    },
+    "preview": {
+      "url": "https://media1.giphy.com/media/euyLJkWydUslG/giphy-preview.gif"
+    }
+  },
   "user": {
-    "id": "dawiaiwdja98w98ajwoaiw",
-    "name": "Patricia"
+    "id": "5e223aa19b05942c16541766",
+    "name": "patricia"
   },
-  "gif": {
-    "id": "cjudw0yhz398d0b26axrrctc7",
-    "giphyId": null,
-    "url": "https://media.giphy.com/media/uyWTOgNGGWfks/giphy.gif",
-    "height": null,
-    "width": null
-  },
-  "fromNow": "4 months ago",
-  "week": 15
+  "fromNow": "3 days ago",
+  "week": 4,
+  "year": 2020
 }
 ```
 
@@ -236,10 +185,8 @@ Create a new entry for a user.
 
 ```json
 {
-  "user": "dawiaiwdja98w98ajwoaiw",
-  "gif": {
-    "url": "https://media.giphy.com/media/uyWTOgNGGWfks/giphy.gif"
-  }
+  "userId": "dawiaiwdja98w98ajwoaiw",
+  "url": "https://media.giphy.com/media/uyWTOgNGGWfks/giphy.gif"
 }
 ```
 
@@ -247,22 +194,25 @@ Create a new entry for a user.
 
 ```json
 {
-  "id": "cjudw0yht398c0b26a568w32i",
-  "createdAt": "2019-04-12T09:47:20.609Z",
-  "updatedAt": "2019-04-12T09:47:20.609Z",
+  "id": "5e282b4b9b52411c165418a9",
+  "createdAt": "2019-04-11T19:56:22.569Z",
+  "updatedAt": "2019-04-11T19:56:22.569Z",
+  "images": {
+    "giphyId": "uyWTOgNGGWfks",
+    "original": {
+      "url": "https://media3.giphy.com/media/uyWTOgNGGWfks/giphy.gif"
+    },
+    "preview": {
+      "url": "https://media1.giphy.com/media/uyWTOgNGGWfks/giphy-preview.gif"
+    }
+  },
   "user": {
     "id": "dawiaiwdja98w98ajwoaiw",
-    "name": "Patricia"
+    "name": "patricia"
   },
-  "gif": {
-    "id": "cjudw0yhz398d0b26axrrctc7",
-    "giphyId": null,
-    "url": "https://media.giphy.com/media/uyWTOgNGGWfks/giphy.gif",
-    "height": null,
-    "width": null
-  },
-  "fromNow": "4 months ago",
-  "week": 15
+  "fromNow": "1 minute ago",
+  "week": 6,
+  "year": 2019
 }
 ```
 
@@ -278,22 +228,25 @@ Delete an entry from the database.
 
 ```json
 {
-  "id": "cjudw0yht398c0b26a568w32i",
-  "createdAt": "2019-04-12T09:47:20.609Z",
-  "updatedAt": "2019-04-12T09:47:20.609Z",
+  "id": "5e282b4b9b52411c165418a9",
+  "createdAt": "2019-04-11T19:56:22.569Z",
+  "updatedAt": "2019-04-11T19:56:22.569Z",
+  "images": {
+    "giphyId": "uyWTOgNGGWfks",
+    "original": {
+      "url": "https://media3.giphy.com/media/uyWTOgNGGWfks/giphy.gif"
+    },
+    "preview": {
+      "url": "https://media1.giphy.com/media/uyWTOgNGGWfks/giphy-preview.gif"
+    }
+  },
   "user": {
     "id": "dawiaiwdja98w98ajwoaiw",
-    "name": "Patricia"
+    "name": "patricia"
   },
-  "gif": {
-    "id": "cjudw0yhz398d0b26axrrctc7",
-    "giphyId": null,
-    "url": "https://media.giphy.com/media/uyWTOgNGGWfks/giphy.gif",
-    "height": null,
-    "width": null
-  },
-  "fromNow": "4 months ago",
-  "week": 15
+  "fromNow": "1 minute ago",
+  "week": 6,
+  "year": 2019
 }
 ```
 
@@ -334,23 +287,3 @@ Search for GIFs using a keyword.
 
 </p>
 </details>
-
-<details><summary>POST <code>/api/notifications/push</code></summary>
-<p>
-
-Send push notifications to all users that have opted in.
-
-The message includes a notice that it's time to submit your GIF of the week.
-
-**Success Response**: 200
-
-```json
-{
-  "status": "ok"
-}
-```
-
-</p>
-</details>
-
-[prisma]: https://www.prisma.io
