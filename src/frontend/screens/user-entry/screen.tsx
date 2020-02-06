@@ -18,9 +18,9 @@ const UserEntryScreen: React.FC = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const handleClickConfirmDelete = useCallback(() => {
     deleteEntry(entryId);
-    router.back();
     setConfirmDelete(false);
-  }, [deleteEntry, entryId, router]);
+    router.push('/[userId]', `/${userId}`);
+  }, [deleteEntry, entryId, router, userId]);
   const handleClickDelete = useCallback(() => setConfirmDelete(true), []);
 
   useEffect(() => {

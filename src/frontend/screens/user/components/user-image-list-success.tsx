@@ -42,13 +42,6 @@ const UserImageListSuccess: React.FC<{ data?: UserImage[] }> = ({ data: images }
           border-bottom-right-radius: 3px;
           background-color: ${theme.light.color.successDark};
         }
-
-        @media (prefers-color-scheme: light) {
-          background-color: ${theme.light.color.successDark};
-        }
-        @media (prefers-color-scheme: dark) {
-          background-color: ${theme.dark.color.successDark};
-        }
       `}</style>
     </>
   );

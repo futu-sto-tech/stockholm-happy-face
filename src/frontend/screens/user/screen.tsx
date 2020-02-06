@@ -1,4 +1,4 @@
-import { IoMdAdd, IoMdLink, IoMdLogOut, IoMdSearch } from 'react-icons/io';
+import { IoMdLink, IoMdLogOut, IoMdSearch } from 'react-icons/io';
 
 import FixedBottom from '../../component/fixed-bottom';
 import Link from 'next/link';

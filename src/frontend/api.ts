@@ -65,7 +65,7 @@ export function useCreateUser(): (name: string) => Promise<User> {
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' },
       });
-      mutate('/api/users', [...(userList || []), newUser], false);
+      mutate('/api/users', [...(userList || []), newUser]);
       return newUser;
     },
     [userList],
@@ -85,7 +85,7 @@ export function useCreateNewEntry(userId: string): (url: string) => Promise<void
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' },
       });
-      mutate('/api/entries', [...(userEntries.data || []), newEntry], false);
+      mutate('/api/entries', [...(userEntries.data || []), newEntry]);
     },
     [userId, userEntries.data],
   );
@@ -98,15 +98,12 @@ export function useDeleteEntry(userId: string): (entryId: string) => Promise<voi
 
   return useCallback(
     async (entryId: string): Promise<void> => {
-      mutate(
-        '/api/entries',
-        userEntries.data?.filter(item => item.id !== entryId),
-        false,
-      );
       await fetch<EntryResponse>(`/api/entries/${entryId}`, {
         method: 'DELETE',
       });
+      const updatedEntries = userEntries.data?.filter(item => item.id !== entryId);
+      mutate('/api/entries', updatedEntries);
     },
-    [userEntries.data],
+    [userEntries],
   );
 }

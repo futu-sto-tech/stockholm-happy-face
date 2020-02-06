@@ -6,10 +6,10 @@ const UserHeading: React.FC<{ userId: string }> = ({ userId }) => {
   const { data, error } = useUser(userId);
 
   if (error) {
-    <Text size="medium">Failed to fetch name of user</Text>;
+    <Text size="medium">Failed to fetch user name</Text>;
   }
 
-  return <Text size="medium" truncate>{`Welcome ${data ? data.name : '...'}`}</Text>;
+  return data ? <Text size="medium" truncate>{`Welcome ${data.name}`}</Text> : null;
 };
 
 export default UserHeading;

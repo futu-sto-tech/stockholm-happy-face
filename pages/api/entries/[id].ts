@@ -4,7 +4,7 @@ import { deleteEntry, getEntry } from '../../../src/backend/routes/entries-id';
 async function get(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const id = req.query.id as string;
   const result = await getEntry(id);
-  if (result) {
+  if (result === undefined) {
     return res.status(404).json({ error: 'Entry not found' });
   }
   res.status(200).json(result);
