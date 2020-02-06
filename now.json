@@ -1,27 +1,13 @@
 {
   "name": "Smileys",
-  "version": 2,
   "env": {
     "GIPHY_API_KEY": "@giphy-api-key",
-    "API_BASE_URL": "https://smileys.now.sh/api"
+    "MONGO_URL": "@mongo-url",
+    "MONGO_DB_NAME": "@mongo-db-name"
   },
   "build": {
     "env": {
-      "API_BASE_URL": "https://smileys.now.sh/api"
+      "GA_TRACKING_ID": "@ga-tracking-id"
     }
-  },
-  "alias": "smileys",
-  "builds": [
-    { "src": "api/src/routes/**/*.js", "use": "@now/node" },
-    { "src": "next/next.config.js", "use": "@now/next" }
-  ],
-  "routes": [
-    { "src": "/api/gif(.*)", "dest": "api/src/routes/gif" },
-    { "src": "/api/users(.*)", "dest": "api/src/routes/users" },
-    { "src": "/api/entries(.*)", "dest": "api/src/routes/entries" },
-    {
-      "src": "/(.*)",
-      "dest": "/next/$1"
-    }
-  ]
+  }
 }

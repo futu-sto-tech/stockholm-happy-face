@@ -1,61 +1,95 @@
 # Smileys App
 
-This project offers a new way to run smileys: with GIFs! This is how it works:
+Choose a GIF to represent how your week has been.
 
-1. You open the web app and paste in a link to a GIF/search for a GIF
-1. Submit your weeks smiley entry
-1. Wait for Friday...
-1. At Smileys; open the companion Apple TV app and select "Random"
-1. Go through each entry and share your weeks highlights and learnings
+[![Sponsored](https://img.shields.io/badge/chilicorn-sponsored-brightgreen.svg?logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAA4AAAAPCAMAAADjyg5GAAABqlBMVEUAAAAzmTM3pEn%2FSTGhVSY4ZD43STdOXk5lSGAyhz41iz8xkz2HUCWFFhTFFRUzZDvbIB00Zzoyfj9zlHY0ZzmMfY0ydT0zjj92l3qjeR3dNSkoZp4ykEAzjT8ylUBlgj0yiT0ymECkwKjWqAyjuqcghpUykD%2BUQCKoQyAHb%2BgylkAyl0EynkEzmkA0mUA3mj86oUg7oUo8n0k%2FS%2Bw%2Fo0xBnE5BpU9Br0ZKo1ZLmFZOjEhesGljuzllqW50tH14aS14qm17mX9%2Bx4GAgUCEx02JySqOvpSXvI%2BYvp2orqmpzeGrQh%2Bsr6yssa2ttK6v0bKxMBy01bm4zLu5yry7yb29x77BzMPCxsLEzMXFxsXGx8fI3PLJ08vKysrKy8rL2s3MzczOH8LR0dHW19bX19fZ2dna2trc3Nzd3d3d3t3f39%2FgtZTg4ODi4uLj4%2BPlGxLl5eXm5ubnRzPn5%2Bfo6Ojp6enqfmzq6urr6%2Bvt7e3t7u3uDwvugwbu7u7v6Obv8fDz8%2FP09PT2igP29vb4%2BPj6y376%2Bu%2F7%2Bfv9%2Ff39%2Fv3%2BkAH%2FAwf%2FtwD%2F9wCyh1KfAAAAKXRSTlMABQ4VGykqLjVCTVNgdXuHj5Kaq62vt77ExNPX2%2Bju8vX6%2Bvr7%2FP7%2B%2FiiUMfUAAADTSURBVAjXBcFRTsIwHAfgX%2FtvOyjdYDUsRkFjTIwkPvjiOTyX9%2FAIJt7BF570BopEdHOOstHS%2BX0s439RGwnfuB5gSFOZAgDqjQOBivtGkCc7j%2B2e8XNzefWSu%2BsZUD1QfoTq0y6mZsUSvIkRoGYnHu6Yc63pDCjiSNE2kYLdCUAWVmK4zsxzO%2BQQFxNs5b479NHXopkbWX9U3PAwWAVSY%2FpZf1udQ7rfUpQ1CzurDPpwo16Ff2cMWjuFHX9qCV0Y0Ok4Jvh63IABUNnktl%2B6sgP%2BARIxSrT%2FMhLlAAAAAElFTkSuQmCC)](http://spiceprogram.org/oss-sponsorship)
 
-## Parts
+## Table of contents
 
-The project consists of three pieces:
+- [About the project](#about-the-project)
+  - [Built with](#build-with)
+  - [Major components](#major-components)
+- [Deployment](#deployment)
+  - [API and web app](#api-and-web-app)
 
-1. The web app for entering and deleting your weekly smiley entries
-1. The Apple TV app for displaying everyone's entries
-1. The backend REST API
+## About the project
 
-### 1. Web app
+Smileys is a weekly session where team members share the ups and downs from the past week. This projects aims to complement this idea by adding GIFs in the mix!
 
-The purpose of the web app is to enable users to submit the weekly GIF entries. You can submit a new GIF as soon as the week starts. You can always log in and delete your current entry and re-submit a new one. You can also see your history of past entries. When you first use the app you enter your user name and subsequently, you simply type the same user name to log in to the app. No additional authentication is currently in place.
+It roughly works like this:
 
-Technically, the web app is based on React and bootstrapped with `create-react-app`. It's built and deployed as a static PWA. It is setup to call the backend on the same domain.
+1. Use the web app to find a suitable GIF that represents your week
+1. On Friday, gather your team and go through everyone's entries in the use the Apple TV app (separate repo)
 
-### 2. Apple TV app
+### Built with
 
-See separate repo.
+- [Zeit Now](https://zeit.co/now) - serverless deployment
+- [Next.js](https://nextjs.org) - React framework
+- [MongoDB Atlas][mongodb-atlas] - Managed MongoDB
 
-### 3. REST API
+### Major components
 
-The REST API is used by both clients. It's built around a service called Prisma.
+The project can be divided into the following pieces:
+
+- REST API
+
+  The shared backend for all clients. Connects to a MongoDB instance for persistance. It's implemented in Node.js/TypeScript using Next.js API routes.
+
+- Web app
+
+  The web application is a React/Next.js/TypeScript application.
+
+- AppleTV app
+
+  The AppleTV app is used to present all entries from the past week. It's part of a separate repo.
 
 ## Deployment
 
-These are the instructions to deploy the service. First let's get some free accounts.
+Both the REST API and web app are deployed to a single domain using Next.js. I highly recommend Zeit Now which makes the process painless.
 
-1. Go to [Prisma][prisma] and sign up for a free account. You can simply login with your GitHub credentials.
+If you want to setup this project yourself - this is the part for you. You will need to sign up for a few services to get everything working, however, with basic usage you can stick to the free tiers.
 
-1. Install the Prisma CLI
+The first thing you need to do is to clone the project.
+
+```bash
+git clone https://github.com/futurice/stockholm-happy-face
+cd stockholm-happy-face
+```
+
+### API and web app
+
+The REST API and web app are deployed together. Before we start, let's sign up for some services:
+
+1. Go to [MongoDB Atlas][mongodb-atlas] and sign up for an account
+
+1. Go to [Zeit Now][now] and sign up for an account
+
+1. Go to [Giphy][giphy-dev] and generate an API key
+
+1. Next we need to install some dependencies - for this you need Node.js.
 
    ```bash
-   npm install -g prisma
+   # install the Zeit Now CLI
+   yarn global add now
+
+   # install local dependencies
+   yarn
    ```
 
-1. Install dependencies and setup Prisma
+1. Now go to MongoDB Atlas and spin up a new instance and copy the connection string. You can get far just using the free tier.
+
+1. Configure Zeit Now to use our 3rd party service credentials
 
    ```bash
-   npm install --prefix ./api ./api
-   npm install --prefix ./www ./api
-
-   prisma deploy
+   now secret add giphy-api-key {GIPHY API KEY}
+   now secret add mongo-url {MONGODB CONNECTION STRING}
+   now secret add mongo-db-name {MONGODB DATABASE NAME}
+   now secret add ga-tracking-id {GOOGLE ANALYTICS ID}
    ```
 
-   Select "Demo server" when prompted and authenticate with Prisma.
+1. Finally, we are gonna use [Zeit Now][now] to deploy our services.
 
-1. Finally we are gonna use [now][now] to deploy our services.
-
-   You can first test that everything works by running `now` locally:
+   You can test that everything works by testing it locally:
 
    ```bash
    now dev
@@ -67,73 +101,14 @@ These are the instructions to deploy the service. First let's get some free acco
    now
    ```
 
-## Rest API
+   This will give you a unique deployment URL that you can use to access the services over HTTP.
 
-- Prefix: /api/v1
+## Documentation
 
-### User
+### REST API
 
-"Users" represent end users of the app. Users can additionally have a role which will determine authorization level in the app.
+See [API documentation](api/README.md).
 
-- `GET /users`: List users of the app.
-
-- `GET /users/email`: Find a specific user by email.
-
-  Use as `GET /users/email?email=paul.anderson@magnolia.com`.
-
-- `GET /users/email/:id`: Fetch a user by ID.
-
-- `POST /users`: Create a new user.
-
-  The body should contain the following fields:
-
-  ```json
-  {
-    "name": "Paul Anderson",
-    "email": "paul.anderson@magnolia.com",
-    "avatar": "http://www.example.com/some.jpg"
-  }
-  ```
-
-- `PUT /users/:id`: Update an existing user.
-
-  The fields that can be updated include:
-
-  ```json
-  {
-    "nickname": "Pauly"
-  }
-  ```
-
-  > If you pass "nickname" as "RANDOM", the API will assign a random nickname to the user.
-
-### Entry
-
-Entries represent the smilies per week and user.
-
-- `GET /entries`: List and filter all entries.
-
-  Query params:
-
-  . `?userName=Paul Anderson`: filter by user.
-
-- `GET /entries/:id`: Fetch a single entry.
-
-- `POST /entries`: Create a new entry.
-
-  The body should contain the following fields:
-
-  ```json
-  {
-    "userId": "iowe8awe9aweo",
-    "link": null,
-    "text": "🤔"
-  }
-  ```
-
-  Each entry should contain _either_ a link to an image (jpg, png, gif) or a text string.
-
-- `DELETE /entries/:id`: Delete an existing entry.
-
-[prisma]: https://www.prisma.io
 [now]: https://zeit.co/now
+[giphy-dev]: https://developers.giphy.com/dashboard/
+[mongodb-atlas]: https://www.mongodb.com/cloud/atlas

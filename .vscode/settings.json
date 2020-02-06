@@ -1,9 +1,11 @@
 {
   "cSpell.words": [
-    "api",
+    "Checkmark",
+    "camelcase",
+    "dayjs",
+    "debounced",
     "giphy",
-    "key",
-    "positivity",
-    "prisma"
+    "gtag",
+    "minmax"
   ]
 }
