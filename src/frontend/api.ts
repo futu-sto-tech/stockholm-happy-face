@@ -60,13 +60,17 @@ export function useCreateUser(): (name: string) => Promise<User> {
   const handle = useCallback(
     async (name: string): Promise<User> => {
       const data: NewUserRequestBody = { name };
-      const newUser = await fetch<UserResponse>('/api/users', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      mutate('/api/users', [...(userList || []), newUser]);
-      return newUser;
+      try {
+        const newUser = await fetch<UserResponse>('/api/users', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json' },
+        });
+        mutate('/api/users', [...(userList || []), newUser]);
+        return newUser;
+      } catch (error) {
+        throw new Error('Unable to create new user');
+      }
     },
     [userList],
   );
