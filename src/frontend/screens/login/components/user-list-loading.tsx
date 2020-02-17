@@ -3,7 +3,7 @@ import React from 'react';
 const UserListLoading: React.FC = () => (
   <>
     {[1, 2, 3, 4, 5].map(item => (
-      <div key={item} className="loading-item" />
+      <div key={item} className="loading-item" data-testid="skeleton-item" />
     ))}
     <style jsx>{`
       @keyframes fade-in {

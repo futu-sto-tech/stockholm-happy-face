@@ -1,8 +1,16 @@
+const { Server } = require('miragejs');
 const axios = require('axios');
 
-jest.setTimeout(30000);
+new Server({
+  routes() {
+    this.namespace = '/api';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000/api';
-const client = axios.default.create({ baseURL: BASE_URL });
+    this.get('/users', () => [
+      { id: '1', name: 'Luke' },
+      { id: '2', name: 'Leah' },
+      { id: '3', name: 'Anakin' },
+    ]);
+  },
+});
 
-module.exports = client;
+module.exports = axios.create({ baseURL: '/api' });
