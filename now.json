@@ -1,5 +1,4 @@
 {
-  "name": "Smileys",
   "env": {
     "GIPHY_API_KEY": "@giphy-api-key",
     "MONGO_URL": "@mongo-url",
