@@ -19,7 +19,7 @@ const FixedBottom: React.FC = ({ children }) => {
         .footer {
           transition: padding-bottom 0.3s;
           padding: 16px;
-          padding-bottom: calc(16px + env(safe-area-inset-bottom) / 2);
+          padding-bottom: max(16px, env(safe-area-inset-bottom));
         }
 
         @media (prefers-color-scheme: light) {
