@@ -1,4 +1,4 @@
-import { IoMdLink, IoMdLogOut, IoMdSearch } from 'react-icons/io';
+import { IoMdAdd, IoMdLink, IoMdLogOut } from 'react-icons/io';
 
 import FixedBottom from '../../component/fixed-bottom';
 import Link from 'next/link';
@@ -32,7 +32,7 @@ const UserScreen: React.FC = () => {
           </Link>
           <Link href="/[userId]/new" as={`/${userId}/new`}>
             <a>
-              <RoundButton IconComponent={IoMdSearch} buttonType="SUCCESS" />
+              <RoundButton IconComponent={IoMdAdd} buttonType="SUCCESS" />
             </a>
           </Link>
           <RoundButton
