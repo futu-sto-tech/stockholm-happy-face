@@ -27,6 +27,7 @@ const USER_QUERY = /* GraphQL */ `
   query User($id: String!) {
     user_by_pk(id: $id) {
       name
+      picture
     }
   }
 `;
@@ -34,6 +35,7 @@ const USER_QUERY = /* GraphQL */ `
 interface UserData {
   user_by_pk: {
     name: string;
+    picture: string;
   };
 }
 
@@ -43,7 +45,6 @@ interface UserVariables {
 
 const EditUserName: React.FC<{ userId: string }> = ({ userId }) => {
   const [name, setName] = useState<string>();
-  const [editName, setEditName] = useState(false);
   const { data, refetch } = useQuery<UserData | undefined, UserVariables>(USER_QUERY, {
     variables: { id: userId },
   });
@@ -63,7 +64,6 @@ const EditUserName: React.FC<{ userId: string }> = ({ userId }) => {
       if (name) {
         await updateUser({ variables: { id: userId, name } });
         await refetch();
-        setEditName(false);
       }
     },
     [userId, name, updateUser, refetch],
@@ -71,45 +71,28 @@ const EditUserName: React.FC<{ userId: string }> = ({ userId }) => {
 
   return (
     <div>
-      <div className="px-4 py-2 bg-white rounded shadow">
-        <p className="text-sm text-gray-600 uppercase">Name</p>
-        {editName ? (
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-row">
-              <input
-                className="flex-1 mr-2 form-input"
-                value={name}
-                onChange={({ target: { value } }): void => setName(value)}
-                disabled={loading || name === undefined}
-                required
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 mr-2 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300"
-                disabled={loading}
-              >
-                {loading ? 'Loading' : 'Save'}
-              </button>
-              <button
-                className="px-4 py-2 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300"
-                onClick={(): void => setEditName(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        ) : (
-          <div className="flex flex-row items-center">
-            <p className="flex-1">{data?.user_by_pk.name}</p>
+      <img src={data?.user_by_pk.picture} className="w-40 h-40 mx-auto rounded-full" />
+      <div className="h-4"></div>
+      <form onSubmit={handleSubmit}>
+        <div className="relative">
+          <input
+            className="w-full h-12 rounded form-input"
+            value={name}
+            onChange={({ target: { value } }): void => setName(value)}
+            disabled={loading || name === undefined}
+            required
+          />
+          <div className="absolute top-0 bottom-0 right-0">
             <button
-              className="px-4 py-2 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300"
-              onClick={(): void => setEditName(true)}
+              type="submit"
+              className="h-full px-4 text-gray-100 bg-gray-600 rounded-r hover:bg-gray-500"
+              disabled={loading}
             >
-              Edit
+              {loading ? 'Loading' : 'Update'}
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      </form>
     </div>
   );
 };
@@ -119,11 +102,11 @@ const SettingsPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="grid max-w-2xl gap-4 p-4 mx-auto">
+      <div className="max-w-lg p-4 mx-auto space-y-4">
         {user && <EditUserName userId={user.sub} />}
 
         <button
-          className="px-4 py-2 text-gray-700 transition-transform transform bg-gray-300 rounded hover:bg-gray-400 active:scale-95"
+          className="w-full px-4 py-2 font-semibold text-gray-600 transition-shadow duration-150 transform bg-white rounded shadow-xs hover:shadow-lg active:shadow-inner focus:shadow-outline active:bg-gray-200"
           onClick={logout}
         >
           Logout

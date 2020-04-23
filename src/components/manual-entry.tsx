@@ -34,7 +34,7 @@ const ManualEntry: React.FC = () => {
       <main className="h-64 p-12">
         <form onSubmit={handleSubmitUrl}>
           <label className="block">
-            <span className="text-gray-600">Paste link to your GIF here</span>
+            <span className="text-gray-600">Link to GIF</span>
             <input
               className="block w-full mt-1 mb-2 rounded-lg form-input"
               placeholder="Happy, sad, boring..."

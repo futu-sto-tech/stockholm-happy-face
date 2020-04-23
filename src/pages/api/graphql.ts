@@ -14,6 +14,7 @@ const schema = buildSchema(`
     title: String!
     preview: GifImage!
     original: GifImage!
+    fixed_width: GifImage!
   }
 
   type Query {

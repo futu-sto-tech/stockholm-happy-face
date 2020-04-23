@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 
+import { motion } from 'framer-motion';
 import { useAuth0 } from '../context/auth';
 import { useRouter } from 'next/router';
 
@@ -12,15 +13,23 @@ const IndexPage: React.FC = () => {
   }, [router, authenticated, user]);
 
   return (
-    <div className="flex items-center justify-center h-screen p-4 bg-blue-300">
-      <div className="grid gap-4">
-        <img className="w" src="/smileys-logo.svg" />
+    <div className="flex items-center justify-center h-screen p-8 bg-gray-400">
+      <div className="grid w-full max-w-screen-md gap-8">
+        <img className="w-full mx-auto" src="/smileys-logo.svg" />
         {loading || authenticated ? (
-          <div>Loading...</div>
+          <motion.p
+            className="text-3xl text-center"
+            animate={{ rotate: 360 }}
+            transition={{ loop: Infinity, repeatDelay: 1 }}
+          >
+            🤔
+          </motion.p>
         ) : (
-          <button className="relative w-32 p-3 mx-auto" onClick={login}>
-            <div className="absolute top-0 bottom-0 left-0 right-0 z-10 bg-blue-400 rounded-lg opacity-75" />
-            <p className="relative z-20 text-blue-700">Login</p>
+          <button
+            className="w-48 p-3 mx-auto font-semibold text-gray-600 transition-shadow duration-200 bg-gray-200 rounded-lg shadow-sm opacity-75 hover:bg-white hover:shadow-2xl active:shadow-xs"
+            onClick={login}
+          >
+            Login
           </button>
         )}
       </div>

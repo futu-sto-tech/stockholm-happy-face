@@ -1,6 +1,8 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
+import MasonryGrid from './masonry-grid';
 import { useQuery } from 'graphql-hooks';
 
 const TRENDING_GIF_QUERY = /* GraphQL */ `
@@ -71,15 +73,22 @@ const TrendingGifResults: React.FC = () => {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-2">
+      <p className="font-semibold text-gray-700">Trending GIFs</p>
+      <div className="h-1" />
+      <MasonryGrid>
         {data?.trending_gif.map((item) => (
-          <Link key={item.id} href={{ query: { url: item.original.url } }}>
-            <a>
-              <img src={item.preview.url} alt={item.title} className="object-cover w-full h-full" />
-            </a>
+          <Link key={item.id} href={{ query: { url: item.original.url } }} passHref>
+            <motion.a
+              key={item.id}
+              className="block w-full mb-1"
+              initial={{ opacity: 0, y: -32 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <img src={item.preview.url} alt={item.title} className="w-full h-auto" />
+            </motion.a>
           </Link>
         ))}
-      </div>
+      </MasonryGrid>
       {data?.trending_gif.length && (
         <p className="font-semibold text-center" ref={scrollRef}>
           Loading more...

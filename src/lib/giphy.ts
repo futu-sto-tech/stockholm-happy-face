@@ -17,6 +17,7 @@ type ImageObject = {
   url: string;
   width: string;
   height: string;
+  webp: string;
 };
 
 type GifObject = {
@@ -25,6 +26,7 @@ type GifObject = {
   images: {
     preview_gif: ImageObject;
     original: ImageObject;
+    fixed_width: ImageObject;
   };
 };
 
@@ -41,25 +43,19 @@ export type ApiGifObject = {
   title: string;
   preview: { width: string; height: string; url: string };
   original: { width: string; height: string; url: string };
+  fixed_width: { url: string; webp: string };
 };
 
 function parseGifObject(item: GifObject): ApiGifObject {
   const { id, title, images } = item;
-  const { width, height, url } = images.preview_gif;
 
   return {
     id,
     title,
-    preview: {
-      width,
-      height,
-      url,
-    },
-    original: {
-      width: images.original.width,
-      height: images.original.height,
-      url: images.original.url,
-    },
+    preview: { ...images.preview_gif },
+    original: { ...images.original },
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    fixed_width: { ...images.fixed_width },
   };
 }
 

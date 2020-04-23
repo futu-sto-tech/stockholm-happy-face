@@ -4,11 +4,7 @@ import { getGiphyGif, getGiphyId } from '../../lib/giphy';
 import axios from 'axios';
 
 interface RequestBody {
-  table: {
-    name: string;
-  };
   event: {
-    op: string;
     data: {
       new: {
         id: number;
@@ -22,10 +18,23 @@ const HASURA_GRAPHQL_ENDPOINT = process.env.HASURA_GRAPHQL_ENDPOINT as string;
 const HASURA_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET as string;
 
 const UPDATE_IMAGE_MUTATION = /* GraphQL */ `
-  mutation UpdateImage($id: Int!, $giphyId: String!, $previewUrl: String!) {
+  mutation UpdateImage(
+    $id: Int!
+    $giphyId: String!
+    $previewUrl: String!
+    $fixedWidth: String
+    $fixedWidthWebp: String
+    $title: String
+  ) {
     update_image(
       where: { id: { _eq: $id } }
-      _set: { giphy_id: $giphyId, preview_url: $previewUrl }
+      _set: {
+        giphy_id: $giphyId
+        preview_url: $previewUrl
+        fixed_width_url: $fixedWidth
+        fixed_width_webp_url: $fixedWidthWebp
+        title: $title
+      }
     ) {
       returning {
         id
@@ -55,6 +64,9 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
             id: image.id,
             giphyId: giphyImage.id,
             previewUrl: giphyImage.preview.url,
+            fixedWidth: giphyImage.fixed_width.url,
+            fixedWidthWebp: giphyImage.fixed_width.webp,
+            title: giphyImage.title,
           },
         },
         {
@@ -66,7 +78,12 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
         },
       );
 
-      console.info(`Updated image with preview URL: ${response.data}`);
+      if (response.data.errors) {
+        console.info(`Failed to update image: ${JSON.stringify(response.data.errors)}`);
+        return res.end(JSON.stringify({ success: false }));
+      }
+
+      console.info(`Updated image: ${JSON.stringify(response.data)}`);
       return res.end(JSON.stringify({ success: true }));
     }
   }

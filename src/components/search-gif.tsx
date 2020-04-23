@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
 import Link from 'next/link';
+import MasonryGrid from './masonry-grid';
 import { MdClose } from 'react-icons/md';
 import TrendingGifResults from './trending-gif-results';
+import { motion } from 'framer-motion';
 import { useDebounce } from '../hooks';
 import { useQuery } from 'graphql-hooks';
 
@@ -77,15 +79,19 @@ const SearchResults: React.FC<{
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-2">
+      <MasonryGrid>
         {data?.search_gif.map((item) => (
           <Link key={item.id} href={{ query: { url: item.original.url } }}>
-            <a>
-              <img src={item.preview.url} alt={item.title} className="object-cover w-full h-full" />
-            </a>
+            <motion.a
+              className="block w-full mb-1"
+              initial={{ opacity: 0, y: -32 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <img src={item.preview.url} alt={item.title} className="w-full h-auto" />
+            </motion.a>
           </Link>
         ))}
-      </div>
+      </MasonryGrid>
       {data?.search_gif.length && (
         <p className="font-semibold text-center" ref={scrollRef}>
           Loading more...
@@ -104,28 +110,27 @@ const SearchGif: React.FC<{
   const debouncedQuery = useDebounce(query, 1000);
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-lg shadow">
-      <header className="relative flex items-center justify-center h-16 px-4 border-b border-gray-300">
-        <p className="text-lg font-semibold text-center">Choose a GIF</p>
-        <div className="absolute top-0 bottom-0 right-0 flex items-center pr-4">
-          <Link href="/profile">
-            <a className="p-2 bg-gray-200 rounded-full">
-              <MdClose size="20" />
-            </a>
-          </Link>
-        </div>
+    <div>
+      <header className="p-4 bg-gray-200 rounded-lg">
+        <h2 className="font-semibold text-gray-900">How was your week?</h2>
+        <p className="text-sm text-gray-700">
+          Pick a GIF to share your experience this week with your team.
+        </p>
+        <div className="h-2" />
+        <input
+          className="block w-full rounded-lg form-input"
+          placeholder="Happy, stressful, confusing..."
+          type="search"
+          value={query}
+          onChange={({ target: { value } }): void => setQuery(value)}
+        />
+        <Link href={{ href: '/entries/new', query: { manual: 'on' } }}>
+          <a className="text-sm text-gray-700 underline">Or paste a link</a>
+        </Link>
       </header>
-      <main className="flex-1 p-4 overflow-y-auto">
+      <div className="h-2"></div>
+      <main>
         <div className="flex flex-col">
-          <input
-            className="block w-full rounded-lg form-input"
-            placeholder="Happy, sad, boring..."
-            type="search"
-            value={query}
-            onChange={({ target: { value } }): void => setQuery(value)}
-            autoFocus
-          />
-          <div className="h-4" />
           <div className="flex-1">
             {debouncedQuery ? (
               <SearchResults query={debouncedQuery} offset={offset} setOffset={setOffset} />

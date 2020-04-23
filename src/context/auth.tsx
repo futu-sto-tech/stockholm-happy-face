@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import createAuth0Client, { IdToken } from '@auth0/auth0-spa-js';
 
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
-import createAuth0Client from '@auth0/auth0-spa-js';
 
 interface AuthUser {
   sub: string;

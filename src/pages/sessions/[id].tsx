@@ -5,6 +5,7 @@ import { Result, useMutation, useSubscription } from 'graphql-hooks';
 import Router, { useRouter } from 'next/router';
 import { getEndOfWeek, getStartOfWeek } from '../../lib/utils';
 
+import Button from '../../components/button';
 import { useAuth0 } from '../../context/auth';
 
 const SESSION_SUBSCRIPTION = /* GraphQL */ `
@@ -121,18 +122,6 @@ const DELETE_SESSION_USER_MUTATION = /* GraphQL */ `
     }
   }
 `;
-
-const Button: React.FC<{ onClick?: () => void; className?: string }> = ({
-  className,
-  ...props
-}) => (
-  <motion.button
-    className={`inline-block p-3 text-gray-700 bg-gray-300 rounded-full hover:bg-gray-200 ${className}`}
-    whileTap={{ scale: 0.95 }}
-    whileHover={{ scale: 1.05 }}
-    {...props}
-  />
-);
 
 const SessionPage: React.FC = () => {
   const router = useRouter();
@@ -267,97 +256,79 @@ const SessionPage: React.FC = () => {
 
   return (
     <div>
-      <div className="flex flex-col h-screen px-4">
-        <div className="sticky top-0 pt-4">
-          <header className="relative overflow-hidden bg-gray-400 rounded-full">
-            {percentagePassed && (
-              <motion.div
-                animate={{ width: [`${percentagePassed}%`, '100%'] }}
-                transition={{ duration: timeLeft }}
-                className="absolute top-0 bottom-0 left-0 z-10 bg-red-500 opacity-25"
-              />
-            )}
-            <div className="relative z-20 flex flex-row items-center justify-between p-2">
-              <Button onClick={handleClickClose}>
-                <MdClose size="24" />
-              </Button>
-              <p className="flex-1 text-xl font-semibold text-center text-gray-700">
-                {session?.entry ? session.entry.user.name : 'Start Smileys!'}
-              </p>
-              {session?.entry ? (
-                <div className="flex flex-row">
-                  <Button onClick={handlePrev} className="rounded-l-full rounded-r-none">
-                    <MdNavigateBefore size="24" />
-                  </Button>
-                  <Button onClick={handleNext} className="rounded-l-none rounded-r-full">
-                    <MdNavigateNext size="24" />
-                  </Button>
-                </div>
-              ) : (
-                <Button onClick={handleNext}>
-                  <MdPlayArrow size="24" />
+      {percentagePassed && (
+        <motion.div
+          animate={{ width: [`${percentagePassed}%`, '100%'] }}
+          transition={{ duration: timeLeft }}
+          className="absolute top-0 left-0 h-2 bg-blue-500 opacity-50"
+        />
+      )}
+      <div className="absolute top-0 left-0 p-4">
+        <Button onClick={handleClickClose}>
+          <MdClose size="24" />
+        </Button>
+      </div>
+      <div
+        className={`flex flex-col h-screen ${
+          session?.entry && 'bg-gray-900'
+        } transition-colors duration-500`}
+      >
+        <main className="flex items-center justify-center flex-1">
+          {session?.entry ? (
+            <div className="max-w-4xl space-y-4">
+              <header className="flex items-center justify-between">
+                <Button onClick={handlePrev}>
+                  <MdNavigateBefore size="24" />
                 </Button>
-              )}
-            </div>
-          </header>
-        </div>
-        <main className="flex-1">
-          {session?.is_active === false ? (
-            <div>This session has ended</div>
-          ) : session?.entry ? (
-            <div className="relative flex flex-row items-center justify-center h-full max-w-4xl mx-auto overflow-hidden">
-              <AnimatePresence>
-                <motion.img
-                  key={session.entry.image.original_url}
-                  src={session.entry.image.original_url}
-                  initial={{ opacity: 0, x: 1000 }}
-                  animate={{ zIndex: 1, x: 0, opacity: 1 }}
-                  exit={{ zIndex: 0, x: -1000, opacity: 0 }}
-                  transition={{
-                    x: { type: 'spring', stiffness: 300, damping: 200 },
-                    opacity: { duration: 0.2 },
-                  }}
-                  className="absolute"
-                />
-              </AnimatePresence>
+                <p className="text-lg font-semibold text-center text-gray-400">
+                  {session.entry.user.name}
+                </p>
+                <Button onClick={handleNext}>
+                  <MdNavigateNext size="24" />
+                </Button>
+              </header>
+              <main className="relative flex justify-center flex-1 overflow-hidden">
+                <AnimatePresence exitBeforeEnter>
+                  <motion.img
+                    key={session.entry.image.original_url}
+                    src={session.entry.image.original_url}
+                    initial={{ opacity: 0, x: 1000 }}
+                    animate={{ zIndex: 1, x: 0, opacity: 1 }}
+                    exit={{ zIndex: 0, x: -1000, opacity: 0 }}
+                    transition={{
+                      x: { type: 'spring', stiffness: 300, damping: 200 },
+                      opacity: { duration: 0.2 },
+                    }}
+                  />
+                </AnimatePresence>
+              </main>
             </div>
           ) : (
-            <div className="grid h-full grid-cols-6 grid-rows-6 gap-2 py-4">
-              {session?.users.map((item) => (
-                <motion.div
-                  key={item.user.id}
-                  className="flex items-center justify-center overflow-hidden bg-gray-400 rounded-full"
-                  animate={{
-                    scale: [0.5, 1, 1.3, 1, 1],
-                    rotate: [0, 0, -15, -15, 0],
-                  }}
-                  positionTransition
-                >
-                  {item.user.picture ? <img src={item.user.picture} /> : item.user.name}
-                </motion.div>
-              ))}
-            </div>
+            <Button onClick={handleNext}>
+              <MdPlayArrow size="24" />
+            </Button>
           )}
         </main>
+        <footer className="flex px-4 pb-4 space-x-2">
+          {session?.users.map((item) => (
+            <motion.button
+              onClick={(): Promise<void> => handleClickUser(item.user.id)}
+              key={item.user.id}
+              className="flex items-center justify-center"
+              animate={{
+                scale: [0.5, 1, 1.3, 1, 1],
+                rotate: [0, 0, -15, -15, 0],
+              }}
+              positionTransition
+            >
+              <div className="space-y-2">
+                <img className="w-24 h-auto mx-auto rounded-full" src={item.user.picture} />
+                <p className="text-center text-gray-400">{item.user.name}</p>
+              </div>
+            </motion.button>
+          ))}
+        </footer>
       </div>
-      {session?.entry && (
-        <div className="p-4 bg-gray-300">
-          <div className="pb-3">
-            <p className="text-lg font-semibold text-center">Team Stockholm</p>
-          </div>
-          <div className="grid gap-2">
-            {session?.users.map((item) => (
-              <button
-                key={item.user.id}
-                className="max-w-xs p-3 text-center bg-gray-400 rounded-full"
-                onClick={(): Promise<void> => handleClickUser(item.user.id)}
-              >
-                {item.user.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

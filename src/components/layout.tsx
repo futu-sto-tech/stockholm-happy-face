@@ -1,5 +1,6 @@
-import { MdAccountCircle, MdHome, MdPlayArrow } from 'react-icons/md';
+import { MdAccountCircle, MdImage } from 'react-icons/md';
 
+import { IconType } from 'react-icons/lib/cjs';
 import Link from 'next/link';
 import React from 'react';
 import { useAuth0 } from '../context/auth';
@@ -22,16 +23,23 @@ interface UserVariables {
   id: string;
 }
 
-const InactiveTab: React.FC = ({ children }) => (
-  <div className="flex items-center justify-center w-24 my-1 text-gray-600 rounded-lg hover:bg-gray-200 active:bg-gray-300">
-    {children}
-  </div>
-);
+interface LinkButtonProps {
+  IconComponent: IconType;
+  title: string;
+  active: boolean;
+}
 
-const ActiveTab: React.FC = ({ children }) => (
-  <div className="flex items-center justify-center w-24 mt-1 text-gray-800 border-b-2 border-gray-800">
-    {children}
-  </div>
+const LinkButton: React.FC<LinkButtonProps> = ({ IconComponent, title, active, ...props }) => (
+  <a className={`block p-2 rounded-r-lg ${active && 'bg-blue-500'}`} {...props}>
+    <div
+      className={`flex flex-col items-center justify-center h-20 rounded-lg ${
+        active ? 'text-white' : 'text-gray-600 hover:bg-gray-300'
+      }`}
+    >
+      <IconComponent className="mx-auto text-current" size="32" />
+      <p className="text-xs font-semibold text-current">{title}</p>
+    </div>
+  </a>
 );
 
 const SettingsLink: React.FC<{ userId: string }> = ({ userId }) => {
@@ -39,14 +47,17 @@ const SettingsLink: React.FC<{ userId: string }> = ({ userId }) => {
     variables: { id: userId },
   });
 
-  return (
-    <Link href="/settings">
-      <a className="grid items-center grid-cols-2 p-2 pr-4 text-gray-600 transition-transform transform rounded-full active:scale-95 hover:bg-gray-300">
-        <MdAccountCircle size="32" />
-        <p>{data?.user_by_pk.name}</p>
-      </a>
+  const router = useRouter();
+
+  return data ? (
+    <Link href="/settings" passHref>
+      <LinkButton
+        IconComponent={MdAccountCircle}
+        title={data.user_by_pk.name}
+        active={router.pathname === '/settings'}
+      />
     </Link>
-  );
+  ) : null;
 };
 
 const Layout: React.FC = ({ children }) => {
@@ -54,44 +65,18 @@ const Layout: React.FC = ({ children }) => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="sticky top-0 z-50 flex flex-row items-center justify-between px-4 bg-white shadow">
-        <Link href="/">
-          <a>
-            <h1 className="text-2xl font-bold text-gray-700">Smileys</h1>
-          </a>
+    <div className="flex flex-row">
+      <nav className="w-24 py-2">
+        <Link href="/profile" passHref>
+          <LinkButton
+            IconComponent={MdImage}
+            title="Your GIFs"
+            active={router.pathname === '/profile'}
+          />
         </Link>
-        <div className="grid items-stretch h-16 grid-cols-2 gap-2">
-          <Link href="/profile">
-            <a className="flex">
-              {router.pathname === '/profile' ? (
-                <ActiveTab>
-                  <MdHome size="40" />
-                </ActiveTab>
-              ) : (
-                <InactiveTab>
-                  <MdHome size="40" />
-                </InactiveTab>
-              )}
-            </a>
-          </Link>
-          <Link href="/teams">
-            <a className="flex">
-              {router.pathname === '/teams' ? (
-                <ActiveTab>
-                  <MdPlayArrow size="48" />
-                </ActiveTab>
-              ) : (
-                <InactiveTab>
-                  <MdPlayArrow size="48" />
-                </InactiveTab>
-              )}
-            </a>
-          </Link>
-        </div>
         {user && <SettingsLink userId={user.sub} />}
-      </header>
-      <main className="flex-1">{children}</main>
+      </nav>
+      <main className="flex-1 h-screen overflow-y-auto">{children}</main>
     </div>
   );
 };

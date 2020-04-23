@@ -6,6 +6,5 @@
 @tailwind utilities;
 
 html, body {
-  @apply h-full;
-  @apply bg-gray-200;
+  @apply bg-gray-100;
 }

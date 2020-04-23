@@ -133,42 +133,50 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
   );
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <header className="relative flex items-center justify-center h-16 px-4 border-b border-gray-300">
+    <div className="p-4 bg-gray-200 rounded-lg">
+      <header>
         <p className="text-lg font-semibold text-center">Happy with this one?</p>
-
-        <div className="absolute top-0 bottom-0 left-0 flex items-center pl-4">
-          <Link href="/entries/new">
-            <a className="p-2 bg-gray-200 rounded-full">
-              <MdArrowBack size="20" />
-            </a>
-          </Link>
-        </div>
+        <p className="text-center">
+          Pick this GIF to share with your team during this weeks Smiley-session
+        </p>
       </header>
       <main className="p-4">
         <div className="max-w-6xl p-4 mx-auto">
           <img className="mx-auto mb-4" src={url} />
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-2">
-              <select
-                className="block w-full form-select"
-                value={team}
-                onChange={({ target: { value } }): void => setTeam(parseInt(value))}
-                required
-              >
-                <option>Select team</option>
-                {teamsData?.team.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-              <button
-                className="px-4 py-2 text-gray-700 transition-transform transform bg-gray-300 rounded hover:bg-gray-400 active:scale-95"
-                type="submit"
-              >
-                Save
-              </button>
+            <div className="space-y-4">
+              <div className="flex justify-center space-x-4">
+                <Link href="/entries/new">
+                  <a className="flex flex-row items-center">
+                    <MdArrowBack size="20" />
+                    <p className="ml-2 text-sm font-semibold">Pick another</p>
+                  </a>
+                </Link>
+
+                <button
+                  className="px-4 py-2 text-gray-700 transition-transform transform bg-gray-300 rounded hover:bg-gray-400 active:scale-95"
+                  type="submit"
+                >
+                  Pick GIF
+                </button>
+              </div>
+
+              <div className="flex flex-col items-center space-y-1">
+                <p>Your team</p>
+                <select
+                  className="block form-select"
+                  value={team}
+                  onChange={({ target: { value } }): void => setTeam(parseInt(value))}
+                  required
+                >
+                  <option>Select team</option>
+                  {teamsData?.team.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </form>
         </div>

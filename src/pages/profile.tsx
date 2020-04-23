@@ -1,39 +1,33 @@
-import React, { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { MdArrowForward, MdDelete, MdRemove } from 'react-icons/md';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Result, useQuery, useSubscription } from 'graphql-hooks';
 
+import Button from '../components/button';
 import Layout from '../components/layout';
 import Link from 'next/link';
-import { MdSearch } from 'react-icons/md';
 import { getCurrentWeek } from '../lib/utils';
 import { useAuth0 } from '../context/auth';
-
-const CURRENT_YEAR = new Date().getFullYear();
-
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+import useDeleteEntryMutation from '../lib/api/delete-entry-mutation';
 
 const TEAM_SESSIONS_SUBSCRIPTION = /* GraphQL */ `
   subscription TeamSessions($id: Int!) {
     session(where: { team_id: { _eq: $id }, is_active: { _eq: true } }) {
       id
+      team {
+        name
+      }
     }
   }
 `;
 
+interface Session {
+  id: number;
+  team: { name: string };
+}
+
 interface TeamSessionsData {
-  session: Array<{ id: number }>;
+  session: Session[];
 }
 
 const USER_ENTRIES_QUERY = /* GraphQL */ `
@@ -76,8 +70,8 @@ interface QueryVariables {
   id: string;
 }
 
-const CurrentEntry: React.FC<{ entry: Entry }> = ({ entry }) => {
-  const [sessions, setSessions] = useState<Array<{ id: number }>>();
+const SessionNotification: React.FC<{ entry: Entry }> = ({ entry }) => {
+  const [sessions, setSessions] = useState<Session[]>();
 
   useSubscription(
     { query: TEAM_SESSIONS_SUBSCRIPTION, variables: { id: entry.team_id } },
@@ -93,24 +87,45 @@ const CurrentEntry: React.FC<{ entry: Entry }> = ({ entry }) => {
 
   const activeSession = useMemo(() => sessions?.[0], [sessions]);
 
+  return activeSession ? (
+    <div>
+      <AnimatePresence>
+        <Link href="/sessions/[id]" as={`/sessions/${activeSession.id}`} passHref>
+          <motion.a
+            className="flex items-center justify-between px-4 py-2 text-gray-100 bg-green-500 rounded"
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileTap={{ scale: 0.99 }}
+          >
+            <p className="font-semibold text-center">Join {activeSession.team.name} Smileys!</p>
+            <motion.div animate={{ x: [0, -4, 0] }} transition={{ loop: Infinity, duration: 1.5 }}>
+              <MdArrowForward size="28" />
+            </motion.div>
+          </motion.a>
+        </Link>
+      </AnimatePresence>
+      <div className="h-4"></div>
+    </div>
+  ) : null;
+};
+
+const CurrentEntry: React.FC<{ entry: Entry; onRemove: () => Promise<void> }> = ({
+  entry,
+  onRemove,
+}) => {
   return (
     <div>
-      <div className="flex flex-row items-center justify-between px-4 py-3 font-semibold text-gray-800">
-        <p>Week {entry.week}</p>
-        {activeSession && (
-          <Link href="/sessions/[id]" as={`/sessions/${activeSession.id}`}>
-            <a className="text-green-600">Join Smileys!</a>
-          </Link>
-        )}
+      <SessionNotification entry={entry} />
+      <p className="text-lg font-semibold text-gray-700">Your GIF this week</p>
+      <div className="h-1" />
+      <div className="relative group">
+        <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100">
+          <Button onClick={onRemove}>
+            <MdDelete size="24" />
+          </Button>
+        </div>
+        <img className="w-full rounded-b" src={entry.image.original_url} />
       </div>
-      <div className="flex items-center justify-center">
-        <Link href="/entries/[id]" as={`/entries/${entry.id}`}>
-          <a>
-            <img className="object-cover w-full" src={entry.image.original_url} />
-          </a>
-        </Link>
-      </div>
-      <div className="h-4" />
     </div>
   );
 };
@@ -122,95 +137,81 @@ export function useUserEntries(userId: string) {
 }
 
 const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data, loading } = useUserEntries(userId);
+  const { data, refetch } = useUserEntries(userId);
 
   const [currentYear, currentWeek] = useMemo(() => getCurrentWeek(), []);
   const currentEntry = data?.user_by_pk.entries.find(
     (item) => item.year === currentYear && item.week === currentWeek,
   );
 
-  const entriesByMonth = useMemo(() => {
-    const entryMap = data?.user_by_pk.entries
-      .filter((item) => item.id !== currentEntry?.id)
-      .reduce<{ [key: string]: { year: number; month: number; entries: Entry[] } }>(
-        (prev, current) => {
-          const key = `${current.year}-${current.month}`;
-          if (key in prev) {
-            prev[key].entries.push(current);
-          } else {
-            prev[key] = { year: current.year, month: current.month, entries: [current] };
-          }
-
-          return prev;
-        },
-        {},
-      );
-
-    return entryMap ? Object.values(entryMap) : undefined;
-  }, [data, currentEntry]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  const deleteEntry = useDeleteEntryMutation();
+  const handleRemoveItem = useCallback(
+    async (id: number) => {
+      await deleteEntry({ variables: { id } });
+      await refetch();
+    },
+    [deleteEntry, refetch],
+  );
 
   return (
-    <Layout>
-      <div className="grid max-w-2xl gap-4 p-4 mx-auto">
-        <div className="bg-white rounded-lg shadow">
-          {currentEntry ? (
-            <CurrentEntry entry={currentEntry} />
-          ) : (
-            <div className="flex-1">
-              <div className="px-4 pt-3">
-                <p className="font-semibold text-gray-800">Week {currentWeek}</p>
-              </div>
-              <div className="px-4 pt-3 pb-4">
-                <Link href="/entries/new">
-                  <a className="flex flex-row items-center block w-full p-2 bg-gray-200 rounded-lg hover:bg-gray-300 active:bg-gray-400">
-                    <MdSearch size="20" className="mr-2 text-gray-600" />
-                    <p className="text-gray-600">How was you week? Search for a GIF</p>
-                  </a>
-                </Link>
-                <Link href="/entries/new?manual=on">
-                  <a className="block mt-1 text-gray-500 underline">Or manually paste a link</a>
-                </Link>
-              </div>
+    <>
+      <div className="max-w-xl p-4 mx-auto">
+        {currentEntry ? (
+          <CurrentEntry
+            entry={currentEntry}
+            onRemove={(): Promise<void> => handleRemoveItem(currentEntry.id)}
+          />
+        ) : (
+          <div>
+            <p className="text-lg font-semibold text-gray-700">Your GIF this week</p>
+            <div className="h-1" />
+
+            <div className="flex flex-col items-center justify-center h-64 bg-gray-200 border border-gray-400 rounded">
+              <p className="mb-2 text-sm text-center text-gray-600">No GIF for this week yet</p>
+              <Link href="/entries/new">
+                <a className="block w-32 py-2 mx-auto transition-shadow duration-150 bg-gray-100 border border-gray-400 rounded-lg hover:bg-gray-200 hover:shadow-lg active:shadow-xs">
+                  <p className="text-center text-gray-600">Pick GIF</p>
+                </a>
+              </Link>
             </div>
-          )}
-        </div>
-        {entriesByMonth?.map(({ year, month, entries }) => (
-          <div key={`${year}${month}`} className="bg-white rounded-lg shadow-sm">
-            <div className="px-4 py-3 font-semibold text-gray-800">
-              {year !== CURRENT_YEAR ? `${MONTHS[month - 1]} ${year}` : `${MONTHS[month - 1]}`}
-            </div>
-            <div className={`grid ${entries.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-1`}>
-              {entries.map((item) => (
-                <Link key={item.id} href="/entries/[id]" as={`/entries/${item.id}`}>
-                  <a>
-                    <img
-                      src={item.image.preview_url || item.image.original_url}
-                      className="object-cover w-full h-64"
-                    />
-                  </a>
-                </Link>
-              ))}
-            </div>
-            <div className="h-4" />
           </div>
-        ))}
+        )}
+        <div className="h-4" />
+        <p className="text-lg font-semibold text-gray-700">Previous GIFs</p>
+        <div className="h-1" />
+        <div className="space-y-4">
+          <AnimatePresence>
+            {data?.user_by_pk.entries
+              .filter((item) => item.id !== currentEntry?.id)
+              .map((item) => (
+                <motion.div
+                  key={item.id}
+                  className="relative group"
+                  positionTransition
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100">
+                    <Button onClick={(): Promise<void> => handleRemoveItem(item.id)}>
+                      <MdDelete size="24" />
+                    </Button>
+                  </div>
+                  <img
+                    src={item.image.preview_url || item.image.original_url}
+                    className="w-full h-auto rounded"
+                  />
+                </motion.div>
+              ))}
+          </AnimatePresence>
+        </div>
       </div>
-    </Layout>
+    </>
   );
 };
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth0();
 
-  if (user) {
-    return <EntryFeed userId={user.sub} />;
-  }
-
-  return <p>Loading...</p>;
+  return <Layout>{user && <EntryFeed userId={user.sub} />}</Layout>;
 };
 
 export default ProfilePage;
