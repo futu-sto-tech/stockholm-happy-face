@@ -1,7 +1,8 @@
+import { MdArrowBack, MdClose } from 'react-icons/md';
 import React, { useCallback, useState } from 'react';
 
+import Button from './button';
 import Link from 'next/link';
-import { MdClose } from 'react-icons/md';
 import { useRouter } from 'next/router';
 
 const ManualEntry: React.FC = () => {
@@ -20,23 +21,21 @@ const ManualEntry: React.FC = () => {
   );
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <header className="relative flex items-center justify-center h-16 px-4 border-b border-gray-300">
-        <p className="text-lg font-semibold text-center">Choose a GIF</p>
-        <div className="absolute top-0 bottom-0 right-0 flex items-center pr-4">
-          <Link href="/profile">
-            <a className="p-2 bg-gray-200 rounded-full">
-              <MdClose size="20" />
-            </a>
-          </Link>
-        </div>
+    <div className="p-4 bg-gray-200 border border-gray-400 rounded-lg space-y-4">
+      <header className="flex items-center space-x-4">
+        <Link href="/entries/new">
+          <a className="text-gray-800">
+            <MdArrowBack size="24" />
+          </a>
+        </Link>
+        <p className="text-lg font-semibold text-gray-800">Great, you already found a GIF!</p>
       </header>
-      <main className="h-64 p-12">
+      <main>
         <form onSubmit={handleSubmitUrl}>
           <label className="block">
             <span className="text-gray-600">Link to GIF</span>
             <input
-              className="block w-full mt-1 mb-2 rounded-lg form-input"
+              className="block w-full mt-1 mb-4 rounded-lg form-input"
               placeholder="Happy, sad, boring..."
               type="url"
               value={url}
@@ -45,12 +44,9 @@ const ManualEntry: React.FC = () => {
               autoFocus
             />
           </label>
-          <button
-            className="px-4 py-2 text-gray-700 transition-transform transform bg-gray-300 rounded hover:bg-gray-400 active:scale-95"
-            type="submit"
-          >
+          <Button className="px-8 bg-gray-300 hover:bg-gray-400" type="submit">
             Preview
-          </button>
+          </Button>
         </form>
       </main>
     </div>

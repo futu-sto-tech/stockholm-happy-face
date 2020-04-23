@@ -40,7 +40,6 @@ const USER_ENTRIES_QUERY = /* GraphQL */ `
         month
         team_id
         image {
-          preview_url
           original_url
         }
       }
@@ -55,7 +54,6 @@ interface Entry {
   week: number;
   team_id: number;
   image: {
-    preview_url?: string;
     original_url: string;
   };
 }
@@ -195,10 +193,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
                       <MdDelete size="24" />
                     </Button>
                   </div>
-                  <img
-                    src={item.image.preview_url || item.image.original_url}
-                    className="w-full h-auto rounded"
-                  />
+                  <img src={item.image.original_url} className="w-full h-auto rounded" />
                 </motion.div>
               ))}
           </AnimatePresence>

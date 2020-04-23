@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
+import Button from './button';
 import Link from 'next/link';
 import MasonryGrid from './masonry-grid';
-import { MdClose } from 'react-icons/md';
+import { MdTrendingUp } from 'react-icons/md';
 import TrendingGifResults from './trending-gif-results';
 import { motion } from 'framer-motion';
 import { useDebounce } from '../hooks';
@@ -101,12 +102,15 @@ const SearchResults: React.FC<{
   );
 };
 
+const TRENDING_TITLE = ['Need some inspiration?', 'Trouble deciding?'];
+
 const SearchGif: React.FC<{
   query: string;
   setQuery: (value: string) => void;
   offset: number;
   setOffset: (value: number) => void;
 }> = ({ query, setQuery, offset, setOffset }) => {
+  const [showTrending, setShowTrending] = useState(false);
   const debouncedQuery = useDebounce(query, 1000);
 
   return (
@@ -134,8 +138,21 @@ const SearchGif: React.FC<{
           <div className="flex-1">
             {debouncedQuery ? (
               <SearchResults query={debouncedQuery} offset={offset} setOffset={setOffset} />
-            ) : (
+            ) : showTrending ? (
               <TrendingGifResults />
+            ) : (
+              <div className="flex flex-col items-center py-10 space-y-2">
+                <p className="text-base">
+                  {TRENDING_TITLE[Math.floor(Math.random() * Math.floor(2))]}
+                </p>
+                <Button
+                  className="flex items-center px-8 space-x-3"
+                  onClick={(): void => setShowTrending(true)}
+                >
+                  <MdTrendingUp size="24" />
+                  <p className="text-base font-semibold">View Trending GIFs</p>
+                </Button>
+              </div>
             )}
           </div>
         </div>

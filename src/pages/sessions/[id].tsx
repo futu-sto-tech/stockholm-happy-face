@@ -309,7 +309,7 @@ const SessionPage: React.FC = () => {
             </Button>
           )}
         </main>
-        <footer className="flex px-4 pb-4 space-x-2">
+        <footer className="flex p-4 bg-gray-800 shadow-2xl space-x-2">
           {session?.users.map((item) => (
             <motion.button
               onClick={(): Promise<void> => handleClickUser(item.user.id)}
@@ -322,7 +322,7 @@ const SessionPage: React.FC = () => {
               positionTransition
             >
               <div className="space-y-2">
-                <img className="w-24 h-auto mx-auto rounded-full" src={item.user.picture} />
+                <img className="w-20 h-auto mx-auto rounded-full" src={item.user.picture} />
                 <p className="text-center text-gray-400">{item.user.name}</p>
               </div>
             </motion.button>
