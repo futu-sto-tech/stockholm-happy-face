@@ -1,8 +1,9 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 import MasonryGrid from './masonry-grid';
+import { MdTrendingUp } from 'react-icons/md';
+import { motion } from 'framer-motion';
 import { useQuery } from 'graphql-hooks';
 
 const TRENDING_GIF_QUERY = /* GraphQL */ `
@@ -72,9 +73,11 @@ const TrendingGifResults: React.FC = () => {
   }, [data, setOffset]);
 
   return (
-    <div>
-      <p className="font-semibold text-gray-700">Trending GIFs</p>
-      <div className="h-1" />
+    <div className="space-y-4">
+      <p className="flex items-center font-semibold text-black space-x-2">
+        <MdTrendingUp size="24" />
+        <span>Trending</span>
+      </p>
       <MasonryGrid>
         {data?.trending_gif.map((item) => (
           <Link key={item.id} href={{ query: { url: item.original.url } }} passHref>

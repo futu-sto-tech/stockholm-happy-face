@@ -133,54 +133,54 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
   );
 
   return (
-    <div className="p-4 bg-gray-200 rounded-lg">
-      <header>
-        <p className="text-lg font-semibold text-center">Happy with this one?</p>
-        <p className="text-center">
-          Pick this GIF to share with your team during this weeks Smiley-session
-        </p>
-      </header>
-      <main className="p-4">
-        <div className="max-w-6xl p-4 mx-auto">
-          <img className="mx-auto mb-4" src={url} />
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="flex justify-center space-x-4">
-                <Link href="/entries/new">
-                  <a className="flex flex-row items-center">
-                    <MdArrowBack size="20" />
-                    <p className="ml-2 text-sm font-semibold">Pick another</p>
-                  </a>
-                </Link>
-
-                <button
-                  className="px-4 py-2 text-gray-700 transition-transform transform bg-gray-300 rounded hover:bg-gray-400 active:scale-95"
-                  type="submit"
-                >
-                  Pick GIF
-                </button>
-              </div>
-
-              <div className="flex flex-col items-center space-y-1">
-                <p>Your team</p>
-                <select
-                  className="block form-select"
-                  value={team}
-                  onChange={({ target: { value } }): void => setTeam(parseInt(value))}
-                  required
-                >
-                  <option>Select team</option>
-                  {teamsData?.team.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </form>
+    <div className="p-6 bg-white border border-black rounded-sm space-y-10">
+      <header className="space-y-6">
+        <div>
+          <p className="text-lg font-semibold text-center">Happy with this one?</p>
+          <p className="text-center text-gray-700">
+            Pick this GIF to share with your team during this weeks Smiley-session
+          </p>
         </div>
+        <div className="w-40 mx-auto">
+          <div className="h-px bg-gray-600" />
+          <div className="h-px bg-gray-600" />
+        </div>
+      </header>
+      <main>
+        <img className="mx-auto" src={url} />
       </main>
+      <form onSubmit={handleSubmit}>
+        <div className="flex justify-center space-x-4">
+          <Link href="/entries/new">
+            <a className="flex items-center px-6 py-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm space-x-2 hover:text-black hover:border-black">
+              <MdArrowBack size="20" />
+              <p className="text-base leading-none">Pick another</p>
+            </a>
+          </Link>
+
+          <div className="flex">
+            <select
+              className="border-r-0 border-black rounded-l-sm rounded-r-none form-select"
+              value={team}
+              onChange={({ target: { value } }): void => setTeam(parseInt(value))}
+              required
+            >
+              <option disabled>Select team</option>
+              {teamsData?.team.map((item) => (
+                <option key={item.id} value={item.id}>
+                  Post to {item.name}
+                </option>
+              ))}
+            </select>
+            <button
+              className="px-6 py-2 text-white transition-colors duration-150 bg-black border border-black rounded-r-sm hover:bg-white hover:text-black"
+              type="submit"
+            >
+              Pick GIF
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };

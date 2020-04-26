@@ -3,6 +3,7 @@ import { Result, useSubscription } from 'graphql-hooks';
 
 import Layout from '../../components/layout';
 import Link from 'next/link';
+import { MdAdd } from 'react-icons/md';
 
 const TEAMS_SUBSCRIPTION = /* GraphQL */ `
   subscription Teams {
@@ -40,17 +41,30 @@ const TeamsPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-6xl p-4 mx-auto">
-        <ul className="grid gap-2">
-          {teams?.map((item) => (
-            <li key={item.id}>
-              <Link href="/teams/[id]" as={`/teams/${item.id}`}>
-                <a className="block p-2 text-center bg-gray-400 rounded shadow hover:bg-gray-300">
-                  {item.name} {item.sessions.length > 0 && `(ONGOING)`}
-                </a>
-              </Link>
-            </li>
-          ))}
+      <div className="max-w-2xl px-4 py-10 mx-auto">
+        <ul className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+          {teams
+            ?.filter((item) => item.sessions.length > 0)
+            .map((item) => (
+              <li key={item.id}>
+                <Link href="/sessions/[id]" as={`/sessions/${item.sessions[0].id}`}>
+                  <a className="block p-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm hover:text-black hover:border-black space-y-2">
+                    <div className="flex items-center justify-center w-20 h-20 mx-auto text-4xl leading-none border border-gray-600 rounded-full">
+                      {item.name.charAt(0)}
+                    </div>
+                    <p className="text-center">{item.name}</p>
+                  </a>
+                </Link>
+              </li>
+            ))}
+          <li>
+            <button className="w-full p-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm hover:text-black hover:border-black space-y-2">
+              <div className="flex items-center justify-center w-20 h-20 mx-auto text-4xl leading-none border border-gray-600 rounded-full">
+                <MdAdd size="56" />
+              </div>
+              <p className="text-center">New team</p>
+            </button>
+          </li>
         </ul>
       </div>
     </Layout>

@@ -10,6 +10,7 @@
     "@auth0/auth0-spa-js": "^1.7.0",
     "@lifeomic/axios-fetch": "^1.4.2",
     "axios": "^0.19.2",
+    "date-fns": "^2.12.0",
     "framer-motion": "^1.10.3",
     "graphql": "^15.0.0",
     "graphql-hooks": "^4.4.4",

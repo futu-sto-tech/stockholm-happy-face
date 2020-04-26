@@ -70,27 +70,25 @@ const EditUserName: React.FC<{ userId: string }> = ({ userId }) => {
   );
 
   return (
-    <div>
+    <div className="space-y-5">
       <img src={data?.user_by_pk.picture} className="w-40 h-40 mx-auto rounded-full" />
-      <div className="h-4"></div>
       <form onSubmit={handleSubmit}>
-        <div className="relative">
+        <div className="flex">
           <input
-            className="w-full h-12 rounded form-input"
+            className="flex-1 border-r-0 border-black rounded-l-sm rounded-r-none form-input"
             value={name}
             onChange={({ target: { value } }): void => setName(value)}
             disabled={loading || name === undefined}
             required
           />
-          <div className="absolute top-0 bottom-0 right-0">
-            <button
-              type="submit"
-              className="h-full px-4 text-gray-100 bg-gray-600 rounded-r hover:bg-gray-500"
-              disabled={loading}
-            >
-              {loading ? 'Loading' : 'Update'}
-            </button>
-          </div>
+
+          <button
+            className="px-6 py-2 text-white transition-colors duration-150 bg-black border border-black rounded-r-sm hover:bg-white hover:text-black"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? 'Loading' : 'Update'}
+          </button>
         </div>
       </form>
     </div>
@@ -102,11 +100,11 @@ const SettingsPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-lg p-4 mx-auto space-y-4">
+      <div className="max-w-lg p-4 mx-auto space-y-10">
         {user && <EditUserName userId={user.sub} />}
 
         <button
-          className="w-full px-4 py-2 font-semibold text-gray-600 transition-shadow duration-150 transform bg-white rounded shadow-xs hover:shadow-lg active:shadow-inner focus:shadow-outline active:bg-gray-200"
+          className="block w-48 py-3 mx-auto text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm space-x-2 hover:text-black hover:border-black"
           onClick={logout}
         >
           Logout

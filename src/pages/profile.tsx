@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { MdArrowForward, MdDelete, MdRemove } from 'react-icons/md';
+import { MdArrowForward, MdDelete, MdMenu, MdMore, MdMoreHoriz } from 'react-icons/md';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Result, useQuery, useSubscription } from 'graphql-hooks';
+import { formatDistanceToNow, parseJSON } from 'date-fns';
 
 import Button from '../components/button';
 import Layout from '../components/layout';
@@ -33,14 +34,24 @@ interface TeamSessionsData {
 const USER_ENTRIES_QUERY = /* GraphQL */ `
   query UserWithEntries($id: String!) {
     user_by_pk(id: $id) {
+      name
+      picture
       entries(order_by: { created_at: desc }) {
         id
+        created_at
         week
         year
         month
-        team_id
+        team {
+          id
+          name
+        }
         image {
           original_url
+        }
+        user {
+          name
+          picture
         }
       }
     }
@@ -49,17 +60,27 @@ const USER_ENTRIES_QUERY = /* GraphQL */ `
 
 interface Entry {
   id: number;
+  created_at: string;
   year: number;
   month: number;
   week: number;
-  team_id: number;
+  team: {
+    id: number;
+    name: string;
+  };
   image: {
     original_url: string;
+  };
+  user: {
+    name: string;
+    picture: string;
   };
 }
 
 interface QueryData {
   user_by_pk: {
+    name: string;
+    picture: string;
     entries: Array<Entry>;
   };
 }
@@ -72,7 +93,7 @@ const SessionNotification: React.FC<{ entry: Entry }> = ({ entry }) => {
   const [sessions, setSessions] = useState<Session[]>();
 
   useSubscription(
-    { query: TEAM_SESSIONS_SUBSCRIPTION, variables: { id: entry.team_id } },
+    { query: TEAM_SESSIONS_SUBSCRIPTION, variables: { id: entry.team.id } },
     ({ error, data }: Result<TeamSessionsData>) => {
       if (error) {
         return;
@@ -107,24 +128,56 @@ const SessionNotification: React.FC<{ entry: Entry }> = ({ entry }) => {
   ) : null;
 };
 
-const CurrentEntry: React.FC<{ entry: Entry; onRemove: () => Promise<void> }> = ({
+const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
   entry,
-  onRemove,
+  onDelete,
 }) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const fromNow = formatDistanceToNow(parseJSON(entry.created_at), { addSuffix: true });
+
   return (
-    <div>
-      <SessionNotification entry={entry} />
-      <p className="text-lg font-semibold text-gray-700">Your GIF this week</p>
-      <div className="h-1" />
-      <div className="relative group">
-        <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100">
-          <Button onClick={onRemove}>
-            <MdDelete size="24" />
-          </Button>
+    <motion.div positionTransition exit={{ opacity: 0, height: 0 }}>
+      <header className="flex items-center justify-between h-16 px-3 bg-black rounded-t-sm">
+        <div className="flex items-center space-x-3">
+          <img className="h-10 rounded-full" src={entry.user.picture} alt={entry.user.name} />
+          <div>
+            <p className="text-base font-semibold leading-none text-gray-200">{entry.user.name}</p>
+            <p className="text-sm text-gray-500">
+              Posted {fromNow} in {entry.team.name}
+            </p>
+          </div>
         </div>
-        <img className="w-full rounded-b" src={entry.image.original_url} />
-      </div>
-    </div>
+        <div className="relative">
+          <button className="block" onClick={(): void => setShowMenu((isOpen) => !isOpen)}>
+            <MdMoreHoriz className="text-gray-400" size="24" />
+          </button>
+
+          {showMenu && (
+            <>
+              <button
+                className="fixed top-0 bottom-0 left-0 right-0 block w-full h-full bg-transparent"
+                onClick={(): void => setShowMenu(false)}
+              />
+              <motion.div
+                className="absolute right-0 w-48 py-1 bg-white rounded shadow-xl"
+                initial={{ opacity: 0, scale: 0.4, translateX: 32, translateY: -16 }}
+                animate={{ opacity: 1, scale: 1, translateX: 0, translateY: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <button
+                  className="flex w-full px-4 py-2 transition-colors duration-150 space-x-2 hover:bg-black hover:text-white"
+                  onClick={onDelete}
+                >
+                  <MdDelete size="24" />
+                  <p>Delete</p>
+                </button>
+              </motion.div>
+            </>
+          )}
+        </div>
+      </header>
+      <img src={entry.image.original_url} className="w-full h-auto rounded-b-sm" />
+    </motion.div>
   );
 };
 
@@ -154,47 +207,54 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
   return (
     <>
       <div className="max-w-xl p-4 mx-auto">
+        <p className="text-lg font-semibold text-black">Your GIF this week</p>
+        <div className="h-3" />
         {currentEntry ? (
-          <CurrentEntry
+          <EntryItem
             entry={currentEntry}
-            onRemove={(): Promise<void> => handleRemoveItem(currentEntry.id)}
+            onDelete={(): Promise<void> => handleRemoveItem(currentEntry.id)}
           />
         ) : (
-          <div>
-            <p className="text-lg font-semibold text-gray-700">Your GIF this week</p>
-            <div className="h-1" />
-
-            <div className="flex flex-col items-center justify-center h-64 bg-gray-200 border border-gray-400 rounded">
-              <p className="mb-2 text-sm text-center text-gray-600">No GIF for this week yet</p>
+          <div className="bg-white">
+            <header className="flex items-center h-16 px-3 bg-black rounded-t-sm">
+              <div className="flex items-center space-x-3">
+                <img
+                  className="h-10 rounded-full"
+                  src={data?.user_by_pk.picture}
+                  alt={data?.user_by_pk.name}
+                />
+                <div>
+                  <p className="text-base font-semibold leading-none text-gray-100">
+                    {data?.user_by_pk.name}
+                  </p>
+                  <p className="text-sm text-gray-400">This week</p>
+                </div>
+              </div>
+            </header>
+            <div className="flex flex-col items-center justify-center h-64 border-b border-l border-r border-black rounded-b-sm">
+              <p className="text-sm text-center text-gray-700">No GIF for this week yet</p>
+              <div className="h-2" />
               <Link href="/entries/new">
-                <a className="block w-32 py-2 mx-auto transition-shadow duration-150 bg-gray-100 border border-gray-400 rounded-lg hover:bg-gray-200 hover:shadow-lg active:shadow-xs">
-                  <p className="text-center text-gray-600">Pick GIF</p>
+                <a className="block px-6 py-2 mx-auto text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm hover:text-black hover:border-black">
+                  <p className="text-center">Pick GIF</p>
                 </a>
               </Link>
             </div>
           </div>
         )}
-        <div className="h-4" />
-        <p className="text-lg font-semibold text-gray-700">Previous GIFs</p>
-        <div className="h-1" />
+        <div className="h-6" />
+        <p className="text-lg font-semibold text-black">Previous GIFs</p>
+        <div className="h-3" />
         <div className="space-y-4">
           <AnimatePresence>
             {data?.user_by_pk.entries
               .filter((item) => item.id !== currentEntry?.id)
               .map((item) => (
-                <motion.div
+                <EntryItem
                   key={item.id}
-                  className="relative group"
-                  positionTransition
-                  exit={{ opacity: 0, height: 0 }}
-                >
-                  <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100">
-                    <Button onClick={(): Promise<void> => handleRemoveItem(item.id)}>
-                      <MdDelete size="24" />
-                    </Button>
-                  </div>
-                  <img src={item.image.original_url} className="w-full h-auto rounded" />
-                </motion.div>
+                  entry={item}
+                  onDelete={(): Promise<void> => handleRemoveItem(item.id)}
+                />
               ))}
           </AnimatePresence>
         </div>

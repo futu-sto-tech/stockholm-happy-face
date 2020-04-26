@@ -1,27 +1,10 @@
-import { MdAccountCircle, MdImage } from 'react-icons/md';
-
+import FlowsIcon from './flows-icon';
+import GifIcon from './gif-icon';
 import { IconType } from 'react-icons/lib/cjs';
 import Link from 'next/link';
+import ProfileIcon from './profile-icon';
 import React from 'react';
-import { useAuth0 } from '../context/auth';
-import { useQuery } from 'graphql-hooks';
 import { useRouter } from 'next/router';
-
-const USER_QUERY = /* GraphQL */ `
-  query UserWithEntries($id: String!) {
-    user_by_pk(id: $id) {
-      name
-    }
-  }
-`;
-
-interface UserData {
-  user_by_pk: { name: string };
-}
-
-interface UserVariables {
-  id: string;
-}
 
 interface LinkButtonProps {
   IconComponent: IconType;
@@ -30,53 +13,47 @@ interface LinkButtonProps {
 }
 
 const LinkButton: React.FC<LinkButtonProps> = ({ IconComponent, title, active, ...props }) => (
-  <a className={`block p-2 rounded-r-lg ${active && 'bg-blue-500'}`} {...props}>
+  <a className={`block p-2 ${active && 'bg-black'}`} {...props}>
     <div
-      className={`flex flex-col items-center justify-center h-20 rounded-lg ${
-        active ? 'text-white' : 'text-gray-600 hover:bg-gray-300'
+      className={`flex flex-col items-center justify-center h-20 rounded-lg space-y-1 ${
+        active ? 'text-white' : 'text-black hover:bg-gray-200'
       }`}
     >
-      <IconComponent className="mx-auto text-current" size="32" />
-      <p className="text-xs font-semibold text-current">{title}</p>
+      <IconComponent className="mx-auto" />
+      <p className="text-sm font-semibold text-current">{title}</p>
     </div>
   </a>
 );
 
-const SettingsLink: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data } = useQuery<UserData | undefined, UserVariables>(USER_QUERY, {
-    variables: { id: userId },
-  });
-
-  const router = useRouter();
-
-  return data ? (
-    <Link href="/settings" passHref>
-      <LinkButton
-        IconComponent={MdAccountCircle}
-        title={data.user_by_pk.name}
-        active={router.pathname === '/settings'}
-      />
-    </Link>
-  ) : null;
-};
-
-const Layout: React.FC = ({ children }) => {
-  const { user } = useAuth0();
+const Layout: React.FC<{ showNav?: boolean }> = ({ children, showNav = true }) => {
   const router = useRouter();
 
   return (
     <div className="flex flex-row">
-      <nav className="w-24 py-2">
+      <nav className={`w-24 bg-white ${showNav ? 'block' : 'hidden'}`}>
         <Link href="/profile" passHref>
           <LinkButton
-            IconComponent={MdImage}
+            IconComponent={GifIcon}
             title="Your GIFs"
             active={router.pathname === '/profile'}
           />
         </Link>
-        {user && <SettingsLink userId={user.sub} />}
+        <Link href="/teams" passHref>
+          <LinkButton
+            IconComponent={FlowsIcon}
+            title="Flows"
+            active={router.pathname === '/teams'}
+          />
+        </Link>
+        <Link href="/settings" passHref>
+          <LinkButton
+            IconComponent={ProfileIcon}
+            title="Profile"
+            active={router.pathname === '/settings'}
+          />
+        </Link>
       </nav>
-      <main className="flex-1 h-screen overflow-y-auto">{children}</main>
+      <main className="relative flex-1 h-screen overflow-y-auto">{children}</main>
     </div>
   );
 };

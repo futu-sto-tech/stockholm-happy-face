@@ -7,7 +7,7 @@ const Button: React.FC<{
   type?: 'button' | 'reset' | 'submit';
 }> = ({ className, ...props }) => (
   <motion.button
-    className={`inline-block p-3 text-gray-700 bg-gray-300 rounded-full hover:bg-gray-200 ${className}`}
+    className={`p-3 text-gray-500 rounded-full hover:bg-gray-800 ${className}`}
     whileTap={{ scale: 0.95 }}
     whileHover={{ scale: 1.05 }}
     {...props}

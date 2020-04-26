@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import Button from './button';
 import Link from 'next/link';
 import MasonryGrid from './masonry-grid';
-import { MdTrendingUp } from 'react-icons/md';
 import TrendingGifResults from './trending-gif-results';
 import { motion } from 'framer-motion';
 import { useDebounce } from '../hooks';
@@ -102,60 +100,43 @@ const SearchResults: React.FC<{
   );
 };
 
-const TRENDING_TITLE = ['Need some inspiration?', 'Trouble deciding?'];
-
 const SearchGif: React.FC<{
   query: string;
   setQuery: (value: string) => void;
   offset: number;
   setOffset: (value: number) => void;
 }> = ({ query, setQuery, offset, setOffset }) => {
-  const [showTrending, setShowTrending] = useState(false);
   const debouncedQuery = useDebounce(query, 1000);
 
   return (
-    <div>
-      <header className="p-4 bg-gray-200 rounded-lg">
-        <h2 className="font-semibold text-gray-900">How was your week?</h2>
-        <p className="text-sm text-gray-700">
-          Pick a GIF to share your experience this week with your team.
-        </p>
-        <div className="h-2" />
-        <input
-          className="block w-full rounded-lg form-input"
-          placeholder="Happy, stressful, confusing..."
-          type="search"
-          value={query}
-          onChange={({ target: { value } }): void => setQuery(value)}
-        />
-        <Link href={{ href: '/entries/new', query: { manual: 'on' } }}>
-          <a className="text-sm text-gray-700 underline">Or paste a link</a>
-        </Link>
-      </header>
-      <div className="h-2"></div>
-      <main>
-        <div className="flex flex-col">
-          <div className="flex-1">
-            {debouncedQuery ? (
-              <SearchResults query={debouncedQuery} offset={offset} setOffset={setOffset} />
-            ) : showTrending ? (
-              <TrendingGifResults />
-            ) : (
-              <div className="flex flex-col items-center py-10 space-y-2">
-                <p className="text-base">
-                  {TRENDING_TITLE[Math.floor(Math.random() * Math.floor(2))]}
-                </p>
-                <Button
-                  className="flex items-center px-8 space-x-3"
-                  onClick={(): void => setShowTrending(true)}
-                >
-                  <MdTrendingUp size="24" />
-                  <p className="text-base font-semibold">View Trending GIFs</p>
-                </Button>
-              </div>
-            )}
-          </div>
+    <div className="space-y-10">
+      <div />
+      <header className="max-w-2xl mx-auto space-y-4">
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-black">How was your week?</h2>
+          <p className="text-gray-700">
+            Pick a GIF to share your experience this week with your team.
+          </p>
         </div>
+        <div className="space-y-2">
+          <input
+            className="block w-full border-black rounded-sm form-input"
+            placeholder="Happy, stressful, confusing..."
+            type="search"
+            value={query}
+            onChange={({ target: { value } }): void => setQuery(value)}
+          />
+          <Link href={{ href: '/entries/new', query: { manual: 'on' } }}>
+            <a className="block text-sm text-gray-700 underline">Or paste a link</a>
+          </Link>
+        </div>
+      </header>
+      <main>
+        {debouncedQuery ? (
+          <SearchResults query={debouncedQuery} offset={offset} setOffset={setOffset} />
+        ) : (
+          <TrendingGifResults />
+        )}
       </main>
     </div>
   );

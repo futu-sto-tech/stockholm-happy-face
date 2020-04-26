@@ -21,35 +21,40 @@ const ManualEntry: React.FC = () => {
   );
 
   return (
-    <div className="p-4 bg-gray-200 border border-gray-400 rounded-lg space-y-4">
-      <header className="flex items-center space-x-4">
-        <Link href="/entries/new">
-          <a className="text-gray-800">
-            <MdArrowBack size="24" />
-          </a>
-        </Link>
-        <p className="text-lg font-semibold text-gray-800">Great, you already found a GIF!</p>
-      </header>
-      <main>
-        <form onSubmit={handleSubmitUrl}>
-          <label className="block">
-            <span className="text-gray-600">Link to GIF</span>
-            <input
-              className="block w-full mt-1 mb-4 rounded-lg form-input"
-              placeholder="Happy, sad, boring..."
-              type="url"
-              value={url}
-              onChange={({ target: { value } }): void => setUrl(value)}
-              required
-              autoFocus
-            />
-          </label>
-          <Button className="px-8 bg-gray-300 hover:bg-gray-400" type="submit">
-            Preview
-          </Button>
-        </form>
-      </main>
-    </div>
+    <form onSubmit={handleSubmitUrl}>
+      <div className="p-6 space-y-4">
+        <header>
+          <p className="text-lg font-semibold text-black">Great, you already found a GIF!</p>
+          <p className="text-gray-700">Paste the link to the GIF below.</p>
+        </header>
+        <main>
+          <input
+            className="block w-full transition-colors duration-150 bg-white border border-black border-gray-400 rounded-sm hover:border-black form-input"
+            placeholder="Happy, sad, boring..."
+            type="url"
+            value={url}
+            onChange={({ target: { value } }): void => setUrl(value)}
+            required
+            autoFocus
+          />
+        </main>
+        <footer className="flex space-x-4">
+          <Link href="/entries/new">
+            <a className="flex items-center px-6 py-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm space-x-2 hover:text-black hover:border-black">
+              <MdArrowBack size="20" />
+              <p className="text-base leading-none">Pick another</p>
+            </a>
+          </Link>
+
+          <button
+            className="px-6 py-2 text-white transition-colors duration-150 bg-black border border-black rounded-sm hover:bg-white hover:text-black"
+            type="submit"
+          >
+            Preview GIF
+          </button>
+        </footer>
+      </div>
+    </form>
   );
 };
 

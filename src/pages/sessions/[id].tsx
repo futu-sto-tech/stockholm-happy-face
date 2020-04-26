@@ -6,6 +6,8 @@ import Router, { useRouter } from 'next/router';
 import { getEndOfWeek, getStartOfWeek } from '../../lib/utils';
 
 import Button from '../../components/button';
+import FlatButton from '../../components/flat-button';
+import Layout from '../../components/layout';
 import { useAuth0 } from '../../context/auth';
 
 const SESSION_SUBSCRIPTION = /* GraphQL */ `
@@ -255,7 +257,7 @@ const SessionPage: React.FC = () => {
   }, [timeLeft]);
 
   return (
-    <div>
+    <Layout showNav={session?.entry ? false : true}>
       {percentagePassed && (
         <motion.div
           animate={{ width: [`${percentagePassed}%`, '100%'] }}
@@ -263,29 +265,20 @@ const SessionPage: React.FC = () => {
           className="absolute top-0 left-0 h-2 bg-blue-500 opacity-50"
         />
       )}
-      <div className="absolute top-0 left-0 p-4">
-        <Button onClick={handleClickClose}>
-          <MdClose size="24" />
-        </Button>
-      </div>
-      <div
-        className={`flex flex-col h-screen ${
-          session?.entry && 'bg-gray-900'
-        } transition-colors duration-500`}
-      >
+      <div className={`flex flex-col h-screen`}>
         <main className="flex items-center justify-center flex-1">
           {session?.entry ? (
             <div className="max-w-4xl space-y-4">
               <header className="flex items-center justify-between">
-                <Button onClick={handlePrev}>
-                  <MdNavigateBefore size="24" />
-                </Button>
-                <p className="text-lg font-semibold text-center text-gray-400">
+                <FlatButton className="w-32" onClick={handlePrev}>
+                  Previous
+                </FlatButton>
+                <p className="flex-1 text-lg font-semibold text-center text-black">
                   {session.entry.user.name}
                 </p>
-                <Button onClick={handleNext}>
-                  <MdNavigateNext size="24" />
-                </Button>
+                <FlatButton className="w-32" onClick={handleNext}>
+                  Next
+                </FlatButton>
               </header>
               <main className="relative flex justify-center flex-1 overflow-hidden">
                 <AnimatePresence exitBeforeEnter>
@@ -304,32 +297,44 @@ const SessionPage: React.FC = () => {
               </main>
             </div>
           ) : (
-            <Button onClick={handleNext}>
-              <MdPlayArrow size="24" />
-            </Button>
+            <button
+              className="px-8 py-3 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm hover:text-black hover:border-black"
+              onClick={handleNext}
+            >
+              Start session
+            </button>
           )}
         </main>
-        <footer className="flex p-4 bg-gray-800 shadow-2xl space-x-2">
+        <footer className="flex justify-center h-40 space-x-2">
           {session?.users.map((item) => (
             <motion.button
               onClick={(): Promise<void> => handleClickUser(item.user.id)}
               key={item.user.id}
               className="flex items-center justify-center"
-              animate={{
-                scale: [0.5, 1, 1.3, 1, 1],
-                rotate: [0, 0, -15, -15, 0],
-              }}
               positionTransition
             >
-              <div className="space-y-2">
-                <img className="w-20 h-auto mx-auto rounded-full" src={item.user.picture} />
-                <p className="text-center text-gray-400">{item.user.name}</p>
+              <div className="space-y-1">
+                <motion.img
+                  key={item.user.id}
+                  animate={{
+                    scale: [0.5, 1, 1.3, 1, 1],
+                    rotate: [0, 0, -15, -15, 0],
+                  }}
+                  positionTransition
+                  className={`w-20 h-auto mx-auto rounded-full border-4 ${
+                    item.user.id === session.entry?.user.id
+                      ? 'border-blue-500 shadow-xl'
+                      : 'border-transparent'
+                  }`}
+                  src={item.user.picture}
+                />
+                <p className={`text-center text-black`}>{item.user.name}</p>
               </div>
             </motion.button>
           ))}
         </footer>
       </div>
-    </div>
+    </Layout>
   );
 };
 
