@@ -1,10 +1,21 @@
 /* purgecss start ignore */
+
 @tailwind base;
 @tailwind components;
+
 /* purgecss end ignore */
+
+.flat-button {
+  @apply block px-6 py-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm;
+}
+
+.flat-button:hover {
+  @apply text-black border-black;
+}
 
 @tailwind utilities;
 
-html, body {
+html,
+body {
   @apply bg-gray-100;
 }

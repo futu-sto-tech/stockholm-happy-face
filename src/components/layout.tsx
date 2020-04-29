@@ -16,7 +16,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({ IconComponent, title, active, .
   <a className={`block p-2 ${active && 'bg-black'}`} {...props}>
     <div
       className={`flex flex-col items-center justify-center h-20 rounded-lg space-y-1 ${
-        active ? 'text-white' : 'text-black hover:bg-gray-200'
+        active ? 'text-white' : 'text-black hover:bg-gray-300'
       }`}
     >
       <IconComponent className="mx-auto" />
@@ -30,7 +30,7 @@ const Layout: React.FC<{ showNav?: boolean }> = ({ children, showNav = true }) =
 
   return (
     <div className="flex flex-row">
-      <nav className={`w-24 bg-white ${showNav ? 'block' : 'hidden'}`}>
+      <nav className={`w-24 ${showNav ? 'block' : 'hidden'}`}>
         <Link href="/profile" passHref>
           <LinkButton
             IconComponent={GifIcon}

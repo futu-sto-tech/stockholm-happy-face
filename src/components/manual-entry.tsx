@@ -1,8 +1,7 @@
-import { MdArrowBack, MdClose } from 'react-icons/md';
 import React, { useCallback, useState } from 'react';
 
-import Button from './button';
 import Link from 'next/link';
+import { MdArrowBack } from 'react-icons/md';
 import { useRouter } from 'next/router';
 
 const ManualEntry: React.FC = () => {

@@ -1,18 +1,18 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { MdClose, MdNavigateBefore, MdNavigateNext, MdPlayArrow } from 'react-icons/md';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Result, useMutation, useSubscription } from 'graphql-hooks';
 import Router, { useRouter } from 'next/router';
 import { getEndOfWeek, getStartOfWeek } from '../../lib/utils';
 
-import Button from '../../components/button';
-import FlatButton from '../../components/flat-button';
 import Layout from '../../components/layout';
+import LogoIcon from '../../components/logo-icon';
+import Presentation from '../../components/presentation';
+import { motion } from 'framer-motion';
 import { useAuth0 } from '../../context/auth';
 
 const SESSION_SUBSCRIPTION = /* GraphQL */ `
   subscription Session($sessionId: Int!, $before: timestamptz!, $after: timestamptz!) {
     session_by_pk(id: $sessionId) {
+      id
       is_active
       team {
         id
@@ -42,13 +42,27 @@ const SESSION_SUBSCRIPTION = /* GraphQL */ `
         user {
           id
           name
+          picture
         }
       }
     }
   }
 `;
 
-interface Session {
+export interface Entry {
+  id: number;
+  image: {
+    original_url: string;
+  };
+  user: {
+    id: string;
+    name: string;
+    picture: string;
+  };
+}
+
+export interface Session {
+  id: number;
   is_active: boolean;
   team: {
     id: number;
@@ -61,16 +75,7 @@ interface Session {
   };
   users: Array<{ user: { id: string; name: string; picture?: string } }>;
   changed_entry_at: string;
-  entry?: {
-    id: number;
-    image: {
-      original_url: string;
-    };
-    user: {
-      id: string;
-      name: string;
-    };
-  };
+  entry?: Entry;
 }
 
 interface SessionData {
@@ -164,8 +169,6 @@ const SessionPage: React.FC = () => {
     return (): void => Router.events.off('routeChangeStart', handleDeleteSessionUser);
   }, [user, deleteSessionUser, sessionId]);
 
-  const handleClickClose = useCallback(async () => router.back(), [router]);
-
   const startOfWeek = useMemo(() => getStartOfWeek().toISOString(), []);
   const endOfWeek = useMemo(() => getEndOfWeek().toISOString(), []);
   useSubscription(
@@ -184,51 +187,14 @@ const SessionPage: React.FC = () => {
     },
   );
 
-  const entryIds = useMemo(() => session?.team.entries.map<number>((item) => item.id), [session]);
-
-  const handleNext = useCallback(async () => {
-    if (entryIds && session !== undefined) {
-      if (session.entry === null) {
-        await updateSession({
-          variables: { sessionId, entryId: entryIds[0], time: new Date().toISOString() },
-        });
-      } else if (session.entry) {
-        const entryIndex = entryIds.indexOf(session.entry.id);
-        console.info('has entry', entryIndex, entryIds);
-
-        if (entryIndex + 1 < entryIds.length) {
-          await updateSession({
-            variables: {
-              sessionId,
-              entryId: entryIds[entryIndex + 1],
-              time: new Date().toISOString(),
-            },
-          });
-        } else if (entryIndex + 1 === entryIds.length) {
-          await updateSession({ variables: { sessionId, entryId: undefined } });
-        }
-      }
+  const handleClickStart = useCallback(async () => {
+    if (session) {
+      const entryId = session.team.entries[0].id;
+      await updateSession({
+        variables: { sessionId: session.id, entryId, time: new Date().toISOString() },
+      });
     }
-  }, [updateSession, sessionId, entryIds, session]);
-
-  const handlePrev = useCallback(async () => {
-    if (entryIds && session?.entry) {
-      const entryIndex = entryIds.indexOf(session.entry.id);
-      console.info('Prev', entryIndex);
-
-      if (entryIndex > 0) {
-        await updateSession({
-          variables: {
-            sessionId,
-            entryId: entryIds[entryIndex - 1],
-            time: new Date().toISOString(),
-          },
-        });
-      } else if (entryIndex === 0) {
-        await updateSession({ variables: { sessionId, entryId: undefined } });
-      }
-    }
-  }, [updateSession, sessionId, entryIds, session]);
+  }, [session, updateSession]);
 
   const handleClickUser = useCallback(
     async (userId: string) => {
@@ -242,67 +208,27 @@ const SessionPage: React.FC = () => {
     [session, updateSession, sessionId],
   );
 
-  const timeLeft = useMemo(() => {
-    if (session?.entry && session?.changed_entry_at) {
-      const changedAt = new Date(session?.changed_entry_at);
-      const secondsAgo = (new Date().getTime() - changedAt.getTime()) / 1000;
-      return Math.max(60 - secondsAgo, 0);
-    }
-  }, [session]);
-
-  const percentagePassed = useMemo(() => {
-    if (timeLeft !== undefined) {
-      return 100 * (1 - timeLeft / 60);
-    }
-  }, [timeLeft]);
+  if (session?.entry !== null && session?.entry !== undefined) {
+    return <Presentation session={session} entry={session.entry} />;
+  }
 
   return (
     <Layout showNav={session?.entry ? false : true}>
-      {percentagePassed && (
-        <motion.div
-          animate={{ width: [`${percentagePassed}%`, '100%'] }}
-          transition={{ duration: timeLeft }}
-          className="absolute top-0 left-0 h-2 bg-blue-500 opacity-50"
-        />
-      )}
       <div className={`flex flex-col h-screen`}>
-        <main className="flex items-center justify-center flex-1">
+        <main className="flex items-center flex-1 w-full max-w-4xl px-4 mx-auto">
           {session?.entry ? (
-            <div className="max-w-4xl space-y-4">
-              <header className="flex items-center justify-between">
-                <FlatButton className="w-32" onClick={handlePrev}>
-                  Previous
-                </FlatButton>
-                <p className="flex-1 text-lg font-semibold text-center text-black">
-                  {session.entry.user.name}
-                </p>
-                <FlatButton className="w-32" onClick={handleNext}>
-                  Next
-                </FlatButton>
-              </header>
-              <main className="relative flex justify-center flex-1 overflow-hidden">
-                <AnimatePresence exitBeforeEnter>
-                  <motion.img
-                    key={session.entry.image.original_url}
-                    src={session.entry.image.original_url}
-                    initial={{ opacity: 0, x: 1000 }}
-                    animate={{ zIndex: 1, x: 0, opacity: 1 }}
-                    exit={{ zIndex: 0, x: -1000, opacity: 0 }}
-                    transition={{
-                      x: { type: 'spring', stiffness: 300, damping: 200 },
-                      opacity: { duration: 0.2 },
-                    }}
-                  />
-                </AnimatePresence>
-              </main>
-            </div>
+            <div></div>
           ) : (
-            <button
-              className="px-8 py-3 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm hover:text-black hover:border-black"
-              onClick={handleNext}
-            >
-              Start session
-            </button>
+            <div className="flex flex-col items-center mx-auto space-y-5">
+              <LogoIcon />
+              <h2 className="text-lg font-semibold">{session?.team.name}</h2>
+              <button
+                className="px-8 py-3 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm hover:text-black hover:border-black"
+                onClick={handleClickStart}
+              >
+                Start session
+              </button>
+            </div>
           )}
         </main>
         <footer className="flex justify-center h-40 space-x-2">

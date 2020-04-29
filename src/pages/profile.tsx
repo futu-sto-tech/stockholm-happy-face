@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { MdArrowForward, MdDelete, MdMenu, MdMore, MdMoreHoriz } from 'react-icons/md';
+import { MdArrowForward, MdDelete, MdMoreHoriz } from 'react-icons/md';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Result, useQuery, useSubscription } from 'graphql-hooks';
 import { formatDistanceToNow, parseJSON } from 'date-fns';
 
-import Button from '../components/button';
 import Layout from '../components/layout';
 import Link from 'next/link';
 import { getCurrentWeek } from '../lib/utils';
