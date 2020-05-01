@@ -9,7 +9,8 @@ const EntriesNewPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="h-screen max-w-3xl p-4 mx-auto">
+      <div className="max-w-3xl px-4 mx-auto">
+        <div className="h-10" />
         {router.query.manual ? <ManualEntry /> : <NewEntry />}
       </div>
     </Layout>

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getGiphyGif, getGiphyId } from '../../lib/giphy';
 
+import Vibrant from 'node-vibrant';
 import axios from 'axios';
 
 interface RequestBody {
@@ -25,6 +26,7 @@ const UPDATE_IMAGE_MUTATION = /* GraphQL */ `
     $fixedWidth: String
     $fixedWidthWebp: String
     $title: String
+    $color: String
   ) {
     update_image(
       where: { id: { _eq: $id } }
@@ -34,6 +36,7 @@ const UPDATE_IMAGE_MUTATION = /* GraphQL */ `
         fixed_width_url: $fixedWidth
         fixed_width_webp_url: $fixedWidthWebp
         title: $title
+        color: $color
       }
     ) {
       returning {
@@ -48,6 +51,15 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
   const body = req.body as RequestBody;
   const image = body.event.data.new;
   console.info(`Processing image: ${image.id} with URL: ${image.original_url}`);
+
+  let color: string | undefined = undefined;
+  try {
+    const colorValue = await Vibrant.from(image.original_url).getPalette();
+    color = colorValue.DarkMuted?.getHex();
+    console.info('Detected primary color', color);
+  } catch (error) {
+    console.warn('Unable to detect primary color', error);
+  }
 
   const giphyId = getGiphyId(image.original_url);
   if (giphyId) {
@@ -67,6 +79,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
             fixedWidth: giphyImage.fixed_width.url,
             fixedWidthWebp: giphyImage.fixed_width.webp,
             title: giphyImage.title,
+            color,
           },
         },
         {

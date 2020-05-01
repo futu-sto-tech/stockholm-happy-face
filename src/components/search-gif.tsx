@@ -110,7 +110,6 @@ const SearchGif: React.FC<{
 
   return (
     <div className="space-y-10">
-      <div />
       <header className="max-w-2xl mx-auto space-y-4">
         <div className="text-center">
           <h2 className="text-lg font-semibold text-black">How was your week?</h2>

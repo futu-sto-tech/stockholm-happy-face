@@ -1,131 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { MdArrowForward, MdDelete, MdMoreHoriz } from 'react-icons/md';
+import { MdDelete, MdMoreHoriz } from 'react-icons/md';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Result, useQuery, useSubscription } from 'graphql-hooks';
 import { formatDistanceToNow, parseJSON } from 'date-fns';
+import useUserEntriesQuery, { Entry } from '../queries/user-entries';
 
 import Layout from '../components/layout';
 import Link from 'next/link';
 import { getCurrentWeek } from '../lib/utils';
 import { useAuth0 } from '../context/auth';
 import useDeleteEntryMutation from '../lib/api/delete-entry-mutation';
-
-const TEAM_SESSIONS_SUBSCRIPTION = /* GraphQL */ `
-  subscription TeamSessions($id: Int!) {
-    session(where: { team_id: { _eq: $id }, is_active: { _eq: true } }) {
-      id
-      team {
-        name
-      }
-    }
-  }
-`;
-
-interface Session {
-  id: number;
-  team: { name: string };
-}
-
-interface TeamSessionsData {
-  session: Session[];
-}
-
-const USER_ENTRIES_QUERY = /* GraphQL */ `
-  query UserWithEntries($id: String!) {
-    user_by_pk(id: $id) {
-      name
-      picture
-      entries(order_by: { created_at: desc }) {
-        id
-        created_at
-        week
-        year
-        month
-        team {
-          id
-          name
-        }
-        image {
-          original_url
-        }
-        user {
-          name
-          picture
-        }
-      }
-    }
-  }
-`;
-
-interface Entry {
-  id: number;
-  created_at: string;
-  year: number;
-  month: number;
-  week: number;
-  team: {
-    id: number;
-    name: string;
-  };
-  image: {
-    original_url: string;
-  };
-  user: {
-    name: string;
-    picture: string;
-  };
-}
-
-interface QueryData {
-  user_by_pk: {
-    name: string;
-    picture: string;
-    entries: Array<Entry>;
-  };
-}
-
-interface QueryVariables {
-  id: string;
-}
-
-const SessionNotification: React.FC<{ entry: Entry }> = ({ entry }) => {
-  const [sessions, setSessions] = useState<Session[]>();
-
-  useSubscription(
-    { query: TEAM_SESSIONS_SUBSCRIPTION, variables: { id: entry.team.id } },
-    ({ error, data }: Result<TeamSessionsData>) => {
-      if (error) {
-        return;
-      }
-
-      // all good, handle the gql result
-      setSessions(data?.session);
-    },
-  );
-
-  const activeSession = useMemo(() => sessions?.[0], [sessions]);
-
-  return activeSession ? (
-    <div>
-      <AnimatePresence>
-        <Link href="/sessions/[id]" as={`/sessions/${activeSession.id}`} passHref>
-          <motion.a
-            className="flex items-center justify-between px-4 py-2 text-gray-100 bg-green-500 rounded"
-            initial={{ opacity: 0, y: -100 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileTap={{ scale: 0.99 }}
-          >
-            <p className="font-semibold text-center">Join {activeSession.team.name} Smileys!</p>
-            <motion.div animate={{ x: [0, -4, 0] }} transition={{ loop: Infinity, duration: 1.5 }}>
-              <MdArrowForward size="28" />
-            </motion.div>
-          </motion.a>
-        </Link>
-      </AnimatePresence>
-      <div className="h-4"></div>
-    </div>
-  ) : null;
-};
+import useTeamSubscription from '../subscriptions/team';
 
 const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
   entry,
@@ -164,7 +48,7 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
                 transition={{ duration: 0.1 }}
               >
                 <button
-                  className="flex w-full px-4 py-2 transition-colors duration-150 space-x-2 hover:bg-black hover:text-white"
+                  className="flex w-full px-4 py-2 space-x-2 transition-colors duration-150 hover:bg-black hover:text-white"
                   onClick={onDelete}
                 >
                   <MdDelete size="24" />
@@ -180,14 +64,51 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
   );
 };
 
-export function useUserEntries(userId: string) {
-  return useQuery<QueryData | undefined, QueryVariables>(USER_ENTRIES_QUERY, {
-    variables: { id: userId },
-  });
-}
+const ActiveNotification: React.FC<{ team: { id: number; name: string } }> = ({ team }) => (
+  <div className="flex items-center justify-between px-6 py-4 bg-black rounded shadow-stereoscopic">
+    <div className="flex items-center space-x-2">
+      <div className="w-4 h-4 p-px border border-white rounded-full">
+        <motion.div
+          className="w-full h-full bg-white rounded-full"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: [0, 1, 0] }}
+          transition={{ loop: Infinity, duration: 2 }}
+        />
+      </div>
+      <p className="font-semibold text-white">{team.name} Smileys is live</p>
+    </div>
+    <Link href="/teams/[id]" as={`/teams/${team.id}`}>
+      <a className="font-semibold flat-button">Join</a>
+    </Link>
+  </div>
+);
+
+const InactiveNotification: React.FC<{ team: { name: string } }> = ({ team }) => (
+  <div className="flex items-center justify-between px-6 py-4 border border-black rounded">
+    <div className="flex items-center space-x-2">
+      <span className="w-4 h-4 border border-black rounded-full"></span>
+      <p className="font-semibold">{team.name} Smileys is inactive</p>
+    </div>
+    <button disabled className="flat-button">
+      Join
+    </button>
+  </div>
+);
+
+const Notification: React.FC<{ teamId: number }> = ({ teamId }) => {
+  const team = useTeamSubscription(teamId);
+
+  return team ? (
+    team.active ? (
+      <ActiveNotification team={team} />
+    ) : (
+      <InactiveNotification team={team} />
+    )
+  ) : null;
+};
 
 const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data, refetch } = useUserEntries(userId);
+  const { data, refetch } = useUserEntriesQuery(userId);
 
   const [currentYear, currentWeek] = useMemo(() => getCurrentWeek(), []);
   const currentEntry = data?.user_by_pk.entries.find(
@@ -206,7 +127,10 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
   return (
     <>
       <div className="max-w-xl p-4 mx-auto">
-        <p className="text-lg font-semibold text-black">Your GIF this week</p>
+        <div className="h-5" />
+        {data && <Notification teamId={data.user_by_pk.team_id} />}
+        <div className="h-5" />
+        <p className="text-lg font-semibold text-black">My GIF this week</p>
         <div className="h-3" />
         {currentEntry ? (
           <EntryItem

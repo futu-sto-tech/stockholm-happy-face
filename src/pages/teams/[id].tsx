@@ -1,9 +1,12 @@
-import React, { useCallback, useEffect } from 'react';
-import { useMutation, useQuery } from 'graphql-hooks';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import Router, { useRouter } from 'next/router';
 
-import Link from 'next/link';
+import Lobby from '../../components/lobby';
+import Presentation from '../../components/presentation';
 import { useAuth0 } from '../../context/auth';
-import { useRouter } from 'next/router';
+import { useMutation } from 'graphql-hooks';
+import useSessionSubscription from '../../subscriptions/session';
+import useUpdateUserSessionMutation from '../../mutations/update-user-session';
 
 const mutation = /* GraphQL */ `
   mutation InsertSession($team: Int!, $user: String!) {
@@ -60,48 +63,40 @@ const NewSessionButton: React.FC<NewSessionButtonProps> = ({ userId, teamId }) =
   );
 };
 
-const query = /* GraphQL */ `
-  query TeamAndUserEntries($teamId: Int!) {
-    team_by_pk(id: $teamId) {
-      name
-      sessions(where: { is_active: { _eq: true } }) {
-        id
-      }
-    }
-  }
-`;
-
-interface QueryData {
-  team_by_pk: {
-    name: string;
-    sessions: Array<{ id: number }>;
-  };
-}
-
-interface QueryVariables {
-  teamId: number;
-}
-
 const TeamPage: React.FC = () => {
   const router = useRouter();
-  const { user } = useAuth0();
   const teamId = parseInt(router.query.id as string);
-  const { data } = useQuery<QueryData, QueryVariables>(query, { variables: { teamId } });
+  const session = useSessionSubscription(teamId);
+  const { user } = useAuth0();
+  const [updateUserSession] = useUpdateUserSessionMutation();
 
-  return (
-    <div className="max-w-6xl p-4 mx-auto">
-      <h2>{data?.team_by_pk.name}</h2>
-      {data?.team_by_pk.sessions.length ? (
-        <Link href="/sessions/[id]" as={`/sessions/${data.team_by_pk.sessions[0].id}`}>
-          <a className="block p-2 mb-4 text-center bg-gray-400 rounded shadow hover:bg-gray-300">
-            Join
-          </a>
-        </Link>
-      ) : (
-        user && <NewSessionButton teamId={teamId} userId={user.sub} />
-      )}
-    </div>
-  );
+  const participants = useMemo(() => session?.participants.map((item) => item.id), [session]);
+  useEffect(() => {
+    if (user?.sub && participants && participants.indexOf(user.sub) === -1) {
+      updateUserSession({ variables: { user: user.sub, team: teamId } });
+    }
+  }, [user, participants, teamId, updateUserSession]);
+
+  useEffect(() => {
+    async function handleDeleteSessionUser(url: string): Promise<void> {
+      console.info('Changed route', url);
+      if (user) {
+        await updateUserSession({ variables: { user: user.sub } });
+      }
+    }
+
+    Router.events.on('routeChangeStart', handleDeleteSessionUser);
+
+    return (): void => Router.events.off('routeChangeStart', handleDeleteSessionUser);
+  }, [user, updateUserSession]);
+
+  return session && user ? (
+    session.entry ? (
+      <Presentation session={session} entry={session.entry} />
+    ) : (
+      <Lobby session={session} userId={user.sub} />
+    )
+  ) : null;
 };
 
 export default TeamPage;

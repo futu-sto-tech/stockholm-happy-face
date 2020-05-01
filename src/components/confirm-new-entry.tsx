@@ -1,23 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useManualQuery, useMutation, useQuery } from 'graphql-hooks';
+import { useInsertEntryWithImage, useInsertEntryWithUrl } from '../mutations/insert-entry';
 
 import Link from 'next/link';
 import { MdArrowBack } from 'react-icons/md';
+import { useManualQuery } from 'graphql-hooks';
 import { useRouter } from 'next/router';
-import { useUserEntries } from '../pages/profile';
-
-const TEAMS_QUERY = /* GraphQL */ `
-  query Teams {
-    team {
-      id
-      name
-    }
-  }
-`;
-
-interface TeamsData {
-  team: Array<{ id: number; name: string }>;
-}
+import useTeamsQuery from '../queries/teams';
+import useUserEntriesQuery from '../queries/user-entries';
+import useUserQuery from '../queries/user';
 
 const IMAGE_QUERY = /* GraphQL */ `
   query Image($url: String!) {
@@ -35,72 +25,24 @@ interface ImageQueryVariables {
   url: string;
 }
 
-const INSERT_ENTRY_WITH_URL_MUTATION = /* GraphQL */ `
-  mutation InsertEntry($team: Int!, $user: String!, $url: String!) {
-    insert_entry(
-      objects: { team_id: $team, user_id: $user, image: { data: { original_url: $url } } }
-    ) {
-      returning {
-        id
-      }
-    }
-  }
-`;
-
-const INSERT_ENTRY_WITH_IMAGE_MUTATION = /* GraphQL */ `
-  mutation InsertEntry($team: Int!, $user: String!, $image: Int!) {
-    insert_entry(objects: { team_id: $team, user_id: $user, image_id: $image }) {
-      returning {
-        id
-      }
-    }
-  }
-`;
-
-interface MutationData {
-  insert_entry: {
-    returning: Array<{
-      id: number;
-    }>;
-  };
-}
-
-interface MutationVariablesWithUrl {
-  team: number;
-  user: string;
-  url: string;
-}
-
-interface MutationVariablesWithImage {
-  team: number;
-  user: string;
-  image: number;
-}
-
 const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user }) => {
   const router = useRouter();
   const [team, setTeam] = useState<number>();
 
-  const { data: teamsData } = useQuery<TeamsData | undefined>(TEAMS_QUERY);
+  const { data: userData } = useUserQuery(user);
+  const { data: teamsData } = useTeamsQuery();
   useEffect(() => {
-    if (teamsData && team === undefined) {
-      setTeam(teamsData.team[0].id);
+    if (team === undefined) {
+      setTeam(userData?.user_by_pk.team?.id || teamsData?.team[0].id);
     }
-  }, [teamsData, team]);
+  }, [team, userData, teamsData]);
 
   const [fetchImage] = useManualQuery<ImageQueryData | undefined, ImageQueryVariables>(IMAGE_QUERY);
 
-  const [insertEntryWithUrl, { data: dataWithUrl }] = useMutation<
-    MutationData,
-    MutationVariablesWithUrl
-  >(INSERT_ENTRY_WITH_URL_MUTATION);
+  const [insertEntryWithUrl, { data: dataWithUrl }] = useInsertEntryWithUrl();
+  const [insertEntryWithImage, { data: dataWithImage }] = useInsertEntryWithImage();
 
-  const [insertEntryWithImage, { data: dataWithImage }] = useMutation<
-    MutationData | undefined,
-    MutationVariablesWithImage
-  >(INSERT_ENTRY_WITH_IMAGE_MUTATION);
-
-  const { refetch } = useUserEntries(user);
+  const { refetch } = useUserEntriesQuery(user);
   useEffect(() => {
     async function routeToProfile(): Promise<void> {
       await refetch();
@@ -133,10 +75,10 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
   );
 
   return (
-    <div className="p-6 bg-white border border-black rounded-sm space-y-10">
+    <div className="p-6 space-y-10 bg-white border border-black rounded-sm">
       <header className="space-y-6">
         <div>
-          <p className="text-lg font-semibold text-center">Happy with this one?</p>
+          <p className="text-lg font-semibold text-center">Select this one?</p>
           <p className="text-center text-gray-700">
             Pick this GIF to share with your team during this weeks Smiley-session
           </p>
@@ -152,15 +94,15 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
       <form onSubmit={handleSubmit}>
         <div className="flex justify-center space-x-4">
           <Link href="/entries/new">
-            <a className="flex items-center px-6 py-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm space-x-2 hover:text-black hover:border-black">
+            <a className="flex items-center px-6 py-2 space-x-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded hover:text-black hover:border-black">
               <MdArrowBack size="20" />
-              <p className="text-base leading-none">Pick another</p>
+              <p className="text-base leading-none">Back</p>
             </a>
           </Link>
 
           <div className="flex">
             <select
-              className="border-r-0 border-black rounded-l-sm rounded-r-none form-select"
+              className="border-r-0 border-black rounded-l rounded-r-none form-select"
               value={team}
               onChange={({ target: { value } }): void => setTeam(parseInt(value))}
               required
@@ -173,7 +115,7 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
               ))}
             </select>
             <button
-              className="px-6 py-2 text-white transition-colors duration-150 bg-black border border-black rounded-r-sm hover:bg-white hover:text-black"
+              className="px-6 py-2 text-white transition-colors duration-150 bg-black border border-black rounded-r hover:bg-white hover:text-black"
               type="submit"
             >
               Pick GIF
