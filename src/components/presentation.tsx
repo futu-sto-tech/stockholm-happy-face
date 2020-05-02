@@ -5,7 +5,14 @@ import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { motion } from 'framer-motion';
+import useUpdateTeamActiveMutation from '../mutations/update-team-active';
 import useUpdateTeamEntry from '../mutations/update-team-entry';
+
+const ActiveParticipant: React.FC<{ name: string }> = ({ name }) => (
+  <div className="p-3 bg-white rounded">
+    <p className="font-semibold text-black">{name}</p>
+  </div>
+);
 
 const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entry }) => {
   const [updateTeamEntry] = useUpdateTeamEntry();
@@ -43,19 +50,19 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
     }
   }, [updateTeamEntry, entryIds, session, entry.id]);
 
-  const handleClickShowUser = useCallback(
-    async (userId: string) => {
-      const entryId = session.entries.find((item) => item.user_id === userId)?.id;
-      console.log(userId, session.entries, entryId);
-
-      if (entryId) {
-        await updateTeamEntry({
-          variables: { team: session.id, entry: entryId, time: new Date().toISOString() },
-        });
-      }
+  const handleClickShowUserEntry = useCallback(
+    async (entryId: number) => {
+      await updateTeamEntry({
+        variables: { team: session.id, entry: entryId, time: new Date().toISOString() },
+      });
     },
     [session, updateTeamEntry],
   );
+
+  const [updateTeamActive] = useUpdateTeamActiveMutation();
+  const handleClickEndSession = async (): Promise<void> => {
+    await updateTeamActive({ variables: { id: session.id, active: false } });
+  };
 
   return (
     <div className="flex flex-col h-full p-6 bg-black">
@@ -64,24 +71,29 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
           <h3 className="text-xl font-semibold text-white">Participants</h3>
           <div className="h-px bg-gray-600" />
           <ul>
-            {session.participants.map((item) => (
-              <li
-                key={item.id}
-                className="flex items-center justify-between py-3 text-white transition-all duration-100 rounded hover:bg-white hover:bg-opacity-10 hover:px-3 group"
-              >
-                <div className="flex items-center space-x-2">
-                  {item.id === session.entry?.user.id && (
-                    <span className="w-3 h-3 bg-blue-600 rounded-full" />
-                  )}
-                  <p>{item.name}</p>
-                </div>
-                {item.id !== session.entry?.user.id && (
-                  <button
-                    onClick={(): Promise<void> => handleClickShowUser(item.id)}
-                    className="font-semibold transition-opacity duration-100 opacity-0 group-hover:opacity-100"
-                  >
-                    Show
-                  </button>
+            {session.entries.map((item) => (
+              <li key={item.id}>
+                {item.id === session.entry?.id ? (
+                  <div className="my-2">
+                    <ActiveParticipant name={item.user.name} />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 pr-0 text-white transition-all duration-100 rounded hover:bg-white hover:bg-opacity-10 hover:pr-3 group">
+                    <div className="flex items-center space-x-2">
+                      {item.id === session.entry?.id && (
+                        <span className="w-3 h-3 bg-white rounded-full" />
+                      )}
+                      <p>{item.user.name}</p>
+                    </div>
+                    {item.id !== session.entry?.id && (
+                      <button
+                        onClick={(): Promise<void> => handleClickShowUserEntry(item.id)}
+                        className="font-semibold transition-opacity duration-100 opacity-0 group-hover:opacity-100"
+                      >
+                        Show
+                      </button>
+                    )}
+                  </div>
                 )}
               </li>
             ))}
@@ -103,7 +115,7 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
             Next
           </button>
         </nav>
-        <button className="w-full px-4 py-2 text-white border border-white rounded">
+        <button className="w-full px-4 text-white" onClick={handleClickEndSession}>
           End session
         </button>
       </footer>

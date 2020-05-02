@@ -15,17 +15,19 @@ const USER_QUERY = /* GraphQL */ `
   }
 `;
 
-export interface UserQueryData {
-  user_by_pk: {
-    id: string;
+interface User {
+  id: string;
+  name: string;
+  picture?: string;
+  role: 'PARTICIPANT' | 'HOST';
+  team?: {
+    id: number;
     name: string;
-    picture?: string;
-    role: 'PARTICIPANT' | 'HOST';
-    team?: {
-      id: number;
-      name: string;
-    };
   };
+}
+
+export interface UserQueryData {
+  user_by_pk: User;
 }
 
 export interface UserQueryVariables {

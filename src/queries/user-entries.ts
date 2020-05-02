@@ -5,6 +5,7 @@ const QUERY = /* GraphQL */ `
     user_by_pk(id: $id) {
       name
       picture
+      role
       team_id
       entries(order_by: { created_at: desc }) {
         id
@@ -47,13 +48,16 @@ export interface Entry {
   };
 }
 
+export interface EntryUser {
+  name: string;
+  role: 'HOST' | 'PARTICIPANT';
+  picture: string;
+  team_id: number;
+  entries: Array<Entry>;
+}
+
 interface Data {
-  user_by_pk: {
-    name: string;
-    picture: string;
-    team_id: number;
-    entries: Array<Entry>;
-  };
+  user_by_pk: EntryUser;
 }
 
 interface Variables {

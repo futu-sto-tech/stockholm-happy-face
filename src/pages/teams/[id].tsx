@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import Router, { useRouter } from 'next/router';
 
+import Ending from '../../components/ending';
 import Lobby from '../../components/lobby';
 import Presentation from '../../components/presentation';
 import { useAuth0 } from '../../context/auth';
@@ -91,10 +92,14 @@ const TeamPage: React.FC = () => {
   }, [user, updateUserSession]);
 
   return session && user ? (
-    session.entry ? (
-      <Presentation session={session} entry={session.entry} />
+    session.active ? (
+      session.entry ? (
+        <Presentation session={session} entry={session.entry} />
+      ) : (
+        <Lobby session={session} userId={user.sub} />
+      )
     ) : (
-      <Lobby session={session} userId={user.sub} />
+      <Ending session={session} userId={user.sub} />
     )
   ) : null;
 };

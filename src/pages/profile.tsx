@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { MdDelete, MdMoreHoriz } from 'react-icons/md';
 import React, { useCallback, useMemo, useState } from 'react';
 import { formatDistanceToNow, parseJSON } from 'date-fns';
-import useUserEntriesQuery, { Entry } from '../queries/user-entries';
+import useUserEntriesQuery, { Entry, EntryUser } from '../queries/user-entries';
 
 import Layout from '../components/layout';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import { getCurrentWeek } from '../lib/utils';
 import { useAuth0 } from '../context/auth';
 import useDeleteEntryMutation from '../lib/api/delete-entry-mutation';
 import useTeamSubscription from '../subscriptions/team';
+import useUpdateTeamActiveMutation from '../mutations/update-team-active';
 
 const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
   entry,
@@ -83,26 +84,41 @@ const ActiveNotification: React.FC<{ team: { id: number; name: string } }> = ({ 
   </div>
 );
 
-const InactiveNotification: React.FC<{ team: { name: string } }> = ({ team }) => (
+const InactiveNotification: React.FC<{
+  team: { name: string };
+  onClickActivate: () => void;
+  user: EntryUser;
+}> = ({ team, onClickActivate, user }) => (
   <div className="flex items-center justify-between px-6 py-4 border border-black rounded">
     <div className="flex items-center space-x-2">
       <span className="w-4 h-4 border border-black rounded-full"></span>
       <p className="font-semibold">{team.name} Smileys is inactive</p>
     </div>
-    <button disabled className="flat-button">
-      Join
-    </button>
+    {user.role === 'HOST' ? (
+      <button className="flat-button" onClick={onClickActivate}>
+        Start Smileys
+      </button>
+    ) : (
+      <button disabled className="flat-button">
+        Join
+      </button>
+    )}
   </div>
 );
 
-const Notification: React.FC<{ teamId: number }> = ({ teamId }) => {
+const Notification: React.FC<{ teamId: number; user: EntryUser }> = ({ teamId, user }) => {
   const team = useTeamSubscription(teamId);
+
+  const [updateTeamActive] = useUpdateTeamActiveMutation();
+  const handleClickActivate = async (): Promise<void> => {
+    await updateTeamActive({ variables: { id: teamId, active: true } });
+  };
 
   return team ? (
     team.active ? (
       <ActiveNotification team={team} />
     ) : (
-      <InactiveNotification team={team} />
+      <InactiveNotification team={team} onClickActivate={handleClickActivate} user={user} />
     )
   ) : null;
 };
@@ -128,7 +144,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
     <>
       <div className="max-w-xl p-4 mx-auto">
         <div className="h-5" />
-        {data && <Notification teamId={data.user_by_pk.team_id} />}
+        {data && <Notification teamId={data.user_by_pk.team_id} user={data.user_by_pk} />}
         <div className="h-5" />
         <p className="text-lg font-semibold text-black">My GIF this week</p>
         <div className="h-3" />
