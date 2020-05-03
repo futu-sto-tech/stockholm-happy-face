@@ -18,9 +18,8 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
   const [updateTeamEntry] = useUpdateTeamEntry();
 
   const entryIds = useMemo(() => session.entries.map<number>((item) => item.id), [session]);
+  const entryIndex = entryIds.indexOf(entry.id);
   const handleNext = useCallback(async () => {
-    const entryIndex = entryIds.indexOf(entry.id);
-
     if (entryIndex + 1 === entryIds.length) {
       await updateTeamEntry({ variables: { team: session.id, entry: undefined } });
     } else if (entryIndex + 1 < entryIds.length) {
@@ -32,11 +31,9 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
         },
       });
     }
-  }, [updateTeamEntry, entryIds, session, entry.id]);
+  }, [updateTeamEntry, entryIds, session, entryIndex]);
 
   const handlePrev = useCallback(async () => {
-    const entryIndex = entryIds.indexOf(entry.id);
-
     if (entryIndex > 0) {
       await updateTeamEntry({
         variables: {
@@ -48,7 +45,7 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
     } else if (entryIndex === 0) {
       await updateTeamEntry({ variables: { team: session.id, entry: undefined } });
     }
-  }, [updateTeamEntry, entryIds, session, entry.id]);
+  }, [updateTeamEntry, entryIds, session, entryIndex]);
 
   const handleClickShowUserEntry = useCallback(
     async (entryId: number) => {
@@ -109,8 +106,9 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
             Previous
           </button>
           <button
-            className="flex-1 px-4 py-2 text-white border border-white rounded"
+            className="flex-1 px-4 py-2 text-white border border-white rounded disabled:opacity-50"
             onClick={handleNext}
+            disabled={entryIndex + 1 === entryIds.length}
           >
             Next
           </button>

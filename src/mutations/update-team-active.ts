@@ -2,7 +2,7 @@ import { useMutation } from 'graphql-hooks';
 
 const MUTATION = /* GraphQL */ `
   mutation UpdateTeam($id: Int!, $active: Boolean!) {
-    update_team(where: { id: { _eq: $id } }, _set: { active: $active }) {
+    update_team(where: { id: { _eq: $id } }, _set: { active: $active, entry_id: null }) {
       returning {
         id
       }

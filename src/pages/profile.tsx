@@ -89,9 +89,9 @@ const InactiveNotification: React.FC<{
   onClickActivate: () => void;
   user: EntryUser;
 }> = ({ team, onClickActivate, user }) => (
-  <div className="flex items-center justify-between px-6 py-4 border border-black rounded">
+  <div className="flex items-center justify-between px-6 py-4 border border-gray-600 rounded">
     <div className="flex items-center space-x-2">
-      <span className="w-4 h-4 border border-black rounded-full"></span>
+      <span className="w-4 h-4 border border-gray-700 rounded-full"></span>
       <p className="font-semibold">{team.name} Smileys is inactive</p>
     </div>
     {user.role === 'HOST' ? (
@@ -144,7 +144,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
     <>
       <div className="max-w-xl p-4 mx-auto">
         <div className="h-5" />
-        {data && <Notification teamId={data.user_by_pk.team_id} user={data.user_by_pk} />}
+        {data && <Notification teamId={data.user_by_pk.team.id} user={data.user_by_pk} />}
         <div className="h-5" />
         <p className="text-lg font-semibold text-black">My GIF this week</p>
         <div className="h-3" />

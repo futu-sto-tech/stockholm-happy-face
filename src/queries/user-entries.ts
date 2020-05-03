@@ -3,10 +3,14 @@ import { useQuery } from 'graphql-hooks';
 const QUERY = /* GraphQL */ `
   query UserWithEntries($id: String!) {
     user_by_pk(id: $id) {
+      id
       name
       picture
       role
-      team_id
+      team {
+        id
+        name
+      }
       entries(order_by: { created_at: desc }) {
         id
         created_at
@@ -49,10 +53,14 @@ export interface Entry {
 }
 
 export interface EntryUser {
+  id: string;
   name: string;
   role: 'HOST' | 'PARTICIPANT';
   picture: string;
-  team_id: number;
+  team: {
+    id: number;
+    name: string;
+  };
   entries: Array<Entry>;
 }
 

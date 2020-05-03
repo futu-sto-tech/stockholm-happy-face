@@ -1,4 +1,5 @@
 import AppHeader from './app-header';
+import FloatingHeader from './floating-header';
 import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import React from 'react';
@@ -66,7 +67,9 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <div>
-      <AppHeader>{user && <UserNav userId={user.sub} />}</AppHeader>
+      <FloatingHeader>
+        <AppHeader>{user && <UserNav userId={user.sub} />}</AppHeader>
+      </FloatingHeader>
       <main className="flex-1">{children}</main>
     </div>
   );

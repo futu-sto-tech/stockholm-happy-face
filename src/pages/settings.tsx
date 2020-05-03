@@ -1,6 +1,7 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 
 import AppHeader from '../components/app-header';
+import FloatingHeader from '../components/floating-header';
 import LogoIcon from '../components/logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { useAuth0 } from '../context/auth';
@@ -9,7 +10,7 @@ import useTeamsQuery from '../queries/teams';
 import useUpdateUserNameMutation from '../mutations/update-user-name';
 import useUpdateUserRoleMutation from '../mutations/update-user-role';
 import useUpdateUserTeamMutation from '../mutations/update-user-team';
-import useUserQuery from '../queries/user';
+import useUserEntriesQuery from '../queries/user-entries';
 
 const EditUserTeam: React.FC<{
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -77,7 +78,7 @@ const EditUserRole: React.FC<{
 );
 
 const EditUserData: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data, refetch } = useUserQuery(userId);
+  const { data, refetch } = useUserEntriesQuery(userId);
   const teamsData = useTeamsQuery();
   const [updateUserTeam] = useUpdateUserTeamMutation();
   const [updateUserRole] = useUpdateUserRoleMutation();
@@ -120,23 +121,25 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div>
-      <AppHeader>
-        <div className="flex items-center">
-          <div className="flex items-center flex-1 flex-start">
-            <button
-              className="flex items-center px-4 py-2 space-x-1 rounded hover:bg-gray-300"
-              onClick={(): void => router.back()}
-            >
-              <MdArrowBack size="20" />
-              <p>Back</p>
-            </button>
+      <FloatingHeader>
+        <AppHeader>
+          <div className="flex items-center">
+            <div className="flex items-center flex-1 flex-start">
+              <button
+                className="flex items-center px-4 py-2 space-x-1 rounded hover:bg-gray-300"
+                onClick={(): void => router.back()}
+              >
+                <MdArrowBack size="20" />
+                <p>Back</p>
+              </button>
+            </div>
+            <div className="flex items-center justify-center flex-1">
+              <LogoIcon size="100" />
+            </div>
+            <div className="flex-1"></div>
           </div>
-          <div className="flex items-center justify-center flex-1">
-            <LogoIcon size="100" />
-          </div>
-          <div className="flex-1"></div>
-        </div>
-      </AppHeader>
+        </AppHeader>
+      </FloatingHeader>
       <div className="h-10" />
       <div className="max-w-lg p-4 mx-auto space-y-10">
         {user && <EditUserData userId={user.sub} />}

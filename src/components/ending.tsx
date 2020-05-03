@@ -4,19 +4,16 @@ import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { Session } from '../subscriptions/session';
-import useUpdateTeamEntry from '../mutations/update-team-entry';
+import useUpdateTeamActiveMutation from '../mutations/update-team-active';
 import useUserQuery from '../queries/user';
 
 const Ending: React.FC<{ session: Session; userId: string }> = ({ session, userId }) => {
   const userData = useUserQuery(userId);
 
-  const [updateTeamEntry] = useUpdateTeamEntry();
+  const [updateTeamActive] = useUpdateTeamActiveMutation();
   const handleClickRestart = useCallback(async () => {
-    const entryId = session.entries[0].id;
-    await updateTeamEntry({
-      variables: { team: session.id, entry: entryId, time: new Date().toISOString() },
-    });
-  }, [session, updateTeamEntry]);
+    await updateTeamActive({ variables: { id: session.id, active: true } });
+  }, [session, updateTeamActive]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -31,7 +28,7 @@ const Ending: React.FC<{ session: Session; userId: string }> = ({ session, userI
               <p className="text-lg text-center">
                 Team: <span className="font-semibold">{session?.name}</span>
               </p>
-              <p className="text-sm text-center text-gray-600">That&apos;s it for this week</p>
+              <p className="text-sm text-center text-gray-600">That&apos;s it for this week!</p>
             </div>
           </div>
         </div>

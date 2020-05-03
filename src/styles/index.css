@@ -16,18 +16,18 @@
 .shadow-stereoscopic {
   @apply transition-shadow duration-150;
 
-  box-shadow: -5px -5px 0 theme('colors.blue.300'), 5px 5px  0 theme('colors.orange.400');
+  box-shadow: 5px 5px  0 theme('colors.orange.400');
 }
 
 .stereoscopic-button {
   @apply block px-4 py-2 text-white transition-shadow duration-150 bg-black rounded;
 
-  box-shadow: -5px -5px 0 theme('colors.blue.300'), 5px 5px  0 theme('colors.orange.400');
+  box-shadow: 5px 5px  0 theme('colors.orange.400');
 }
 
 .stereoscopic-button:hover,
 .shadow-stereoscopic:hover {
-  box-shadow: 4px 4px 0 theme('colors.blue.300'), -4px -4px  0 theme('colors.orange.400');
+  box-shadow: 3px 3px  0 theme('colors.orange.400');
 }
 
 @tailwind utilities;

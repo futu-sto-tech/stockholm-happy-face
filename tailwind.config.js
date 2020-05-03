@@ -12,7 +12,7 @@ module.exports = {
     scale: ['active'],
     backgroundColor: ['hover', 'active'],
     boxShadow: ['hover', 'active', 'focus'],
-    opacity: ['hover', 'group-hover'],
+    opacity: ['hover', 'group-hover', 'disabled'],
     padding: ['hover'],
   },
   plugins: [require('@tailwindcss/custom-forms')],
