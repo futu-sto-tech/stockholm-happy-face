@@ -67,11 +67,11 @@ const NewSessionButton: React.FC<NewSessionButtonProps> = ({ userId, teamId }) =
 const TeamPage: React.FC = () => {
   const router = useRouter();
   const teamId = parseInt(router.query.id as string);
-  const session = useSessionSubscription(teamId);
+  const data = useSessionSubscription(teamId);
   const { user } = useAuth0();
   const [updateUserSession] = useUpdateUserSessionMutation();
 
-  const participants = useMemo(() => session?.participants.map((item) => item.id), [session]);
+  const participants = useMemo(() => data?.team_by_pk.participants.map((item) => item.id), [data]);
   useEffect(() => {
     if (user?.sub && participants && participants.indexOf(user.sub) === -1) {
       updateUserSession({ variables: { user: user.sub, team: teamId } });
@@ -91,15 +91,15 @@ const TeamPage: React.FC = () => {
     return (): void => Router.events.off('routeChangeStart', handleDeleteSessionUser);
   }, [user, updateUserSession]);
 
-  return session && user ? (
-    session.active ? (
-      session.entry ? (
-        <Presentation session={session} entry={session.entry} />
+  return data && user ? (
+    data.team_by_pk.active ? (
+      data.team_by_pk.entry ? (
+        <Presentation session={data.team_by_pk} entry={data.team_by_pk.entry} />
       ) : (
-        <Lobby session={session} userId={user.sub} />
+        <Lobby session={data.team_by_pk} userId={user.sub} />
       )
     ) : (
-      <Ending session={session} userId={user.sub} />
+      <Ending session={data.team_by_pk} userId={user.sub} />
     )
   ) : null;
 };

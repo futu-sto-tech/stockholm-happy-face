@@ -1,6 +1,4 @@
-import { Result, useSubscription } from 'graphql-hooks';
-
-import { useState } from 'react';
+import { useSubscriptionWithCache } from '../hooks';
 
 const TEAM_SUBSCRIPTION = /* GraphQL */ `
   subscription Team($id: Int!) {
@@ -22,20 +20,6 @@ interface Data {
   team_by_pk: Team;
 }
 
-export default function useTeamSubscription(id: number): Team | undefined {
-  const [team, setTeam] = useState<Team>();
-
-  useSubscription(
-    { query: TEAM_SUBSCRIPTION, variables: { id } },
-    ({ error, data }: Result<Data>) => {
-      if (error) {
-        return;
-      }
-
-      // all good, handle the gql result
-      setTeam(data?.team_by_pk);
-    },
-  );
-
-  return team;
+export default function useTeamSubscription(id: number): Data | undefined {
+  return useSubscriptionWithCache({ query: TEAM_SUBSCRIPTION, variables: { id } });
 }

@@ -107,18 +107,22 @@ const InactiveNotification: React.FC<{
 );
 
 const Notification: React.FC<{ teamId: number; user: EntryUser }> = ({ teamId, user }) => {
-  const team = useTeamSubscription(teamId);
+  const data = useTeamSubscription(teamId);
 
   const [updateTeamActive] = useUpdateTeamActiveMutation();
   const handleClickActivate = async (): Promise<void> => {
     await updateTeamActive({ variables: { id: teamId, active: true } });
   };
 
-  return team ? (
-    team.active ? (
-      <ActiveNotification team={team} />
+  return data ? (
+    data.team_by_pk.active ? (
+      <ActiveNotification team={data.team_by_pk} />
     ) : (
-      <InactiveNotification team={team} onClickActivate={handleClickActivate} user={user} />
+      <InactiveNotification
+        team={data.team_by_pk}
+        onClickActivate={handleClickActivate}
+        user={user}
+      />
     )
   ) : null;
 };

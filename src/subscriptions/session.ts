@@ -1,6 +1,7 @@
-import { Result, useSubscription } from 'graphql-hooks';
 import { getEndOfWeek, getStartOfWeek } from '../lib/utils';
-import { useMemo, useState } from 'react';
+
+import { useMemo } from 'react';
+import { useSubscriptionWithCache } from '../hooks';
 
 const SESSION_SUBSCRIPTION = /* GraphQL */ `
   subscription Session($team: Int!, $before: timestamptz!, $after: timestamptz!) {
@@ -66,27 +67,12 @@ interface SessionData {
   team_by_pk: Session;
 }
 
-export default function useSessionSubscription(teamId: number): Session | undefined {
-  const [team, setTeam] = useState<Session>();
-
+export default function useSessionSubscription(teamId: number): SessionData | undefined {
   const startOfWeek = useMemo(() => getStartOfWeek().toISOString(), []);
   const endOfWeek = useMemo(() => getEndOfWeek().toISOString(), []);
 
-  useSubscription(
-    {
-      query: SESSION_SUBSCRIPTION,
-      variables: { team: teamId, after: startOfWeek, before: endOfWeek },
-    },
-    ({ error, data }: Result<SessionData>) => {
-      if (error) {
-        console.warn(error);
-        return;
-      }
-
-      // all good, handle the gql result
-      setTeam(data?.team_by_pk);
-    },
-  );
-
-  return team;
+  return useSubscriptionWithCache({
+    query: SESSION_SUBSCRIPTION,
+    variables: { team: teamId, after: startOfWeek, before: endOfWeek },
+  });
 }
