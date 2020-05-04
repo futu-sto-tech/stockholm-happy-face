@@ -6,8 +6,8 @@ import Lobby from '../../components/lobby';
 import Presentation from '../../components/presentation';
 import { useAuth0 } from '../../context/auth';
 import { useMutation } from 'graphql-hooks';
-import useSessionSubscription from '../../subscriptions/session';
-import useUpdateUserSessionMutation from '../../mutations/update-user-session';
+import useSessionSubscription from '../../graphql/subscriptions/session';
+import useUpdateUserSessionMutation from '../../graphql/mutations/update-user-session';
 
 const mutation = /* GraphQL */ `
   mutation InsertSession($team: Int!, $user: String!) {

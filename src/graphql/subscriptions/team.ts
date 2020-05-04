@@ -1,4 +1,4 @@
-import { useSubscriptionWithCache } from '../hooks';
+import { useSubscriptionWithCache } from '../../hooks';
 
 const TEAM_SUBSCRIPTION = /* GraphQL */ `
   subscription Team($id: Int!) {

@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useInsertEntryWithImage, useInsertEntryWithUrl } from '../mutations/insert-entry';
+import { useInsertEntryWithImage, useInsertEntryWithUrl } from '../graphql/mutations/insert-entry';
 
 import Link from 'next/link';
 import { MdArrowBack } from 'react-icons/md';
 import { useManualQuery } from 'graphql-hooks';
 import { useRouter } from 'next/router';
-import useTeamsQuery from '../queries/teams';
-import useUserEntriesQuery from '../queries/user-entries';
-import useUserQuery from '../queries/user';
+import useTeamsQuery from '../graphql/queries/teams';
+import useUserEntriesQuery from '../graphql/queries/user-entries';
+import useUserQuery from '../graphql/queries/user';
 
 const IMAGE_QUERY = /* GraphQL */ `
   query Image($url: String!) {

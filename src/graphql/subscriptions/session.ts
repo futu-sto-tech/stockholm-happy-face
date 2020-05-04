@@ -1,7 +1,7 @@
-import { getEndOfWeek, getStartOfWeek } from '../lib/utils';
+import { getEndOfWeek, getStartOfWeek } from '../../lib/utils';
 
 import { useMemo } from 'react';
-import { useSubscriptionWithCache } from '../hooks';
+import { useSubscriptionWithCache } from '../../hooks';
 
 const SESSION_SUBSCRIPTION = /* GraphQL */ `
   subscription Session($team: Int!, $before: timestamptz!, $after: timestamptz!) {

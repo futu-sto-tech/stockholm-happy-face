@@ -3,10 +3,10 @@ import React, { useCallback, useRef } from 'react';
 import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
-import { Session } from '../subscriptions/session';
+import { Session } from '../graphql/subscriptions/session';
 import { motion } from 'framer-motion';
-import useUpdateTeamEntry from '../mutations/update-team-entry';
-import useUserQuery from '../queries/user';
+import useUpdateTeamEntry from '../graphql/mutations/update-team-entry';
+import useUserQuery from '../graphql/queries/user';
 
 const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId }) => {
   const dragConstraint = useRef(null);

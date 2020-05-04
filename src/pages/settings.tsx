@@ -6,11 +6,11 @@ import LogoIcon from '../components/logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { useAuth0 } from '../context/auth';
 import { useRouter } from 'next/router';
-import useTeamsQuery from '../queries/teams';
-import useUpdateUserNameMutation from '../mutations/update-user-name';
-import useUpdateUserRoleMutation from '../mutations/update-user-role';
-import useUpdateUserTeamMutation from '../mutations/update-user-team';
-import useUserEntriesQuery from '../queries/user-entries';
+import useTeamsQuery from '../graphql/queries/teams';
+import useUpdateUserNameMutation from '../graphql/mutations/update-user-name';
+import useUpdateUserRoleMutation from '../graphql/mutations/update-user-role';
+import useUpdateUserTeamMutation from '../graphql/mutations/update-user-team';
+import useUserEntriesQuery from '../graphql/queries/user-entries';
 
 const EditUserTeam: React.FC<{
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;

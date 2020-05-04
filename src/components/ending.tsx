@@ -3,9 +3,9 @@ import React, { useCallback } from 'react';
 import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
-import { Session } from '../subscriptions/session';
-import useUpdateTeamActiveMutation from '../mutations/update-team-active';
-import useUserQuery from '../queries/user';
+import { Session } from '../graphql/subscriptions/session';
+import useUpdateTeamActiveMutation from '../graphql/mutations/update-team-active';
+import useUserQuery from '../graphql/queries/user';
 
 const Ending: React.FC<{ session: Session; userId: string }> = ({ session, userId }) => {
   const userData = useUserQuery(userId);

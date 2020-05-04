@@ -4,9 +4,9 @@ import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import React from 'react';
 import { useAuth0 } from '../context/auth';
-import useTeamsQuery from '../queries/teams';
-import useUpdateUserTeamMutation from '../mutations/update-user-team';
-import useUserQuery from '../queries/user';
+import useTeamsQuery from '../graphql/queries/teams';
+import useUpdateUserTeamMutation from '../graphql/mutations/update-user-team';
+import useUserQuery from '../graphql/queries/user';
 
 const UserSettings: React.FC<{ name: string; picture?: string }> = ({ name, picture }) => (
   <Link href="/settings">

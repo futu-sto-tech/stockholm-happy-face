@@ -2,15 +2,15 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { MdDelete, MdMoreHoriz } from 'react-icons/md';
 import React, { useCallback, useMemo, useState } from 'react';
 import { formatDistanceToNow, parseJSON } from 'date-fns';
-import useUserEntriesQuery, { Entry, EntryUser } from '../queries/user-entries';
+import useUserEntriesQuery, { Entry, EntryUser } from '../graphql/queries/user-entries';
 
 import Layout from '../components/layout';
 import Link from 'next/link';
 import { getCurrentWeek } from '../lib/utils';
 import { useAuth0 } from '../context/auth';
-import useDeleteEntryMutation from '../lib/api/delete-entry-mutation';
-import useTeamSubscription from '../subscriptions/team';
-import useUpdateTeamActiveMutation from '../mutations/update-team-active';
+import useDeleteEntryMutation from '../graphql/mutations/delete-entry-mutation';
+import useTeamSubscription from '../graphql/subscriptions/team';
+import useUpdateTeamActiveMutation from '../graphql/mutations/update-team-active';
 
 const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
   entry,
@@ -135,7 +135,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
     (item) => item.year === currentYear && item.week === currentWeek,
   );
 
-  const deleteEntry = useDeleteEntryMutation();
+  const [deleteEntry] = useDeleteEntryMutation();
   const handleRemoveItem = useCallback(
     async (id: number) => {
       await deleteEntry({ variables: { id } });
