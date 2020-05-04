@@ -2,7 +2,7 @@ import '../styles/index.css';
 
 import { AuthProvider, useAuth0 } from '../context/auth';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { createGraphqlClient, gqlAxios } from '../client';
+import { createGraphqlClient, gqlAxios } from '../graphql/client';
 
 import { ClientContext } from 'graphql-hooks';
 import NextApp from 'next/app';
@@ -14,7 +14,7 @@ const AuthClientConnection: React.FC<{ children: JSX.Element }> = ({ children })
   useEffect(() => {
     if (getIdTokenClaims) {
       console.info('setup interceptor');
-      const interceptorId = gqlAxios.interceptors.request.use(async function(config) {
+      const interceptorId = gqlAxios.interceptors.request.use(async function (config) {
         console.info('interceptor called');
         const idToken = await getIdTokenClaims();
         config.headers['Authorization'] = `Bearer ${idToken.__raw}`;
