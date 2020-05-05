@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { MdDelete, MdMoreHoriz } from 'react-icons/md';
 import React, { useCallback, useMemo, useState } from 'react';
 import { formatDistanceToNow, parseJSON } from 'date-fns';
+import useTeamSubscription, { TeamSubscriptionData } from '../graphql/subscriptions/team';
 import useUserEntriesQuery, { Entry, EntryUser } from '../graphql/queries/user-entries';
 
 import Layout from '../components/layout';
@@ -9,7 +10,6 @@ import Link from 'next/link';
 import { getCurrentWeek } from '../lib/utils';
 import { useAuth0 } from '../context/auth';
 import useDeleteEntryMutation from '../graphql/mutations/delete-entry-mutation';
-import useTeamSubscription from '../graphql/subscriptions/team';
 import useUpdateTeamActiveMutation from '../graphql/mutations/update-team-active';
 
 const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
@@ -87,7 +87,7 @@ const InactiveNotification: React.FC<{
   onClickActivate: () => void;
   user: EntryUser;
 }> = ({ team, onClickActivate, user }) => (
-  <div className="flex items-center justify-between px-6 py-4 border-2 border-gray-900 rounded shadow-stereoscopic">
+  <div className="flex items-center justify-between px-6 py-4 border-2 border-gray-900 rounded">
     <div className="flex items-center space-x-2">
       <span className="w-4 h-4 bg-gray-400 rounded-full"></span>
       <p className="font-semibold">{team.name} Smileys is offline</p>
@@ -104,24 +104,47 @@ const InactiveNotification: React.FC<{
   </div>
 );
 
-const Notification: React.FC<{ teamId: number; user: EntryUser }> = ({ teamId, user }) => {
-  const data = useTeamSubscription(teamId);
-
+const Notification: React.FC<{ data: TeamSubscriptionData; user: EntryUser }> = ({
+  data,
+  user,
+}) => {
   const [updateTeamActive] = useUpdateTeamActiveMutation();
   const handleClickActivate = async (): Promise<void> => {
-    await updateTeamActive({ variables: { id: teamId, active: true } });
+    await updateTeamActive({ variables: { id: data.team_by_pk.id, active: true } });
   };
 
+  return data.team_by_pk.active ? (
+    <ActiveNotification team={data.team_by_pk} />
+  ) : (
+    <InactiveNotification
+      team={data.team_by_pk}
+      onClickActivate={handleClickActivate}
+      user={user}
+    />
+  );
+};
+
+const ThisWeekGif: React.FC<{ peopleCount?: number }> = ({ peopleCount }) => {
+  const noun = peopleCount === 1 ? 'person has' : 'people have';
+
+  return (
+    <div>
+      <p className="text-2xl font-semibold text-black">This week&apos;s session</p>
+      <p>
+        {`${peopleCount} ${noun}`} posted their GIF already <span role="img">🎉</span>
+      </p>
+    </div>
+  );
+};
+
+const TeamSection: React.FC<{ user: EntryUser }> = ({ user }) => {
+  const data = useTeamSubscription(user.team.id);
+
   return data ? (
-    data.team_by_pk.active ? (
-      <ActiveNotification team={data.team_by_pk} />
-    ) : (
-      <InactiveNotification
-        team={data.team_by_pk}
-        onClickActivate={handleClickActivate}
-        user={user}
-      />
-    )
+    <div className="space-y-5">
+      <Notification data={data} user={user} />
+      <ThisWeekGif peopleCount={data?.team_by_pk.entries_aggregate.aggregate.count} />
+    </div>
   ) : null;
 };
 
@@ -146,9 +169,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
     <>
       <div className="max-w-xl p-4 mx-auto">
         <div className="h-5" />
-        {data && <Notification teamId={data.user_by_pk.team.id} user={data.user_by_pk} />}
-        <div className="h-5" />
-        <p className="text-lg font-semibold text-black">My GIF this week</p>
+        {data && <TeamSection user={data.user_by_pk} />}
         <div className="h-3" />
         {currentEntry ? (
           <EntryItem
