@@ -156,32 +156,26 @@ const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, e
           <div className="w-24" />
         </header>
         <main className="flex flex-col items-center flex-1 p-4">
-          <div className="flex flex-col justify-center flex-1 space-y-2">
-            <div className="overflow-hidden rounded shadow-xl">
-              <header className="flex items-center p-2 space-x-4 bg-black">
-                <img
-                  className="w-12 h-auto rounded-full"
-                  src={entry.user.picture}
-                  alt={entry.user.name}
-                />
-                <div>
-                  <p className="leading-none text-white">{entry.user.name}</p>
-                  <p className="text-sm text-gray-300">Posted this week in {session.name}</p>
-                </div>
-              </header>
-              <img className="w-full" src={entry.image.original_url} alt="GIF" />
-            </div>
+          <div className="flex flex-col justify-center flex-1 space-y-6">
+            <header className="flex items-center justify-center">
+              <p className="text-2xl font-semibold leading-none text-white">{entry.user.name}</p>
+            </header>
+            <img className="w-full rounded shadow-xl" src={entry.image.original_url} alt="GIF" />
           </div>
         </main>
-        <footer className="flex justify-center p-4 space-x-4 bg-gray-100">
+        <footer className="flex justify-center p-4 space-x-4 bg-gray-100 bg-opacity-25">
           {session.participants.map((item) => (
-            <div key={item.id} className="">
-              <img
-                className="w-16 h-auto border border-gray-700 rounded-full"
-                src={item.picture}
-                alt={item.name}
-              />
-            </div>
+            <motion.img
+              key={item.id}
+              initial={{ scale: 1, translateY: 0 }}
+              animate={{
+                scale: item.id === session.entry?.user.id ? 1.2 : 1,
+                translateY: item.id === session.entry?.user.id ? -16 : 0,
+              }}
+              className="w-16 h-auto rounded-full"
+              src={item.picture}
+              alt={item.name}
+            />
           ))}
         </footer>
       </div>
