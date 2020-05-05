@@ -66,7 +66,7 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
 };
 
 const ActiveNotification: React.FC<{ team: { id: number; name: string } }> = ({ team }) => (
-  <div className="flex items-center justify-between px-6 py-4 bg-yellow-400 border-2 border-black rounded shadow-stereoscopic">
+  <div className="flex items-center justify-between px-6 py-4 bg-yellow-400 rounded shadow-stereoscopic">
     <div className="flex space-x-2">
       <div className="w-4 h-4 mt-px border border-white rounded-full">
         <div className="w-full h-full bg-green-400 rounded-full" />
@@ -125,14 +125,19 @@ const Notification: React.FC<{ data: TeamSubscriptionData; user: EntryUser }> = 
 };
 
 const ThisWeekGif: React.FC<{ peopleCount?: number }> = ({ peopleCount }) => {
-  const noun = peopleCount === 1 ? 'person has' : 'people have';
+  let sentence: string;
+  if (peopleCount === 0) {
+    sentence = `You can be the first to post a GIF!`;
+  } else if (peopleCount === 1) {
+    sentence = `One person has posted their GIF already 🎉`;
+  } else {
+    sentence = `${peopleCount} people have posted their GIF already 🎉`;
+  }
 
   return (
     <div>
       <p className="text-2xl font-semibold text-black">This week&apos;s session</p>
-      <p>
-        {`${peopleCount} ${noun}`} posted their GIF already <span role="img">🎉</span>
-      </p>
+      <p>{sentence}</p>
     </div>
   );
 };

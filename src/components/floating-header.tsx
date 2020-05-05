@@ -11,7 +11,7 @@ const FloatingHeader: React.FC = ({ children }) => {
   );
 
   return (
-    <motion.div className="sticky top-0 z-50 shadow-xl" style={{ boxShadow }}>
+    <motion.div className="sticky top-0 z-50 border-b shadow-xl" style={{ boxShadow }}>
       {children}
     </motion.div>
   );
