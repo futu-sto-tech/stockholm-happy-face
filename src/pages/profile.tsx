@@ -66,20 +66,18 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
 };
 
 const ActiveNotification: React.FC<{ team: { id: number; name: string } }> = ({ team }) => (
-  <div className="flex items-center justify-between px-6 py-4 bg-black rounded shadow-stereoscopic">
-    <div className="flex items-center space-x-2">
-      <div className="w-4 h-4 p-px border border-white rounded-full">
-        <motion.div
-          className="w-full h-full bg-white rounded-full"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ loop: Infinity, duration: 2 }}
-        />
+  <div className="flex items-center justify-between px-6 py-4 bg-yellow-400 border-2 border-black rounded shadow-stereoscopic">
+    <div className="flex space-x-2">
+      <div className="w-4 h-4 mt-px border border-white rounded-full">
+        <div className="w-full h-full bg-green-400 rounded-full" />
       </div>
-      <p className="font-semibold text-white">{team.name} Smileys is live</p>
+      <div className="space-y-1">
+        <p className="-mt-px text-lg font-semibold leading-none">{team.name} Smileys is live</p>
+        <p className="text-sm leading-none">Session began 2 min ago</p>
+      </div>
     </div>
     <Link href="/teams/[id]" as={`/teams/${team.id}`}>
-      <a className="font-semibold flat-button">Join</a>
+      <a className="stereoscopic-button-white">Join</a>
     </Link>
   </div>
 );
@@ -89,13 +87,13 @@ const InactiveNotification: React.FC<{
   onClickActivate: () => void;
   user: EntryUser;
 }> = ({ team, onClickActivate, user }) => (
-  <div className="flex items-center justify-between px-6 py-4 border border-gray-600 rounded">
+  <div className="flex items-center justify-between px-6 py-4 border-2 border-gray-900 rounded shadow-stereoscopic">
     <div className="flex items-center space-x-2">
-      <span className="w-4 h-4 border border-gray-700 rounded-full"></span>
-      <p className="font-semibold">{team.name} Smileys is inactive</p>
+      <span className="w-4 h-4 bg-gray-400 rounded-full"></span>
+      <p className="font-semibold">{team.name} Smileys is offline</p>
     </div>
     {user.role === 'HOST' ? (
-      <button className="flat-button" onClick={onClickActivate}>
+      <button className="flat-button-secondary" onClick={onClickActivate}>
         Start Smileys
       </button>
     ) : (
@@ -159,7 +157,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
           />
         ) : (
           <div className="bg-white">
-            <header className="flex items-center h-16 px-3 bg-black rounded-t-sm">
+            <header className="flex items-center h-16 px-3 bg-black rounded-t">
               <div className="flex items-center space-x-3">
                 <img
                   className="h-10 rounded-full"
@@ -174,13 +172,11 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
                 </div>
               </div>
             </header>
-            <div className="flex flex-col items-center justify-center h-64 border-b border-l border-r border-black rounded-b-sm">
+            <div className="flex flex-col items-center justify-center h-64 border-b-2 border-l-2 border-r-2 border-black border-dashed rounded-b-lg">
               <p className="text-sm text-center text-gray-700">No GIF for this week yet</p>
               <div className="h-2" />
               <Link href="/entries/new">
-                <a className="block px-6 py-2 mx-auto text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded-sm hover:text-black hover:border-black">
-                  <p className="text-center">Pick GIF</p>
-                </a>
+                <a className="flat-button">Pick GIF</a>
               </Link>
             </div>
           </div>

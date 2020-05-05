@@ -37,7 +37,7 @@ const Ending: React.FC<{ session: Session; userId: string }> = ({ session, userI
         <div className="flex items-center w-full max-w-6xl mx-auto">
           <div className="flex items-center flex-1">
             <Link href="/profile">
-              <a className="flex items-center px-4 space-x-1 flat-button">
+              <a className="flex items-center px-4 space-x-1 flat-button-secondary">
                 <MdArrowBack size="20" />
                 <p>Leave</p>
               </a>
@@ -45,7 +45,7 @@ const Ending: React.FC<{ session: Session; userId: string }> = ({ session, userI
           </div>
           <div className="flex items-center justify-end flex-1">
             {userData.data?.user_by_pk.role === 'HOST' && (
-              <button onClick={handleClickRestart} className="flat-button">
+              <button onClick={handleClickRestart} className="flat-button-secondary">
                 Re-start session
               </button>
             )}

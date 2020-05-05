@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 
+import LogoIcon from '../components/logo-icon';
 import { motion } from 'framer-motion';
 import { useAuth0 } from '../context/auth';
 import { useRouter } from 'next/router';
@@ -13,61 +14,44 @@ const IndexPage: React.FC = () => {
   }, [router, authenticated, user]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-400">
-      <div className="flex items-center justify-center flex-1 p-8">
-        <div className="grid w-full max-w-screen-md gap-8">
-          <img className="w-full mx-auto" src="/smileys-logo.svg" />
-          {loading || authenticated ? (
-            <motion.p
-              className="text-3xl text-center"
-              animate={{ rotate: 360 }}
-              transition={{ loop: Infinity, repeatDelay: 1 }}
-            >
-              🤔
-            </motion.p>
-          ) : (
-            <button
-              className="w-48 p-3 mx-auto font-semibold text-gray-600 transition-shadow duration-200 bg-gray-200 rounded-lg shadow-sm opacity-75 hover:bg-white hover:shadow-2xl active:shadow-xs"
-              onClick={login}
-            >
-              Login
+    <div className="flex flex-col min-h-screen">
+      <header className="flex justify-end p-10">
+        <div className="w-full max-w-xs p-6 space-y-4 border border-gray-700 rounded shadow-stereoscopic">
+          <div className="flex justify-center">
+            <LogoIcon size="120" />
+          </div>
+          <ul>
+            <li className="flex items-center space-x-4">
+              <p className="w-8 text-4xl font-bold text-shadow-stereoscopic">1.</p>
+              <p className="text-lg font-bold">Log in</p>
+            </li>
+            <li className="flex items-center space-x-4">
+              <p className="w-8 text-4xl font-bold text-shadow-stereoscopic">2.</p>
+              <p className="text-lg font-bold">Select a GIF</p>
+            </li>
+            <li className="flex items-center space-x-4">
+              <p className="w-8 text-4xl font-bold text-shadow-stereoscopic">3.</p>
+              <p className="text-lg font-bold">Share with your team</p>
+            </li>
+          </ul>
+          <div>
+            <button className="mx-auto stereoscopic-button" onClick={login}>
+              {loading || authenticated ? (
+                <motion.span
+                  className="text-3xl text-center"
+                  animate={{ rotate: 360 }}
+                  transition={{ loop: Infinity, repeatDelay: 1 }}
+                >
+                  🤔
+                </motion.span>
+              ) : (
+                'Login'
+              )}
             </button>
-          )}
+          </div>
         </div>
-      </div>
-      <div className="grid max-w-6xl gap-10 px-4 mx-auto grid-col-1 lg:grid-cols-3">
-        <section className="flex flex-col justify-between space-y-5">
-          <div>
-            <p className="text-lg font-semibold text-center text-gray-700">Step 1 - Login</p>
-            <p className="text-center text-gray-600">Use your company Google account</p>
-          </div>
-          <img className="w-64 h-auto mx-auto" src="/images/login.svg" alt="Login" />
-        </section>
-
-        <section className="flex flex-col justify-between space-y-5">
-          <div>
-            <p className="text-lg font-semibold text-center text-gray-700">Step 2 - Pick a GIF</p>
-            <p className="text-center text-gray-600">
-              Try to find one that represents how your week has been
-            </p>
-          </div>
-          <img className="w-64 h-auto mx-auto" src="/images/pick-gif.svg" alt="Pick a GIF" />
-        </section>
-
-        <section className="flex flex-col justify-between space-y-5">
-          <div>
-            <p className="text-lg font-semibold text-center text-gray-700">
-              Step 3 - Join Smileys!
-            </p>
-            <p className="text-center text-gray-600">
-              At the end of the week, gather the team and share how you feel
-            </p>
-          </div>
-          <img className="w-64 h-auto mx-auto" src="/images/share-week.svg" alt="Pick a GIF" />
-        </section>
-      </div>
-      <div className="flex-1" />
-      <div className="h-10 lg:h-0" />
+      </header>
+      <main className="flex-1 bg-yellow-400"></main>
     </div>
   );
 };

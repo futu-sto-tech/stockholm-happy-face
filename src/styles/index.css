@@ -6,33 +6,53 @@
 /* purgecss end ignore */
 
 .flat-button {
-  @apply block px-6 py-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded;
+  @apply block px-8 py-3 font-semibold text-black transition-colors duration-100 bg-yellow-400;
 }
 
 .flat-button:hover {
-  @apply text-black border-black;
+  @apply bg-yellow-300;
+}
+
+.flat-button-secondary {
+  @apply block px-8 py-3 font-semibold text-black transition-colors duration-100 bg-gray-300;
+}
+
+.flat-button-secondary:hover {
+  @apply bg-gray-200;
 }
 
 .shadow-stereoscopic {
   @apply transition-shadow duration-150;
 
-  box-shadow: 5px 5px  0 theme('colors.orange.400');
+  box-shadow: 5px 5px 0 theme('colors.orange.400');
+}
+
+.text-shadow-stereoscopic {
+  text-shadow: 2px 2px 0 theme('colors.orange.400'), -2px -2px 0 theme('colors.blue.400');
 }
 
 .stereoscopic-button {
   @apply block px-4 py-2 text-white transition-shadow duration-150 bg-black rounded;
 
-  box-shadow: 5px 5px  0 theme('colors.orange.400');
+  box-shadow: 4px 4px 0 theme('colors.orange.400');
 }
 
-.stereoscopic-button:hover,
-.shadow-stereoscopic:hover {
-  box-shadow: 3px 3px  0 theme('colors.orange.400');
+.stereoscopic-button-white {
+  @apply block px-6 py-2 font-semibold transition-shadow duration-100 bg-white rounded;
+
+  box-shadow: 3px 3px 0 theme('colors.orange.400');
+}
+
+.stereoscopic-button-white:hover {
+  box-shadow: 4px 4px 0 theme('colors.orange.400');
+}
+
+.stereoscopic-button-white:active {
+  box-shadow: 2px 2px 0 theme('colors.orange.400');
+}
+
+.stereoscopic-button:hover {
+  box-shadow: 3px 3px 0 theme('colors.orange.400');
 }
 
 @tailwind utilities;
-
-html,
-body {
-  @apply bg-gray-100;
-}

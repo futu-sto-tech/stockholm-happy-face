@@ -68,7 +68,7 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
         <div className="flex items-center w-full max-w-6xl mx-auto">
           <div className="flex items-center flex-1">
             <Link href="/profile">
-              <a className="flex items-center px-4 space-x-1 flat-button">
+              <a className="flex items-center px-4 space-x-1 flat-button-secondary">
                 <MdArrowBack size="20" />
                 <p>Leave</p>
               </a>
@@ -76,16 +76,16 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-center space-x-2">
-              <button className="px-4 flat-button" onClick={handleClickCopyLink}>
+              <button className="px-4 flat-button-secondary" onClick={handleClickCopyLink}>
                 Copy link
               </button>
 
-              <button className="px-4 flat-button">Preview my GIF</button>
+              <button className="px-4 flat-button-secondary">Preview my GIF</button>
             </div>
           </div>
           <div className="flex items-center justify-end flex-1">
             {userData.data?.user_by_pk.role === 'HOST' && (
-              <button onClick={handleClickStart} className="flat-button">
+              <button onClick={handleClickStart} className="flat-button-secondary">
                 Start session
               </button>
             )}

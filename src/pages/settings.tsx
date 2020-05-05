@@ -31,18 +31,18 @@ const EditUserTeam: React.FC<{
   </div>
 );
 
-const EditUserName: React.FC<{ value?: string; onSubmit: (event: FormEvent) => void }> = ({
-  value,
-  onSubmit,
-}) => {
-  const [name, setName] = useState<string>();
+const EditUserName: React.FC<{
+  value?: string;
+  onSubmit: (event: FormEvent, name: string) => void;
+}> = ({ value, onSubmit }) => {
+  const [name, setName] = useState('');
 
   useEffect(() => {
     if (value) setName(value);
   }, [value]);
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={(event): void => onSubmit(event, name)}>
       <div className="flex">
         <input
           className="flex-1 border-r-0 border-black rounded-l rounded-r-none form-input"
@@ -51,10 +51,7 @@ const EditUserName: React.FC<{ value?: string; onSubmit: (event: FormEvent) => v
           required
         />
 
-        <button
-          className="px-6 py-2 text-white transition-colors duration-150 bg-black border border-black rounded-r hover:bg-white hover:text-black"
-          type="submit"
-        >
+        <button className="border border-black rounded-l-none rounded-r flat-button" type="submit">
           update
         </button>
       </div>
@@ -95,7 +92,7 @@ const EditUserData: React.FC<{ userId: string }> = ({ userId }) => {
     await refetch();
   };
 
-  const handleChangeName = async (event: FormEvent): Promise<void> => {
+  const handleChangeName = async (event: FormEvent, name: string): Promise<void> => {
     event.preventDefault();
     await updateUserName({ variables: { id: userId, name } });
     await refetch();
@@ -144,7 +141,7 @@ const SettingsPage: React.FC = () => {
       <div className="max-w-lg p-4 mx-auto space-y-10">
         {user && <EditUserData userId={user.sub} />}
 
-        <button className="mx-auto flat-button" onClick={logout}>
+        <button className="mx-auto flat-button-secondary" onClick={logout}>
           Log out
         </button>
       </div>
