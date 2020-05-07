@@ -5,6 +5,14 @@
 
 /* purgecss end ignore */
 
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap');
+
+body {
+  font-family: 'Quicksand', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .flat-button {
   @apply block px-8 py-3 font-semibold text-black transition-colors duration-100 bg-yellow-400;
 }
@@ -14,7 +22,7 @@
 }
 
 .flat-button-secondary {
-  @apply block px-8 py-3 font-semibold text-black transition-colors duration-100 bg-gray-300;
+  @apply block px-8 py-3 text-lg font-semibold text-gray-900 transition-colors duration-100 bg-gray-300;
 }
 
 .flat-button-secondary:hover {
@@ -38,7 +46,7 @@
 }
 
 .stereoscopic-button-white {
-  @apply block px-6 py-2 font-semibold transition-shadow duration-100 bg-white rounded;
+  @apply block px-6 py-2 text-base font-bold uppercase transition-shadow duration-100 bg-white rounded;
 
   box-shadow: 3px 3px 0 theme('colors.orange.400');
 }

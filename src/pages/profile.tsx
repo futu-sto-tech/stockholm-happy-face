@@ -21,12 +21,12 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
 
   return (
     <motion.div positionTransition exit={{ opacity: 0, height: 0 }}>
-      <header className="flex items-center justify-between h-16 px-3 bg-black rounded-t-sm">
+      <header className="flex items-center justify-between h-16 px-3 bg-black rounded-t">
         <div className="flex items-center space-x-3">
           <img className="h-10 rounded-full" src={entry.user.picture} alt={entry.user.name} />
-          <div>
-            <p className="text-base font-semibold leading-none text-gray-200">{entry.user.name}</p>
-            <p className="text-sm text-gray-500">
+          <div className="space-y-1">
+            <p className="text-lg font-bold leading-none text-gray-100">{entry.user.name}</p>
+            <p className="text-sm leading-none text-gray-500">
               Posted {fromNow} in {entry.team.name}
             </p>
           </div>
@@ -60,20 +60,22 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
           )}
         </div>
       </header>
-      <img src={entry.image.original_url} className="w-full h-auto rounded-b-sm" />
+      <img src={entry.image.original_url} className="w-full h-auto rounded-b" loading="lazy" />
     </motion.div>
   );
 };
 
 const ActiveNotification: React.FC<{ team: { id: number; name: string } }> = ({ team }) => (
-  <div className="flex items-center justify-between px-6 py-4 bg-yellow-400 rounded shadow-stereoscopic">
+  <div className="flex items-center justify-between p-6 bg-yellow-400 rounded shadow-stereoscopic">
     <div className="flex space-x-2">
       <div className="w-4 h-4 mt-px border border-white rounded-full">
         <div className="w-full h-full bg-green-400 rounded-full" />
       </div>
       <div className="space-y-1">
-        <p className="-mt-px text-lg font-semibold leading-none">{team.name} Smileys is live</p>
-        <p className="text-sm leading-none">Session began 2 min ago</p>
+        <p className="-mt-px text-xl font-semibold leading-none text-gray-900">
+          {team.name} Smileys is live
+        </p>
+        <p className="leading-none text-gray-900">Session began 2 min ago</p>
       </div>
     </div>
     <Link href="/teams/[id]" as={`/teams/${team.id}`}>
@@ -90,11 +92,11 @@ const InactiveNotification: React.FC<{
   <div className="flex items-center justify-between px-6 py-4 border-2 border-gray-900 rounded">
     <div className="flex items-center space-x-2">
       <span className="w-4 h-4 bg-gray-400 rounded-full"></span>
-      <p className="font-semibold">{team.name} Smileys is offline</p>
+      <p className="text-lg font-semibold ">{team.name} Smileys is offline</p>
     </div>
     {user.role === 'HOST' ? (
       <button className="flat-button-secondary" onClick={onClickActivate}>
-        Start Smileys
+        Start
       </button>
     ) : (
       <button disabled className="flat-button">
@@ -129,15 +131,15 @@ const ThisWeekGif: React.FC<{ peopleCount?: number }> = ({ peopleCount }) => {
   if (peopleCount === 0) {
     sentence = `You can be the first to post a GIF!`;
   } else if (peopleCount === 1) {
-    sentence = `One person has posted their GIF already 🎉`;
+    sentence = `One person has posted their GIF 🎉`;
   } else {
-    sentence = `${peopleCount} people have posted their GIF already 🎉`;
+    sentence = `${peopleCount} people have posted their GIF 🎉`;
   }
 
   return (
-    <div>
-      <p className="text-2xl font-semibold text-black">This week&apos;s session</p>
-      <p>{sentence}</p>
+    <div className="space-y-1">
+      <p className="text-3xl font-bold text-gray-900">This week’s session</p>
+      <p className="text-base font-semibold leading-none text-gray-700">{sentence}</p>
     </div>
   );
 };
@@ -146,7 +148,7 @@ const TeamSection: React.FC<{ user: EntryUser }> = ({ user }) => {
   const data = useTeamSubscription(user.team.id);
 
   return data ? (
-    <div className="space-y-5">
+    <div className="space-y-10">
       <Notification data={data} user={user} />
       <ThisWeekGif peopleCount={data?.team_by_pk.entries_aggregate.aggregate.count} />
     </div>
@@ -173,9 +175,9 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
   return (
     <>
       <div className="max-w-xl p-4 mx-auto">
-        <div className="h-5" />
+        <div className="h-10" />
         {data && <TeamSection user={data.user_by_pk} />}
-        <div className="h-3" />
+        <div className="h-5" />
         {currentEntry ? (
           <EntryItem
             entry={currentEntry}
@@ -207,9 +209,9 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
             </div>
           </div>
         )}
-        <div className="h-6" />
-        <p className="text-lg font-semibold text-black">Previous GIFs</p>
-        <div className="h-3" />
+        <div className="h-10" />
+        <p className="text-xl font-bold text-gray-900">Previous GIFs</p>
+        <div className="h-2" />
         <div className="space-y-4">
           <AnimatePresence>
             {data?.user_by_pk.entries
