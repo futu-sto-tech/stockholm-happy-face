@@ -46,7 +46,7 @@ body {
 }
 
 .stereoscopic-button-white {
-  @apply block px-6 py-2 text-base font-bold uppercase transition-shadow duration-100 bg-white rounded;
+  @apply block px-6 py-2 text-base font-bold transition-shadow duration-100 bg-white rounded;
 
   box-shadow: 3px 3px 0 theme('colors.orange.400');
 }

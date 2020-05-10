@@ -88,12 +88,10 @@ const appMachine = Machine<ContextSchema, StateSchema, EventSchema>({
       },
     },
     [State.loggedIn]: {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore: Incorrect compiler error
       on: {
         [Event.LOG_OUT]: {
-          target: [State.loggedOut],
-          actions: [Action.logOut, assign({ auth: null })],
+          target: State.loggedOut,
+          actions: Action.logOut,
         },
       },
     },

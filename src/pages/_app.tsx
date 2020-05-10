@@ -1,6 +1,5 @@
 import '../styles/index.css';
 
-import { AppMachineState } from '../machines/app-machine';
 import { AppProps } from 'next/app';
 import GraphqlClientProvider from '../context/graphql-client';
 import React from 'react';
@@ -12,11 +11,7 @@ type AuthWrapperProps = { children: JSX.Element };
 function AuthWrapper({ children }: AuthWrapperProps): JSX.Element {
   const [state] = useAppMachine();
 
-  if (state.matches(AppMachineState.loggedIn)) {
-    if (state.context.auth === null) {
-      throw new Error('Failed to access auth tokens');
-    }
-
+  if (state.context.auth) {
     return (
       <GraphqlClientProvider token={state.context.auth.token}>{children}</GraphqlClientProvider>
     );
