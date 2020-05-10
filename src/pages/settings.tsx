@@ -1,10 +1,11 @@
 import React, { FormEvent, useEffect, useState } from 'react';
+import { useAppMachine, useUserId } from '../hooks';
 
 import AppHeader from '../components/app-header';
+import { AppMachineEvent } from '../machines/app-machine';
 import FloatingHeader from '../components/floating-header';
 import LogoIcon from '../components/logo-icon';
 import { MdArrowBack } from 'react-icons/md';
-import { useAuth0 } from '../context/auth';
 import { useRouter } from 'next/router';
 import useTeamsQuery from '../graphql/queries/teams';
 import useUpdateUserNameMutation from '../graphql/mutations/update-user-name';
@@ -74,7 +75,8 @@ const EditUserRole: React.FC<{
   </div>
 );
 
-const EditUserData: React.FC<{ userId: string }> = ({ userId }) => {
+const EditUserData: React.FC = () => {
+  const userId = useUserId();
   const { data, refetch } = useUserEntriesQuery(userId);
   const teamsData = useTeamsQuery();
   const [updateUserTeam] = useUpdateUserTeamMutation();
@@ -100,20 +102,20 @@ const EditUserData: React.FC<{ userId: string }> = ({ userId }) => {
 
   return (
     <>
-      <img src={data?.user_by_pk.picture} className="w-32 h-32 mx-auto rounded-full" />
-      <EditUserName value={data?.user_by_pk.name} onSubmit={handleChangeName} />
+      <img src={data?.user_by_pk?.picture} className="w-32 h-32 mx-auto rounded-full" />
+      <EditUserName value={data?.user_by_pk?.name} onSubmit={handleChangeName} />
       <EditUserTeam
         teams={teamsData.data?.team}
-        value={data?.user_by_pk.team?.id}
+        value={data?.user_by_pk?.team?.id}
         onChange={handleChangeTeam}
       />
-      <EditUserRole checked={data?.user_by_pk.role === 'HOST'} onChange={handleChangeRole} />
+      <EditUserRole checked={data?.user_by_pk?.role === 'HOST'} onChange={handleChangeRole} />
     </>
   );
 };
 
 const SettingsPage: React.FC = () => {
-  const { user, logout } = useAuth0();
+  const [, send] = useAppMachine();
   const router = useRouter();
 
   return (
@@ -139,9 +141,14 @@ const SettingsPage: React.FC = () => {
       </FloatingHeader>
       <div className="h-10" />
       <div className="max-w-lg p-4 mx-auto space-y-10">
-        {user && <EditUserData userId={user.sub} />}
+        <EditUserData />
 
-        <button className="mx-auto flat-button-secondary" onClick={logout}>
+        <button
+          className="mx-auto flat-button-secondary"
+          onClick={(): void => {
+            send(AppMachineEvent.LOG_OUT);
+          }}
+        >
           Log out
         </button>
       </div>

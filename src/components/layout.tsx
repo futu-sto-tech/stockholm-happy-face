@@ -3,9 +3,9 @@ import FloatingHeader from './floating-header';
 import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import React from 'react';
-import { useAuth0 } from '../context/auth';
 import useTeamsQuery from '../graphql/queries/teams';
 import useUpdateUserTeamMutation from '../graphql/mutations/update-user-team';
+import { useUserId } from '../hooks';
 import useUserQuery from '../graphql/queries/user';
 
 const UserSettings: React.FC<{ name: string; picture?: string }> = ({ name, picture }) => (
@@ -39,7 +39,7 @@ const UserNav: React.FC<{ userId: string }> = ({ userId }) => {
           />
         )}
       </div>
-      <Link href="/profile">
+      <Link href="/">
         <a className="flex items-center justify-center flex-1">
           <LogoIcon size="100" />
         </a>
@@ -63,12 +63,14 @@ const UserNav: React.FC<{ userId: string }> = ({ userId }) => {
 };
 
 const Layout: React.FC = ({ children }) => {
-  const { user } = useAuth0();
+  const userId = useUserId();
 
   return (
     <div>
       <FloatingHeader>
-        <AppHeader>{user && <UserNav userId={user.sub} />}</AppHeader>
+        <AppHeader>
+          <UserNav userId={userId} />
+        </AppHeader>
       </FloatingHeader>
       <main className="flex-1">{children}</main>
     </div>

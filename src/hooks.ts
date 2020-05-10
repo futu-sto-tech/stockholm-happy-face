@@ -1,5 +1,6 @@
+import { AppMachine, AppMachineContext } from './machines/app-context';
 import { Result, UseSubscriptionOperation, useSubscription } from 'graphql-hooks';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import memCache from 'graphql-hooks-memcache';
 
@@ -33,4 +34,20 @@ export function useSubscriptionWithCache<T extends object>(
   });
 
   return data;
+}
+
+export function useAppMachine(): AppMachine {
+  const context = useContext(AppMachineContext);
+  if (context === undefined) {
+    throw new Error('useAppMachine must be used within an AppProvider');
+  }
+  return context;
+}
+
+export function useUserId(): string {
+  const [state] = useAppMachine();
+  if (state.context.auth === null) {
+    throw new Error('useUserId must be used in logged in state');
+  }
+  return state.context.auth.userId;
 }

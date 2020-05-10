@@ -9,6 +9,7 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.8.0",
     "@lifeomic/axios-fetch": "^1.4.2",
+    "@xstate/react": "^0.8.1",
     "axios": "^0.19.2",
     "date-fns": "^2.12.0",
     "framer-motion": "^1.10.3",
@@ -21,7 +22,8 @@
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-masonry-css": "^1.0.14",
-    "subscriptions-transport-ws": "^0.9.16"
+    "subscriptions-transport-ws": "^0.9.16",
+    "xstate": "^4.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

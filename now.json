@@ -7,9 +7,7 @@
   "build": {
     "env": {
       "GA_TRACKING_ID": "@ga-tracking-id",
-      "HASURA_GRAPHQL_ENDPOINT": "@hasura-graphql-endpoint",
-      "AUTH0_DOMAIN": "@auth0-domain",
-      "AUTH0_CLIENT_ID": "@auth0-client-id"
+      "HASURA_GRAPHQL_ENDPOINT": "@hasura-graphql-endpoint"
     }
   }
 }

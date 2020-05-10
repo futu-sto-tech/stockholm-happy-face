@@ -24,3 +24,15 @@ export function createGraphqlClient(headers: HeadersFunction): GraphQLClient {
 
   return graphqlClient;
 }
+
+export function createApiClient(token: string): GraphQLClient {
+  return new GraphQLClient({
+    url: `https://${process.env.HASURA_GRAPHQL_ENDPOINT}`,
+    cache: memCache(),
+    headers: { Authorization: `Bearer ${token}` },
+    subscriptionClient: new SubscriptionClient(`wss://${process.env.HASURA_GRAPHQL_ENDPOINT}`, {
+      reconnect: true,
+      connectionParams: { headers: { Authorization: `Bearer ${token}` } },
+    }),
+  });
+}

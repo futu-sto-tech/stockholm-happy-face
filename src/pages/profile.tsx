@@ -8,9 +8,9 @@ import useUserEntriesQuery, { Entry, EntryUser } from '../graphql/queries/user-e
 import Layout from '../components/layout';
 import Link from 'next/link';
 import { getCurrentWeek } from '../lib/utils';
-import { useAuth0 } from '../context/auth';
 import useDeleteEntryMutation from '../graphql/mutations/delete-entry-mutation';
 import useUpdateTeamActiveMutation from '../graphql/mutations/update-team-active';
+import { useUserId } from '../hooks';
 
 const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
   entry,
@@ -155,11 +155,11 @@ const TeamSection: React.FC<{ user: EntryUser }> = ({ user }) => {
   ) : null;
 };
 
-const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
+export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
   const { data, refetch } = useUserEntriesQuery(userId);
 
   const [currentYear, currentWeek] = useMemo(() => getCurrentWeek(), []);
-  const currentEntry = data?.user_by_pk.entries.find(
+  const currentEntry = data?.user_by_pk?.entries.find(
     (item) => item.year === currentYear && item.week === currentWeek,
   );
 
@@ -176,7 +176,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
     <>
       <div className="max-w-xl p-4 mx-auto">
         <div className="h-10" />
-        {data && <TeamSection user={data.user_by_pk} />}
+        {data?.user_by_pk && <TeamSection user={data.user_by_pk} />}
         <div className="h-5" />
         {currentEntry ? (
           <EntryItem
@@ -189,12 +189,12 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
               <div className="flex items-center space-x-3">
                 <img
                   className="h-10 rounded-full"
-                  src={data?.user_by_pk.picture}
-                  alt={data?.user_by_pk.name}
+                  src={data?.user_by_pk?.picture}
+                  alt={data?.user_by_pk?.name}
                 />
                 <div>
                   <p className="text-base font-semibold leading-none text-gray-100">
-                    {data?.user_by_pk.name}
+                    {data?.user_by_pk?.name}
                   </p>
                   <p className="text-sm text-gray-400">This week</p>
                 </div>
@@ -214,7 +214,7 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
         <div className="h-2" />
         <div className="space-y-4">
           <AnimatePresence>
-            {data?.user_by_pk.entries
+            {data?.user_by_pk?.entries
               .filter((item) => item.id !== currentEntry?.id)
               .map((item) => (
                 <EntryItem
@@ -231,9 +231,13 @@ const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
 };
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth0();
+  const userId = useUserId();
 
-  return <Layout>{user && <EntryFeed userId={user.sub} />}</Layout>;
+  return (
+    <Layout>
+      <EntryFeed userId={userId} />
+    </Layout>
+  );
 };
 
 export default ProfilePage;

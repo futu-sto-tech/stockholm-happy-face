@@ -65,7 +65,7 @@ export interface EntryUser {
 }
 
 interface Data {
-  user_by_pk: EntryUser;
+  user_by_pk: EntryUser | null;
 }
 
 interface Variables {
