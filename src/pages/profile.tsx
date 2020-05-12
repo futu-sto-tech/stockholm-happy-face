@@ -93,7 +93,7 @@ const InactiveNotification: React.FC<{
   onClickActivate: () => void;
   user: EntryUser;
 }> = ({ team, onClickActivate, user }) => (
-  <div className="flex items-center justify-between px-6 py-4 border-2 border-gray-900 rounded-lg">
+  <div className="flex items-center justify-between px-6 py-4 border border-gray-900 rounded-lg">
     <div className="flex items-center space-x-2">
       <span className="w-4 h-4 border border-black rounded-full"></span>
       <p className="text-lg font-bold ">{team.name} Smileys is offline</p>

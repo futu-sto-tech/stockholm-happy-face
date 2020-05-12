@@ -79,9 +79,9 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
     <div className="p-6 space-y-10 bg-white border border-black rounded-sm">
       <header className="space-y-6">
         <div>
-          <p className="text-xl font-bold text-center">Select this one?</p>
+          <p className="text-xl font-bold text-center">Select this GIF?</p>
           <p className="text-base text-center text-gray-700">
-            Pick this GIF to share with your team during this weeks Smiley-session
+            Pick a GIF to share with your team during this week&apos;s Smileys-session
           </p>
         </div>
         <div className="w-40 mx-auto">

@@ -1,11 +1,11 @@
-import { AppMachineEvent, AppMachineState } from '../machines/app-machine';
-import { useAppMachine, useUserId } from '../hooks';
+import { AppMachineEvent, AppMachineState } from 'machines/app-machine';
+import { useAppMachine, useUserId } from 'hooks';
 
 import { EntryFeed } from './profile';
-import Layout from '../components/layout';
-import LogoIcon from '../components/logo-icon';
+import Layout from 'components/layout';
+import LogoIcon from 'components/logo-icon';
 import React from 'react';
-import buttonStyles from '../styles/button.module.css';
+import buttonStyles from 'styles/button.module.css';
 
 function UserEntryFeed(): JSX.Element {
   const userId = useUserId();

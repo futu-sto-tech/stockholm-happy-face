@@ -1,12 +1,12 @@
-import { Entry, Session } from '../graphql/subscriptions/session';
+import { Entry, Session } from 'graphql/subscriptions/session';
 import React, { useCallback, useMemo } from 'react';
 
 import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { motion } from 'framer-motion';
-import useUpdateTeamActiveMutation from '../graphql/mutations/update-team-active';
-import useUpdateTeamEntry from '../graphql/mutations/update-team-entry';
+import useUpdateTeamActiveMutation from 'graphql/mutations/update-team-active';
+import useUpdateTeamEntry from 'graphql/mutations/update-team-entry';
 
 const ActiveParticipant: React.FC<{ name: string }> = ({ name }) => (
   <div className="p-3 bg-white rounded">
@@ -155,15 +155,17 @@ const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, e
 
           <div className="w-24" />
         </header>
-        <main className="flex flex-col items-center flex-1 p-4">
-          <div className="flex flex-col justify-center flex-1 space-y-6">
-            <header className="flex items-center justify-center">
-              <p className="text-2xl font-bold leading-none text-white">{entry.user.name}</p>
-            </header>
-            <img className="w-full rounded shadow-xl" src={entry.image.original_url} alt="GIF" />
-          </div>
+        <main className="flex flex-col items-center justify-center flex-1 p-4 space-y-6">
+          <p className="flex-shrink-0 text-2xl font-bold leading-none text-center text-white">
+            {entry.user.name}
+          </p>
+          <img
+            className="max-h-full rounded-lg shadow-xl"
+            src={entry.image.original_url}
+            alt="GIF"
+          />
         </main>
-        <footer className="flex justify-center p-4 space-x-4 bg-white bg-opacity-25">
+        <footer className="flex justify-center flex-shrink-0 p-4 space-x-4 bg-white bg-opacity-25">
           {session.participants.map((item) => (
             <motion.img
               key={item.id}

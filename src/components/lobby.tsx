@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useRef } from 'react';
 
 import Link from 'next/link';
@@ -5,7 +6,6 @@ import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { Session } from '../graphql/subscriptions/session';
 import buttonStyles from '../styles/button.module.css';
-import { motion } from 'framer-motion';
 import useUpdateTeamEntry from '../graphql/mutations/update-team-entry';
 import useUserQuery from '../graphql/queries/user';
 
@@ -29,7 +29,7 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
           ref={dragConstraint}
         ></div>
       </div>
-      <main className="flex flex-col items-center justify-between flex-1 py-24 space-y-10 bg-yellow-400">
+      <main className="flex flex-col items-center justify-between flex-1 px-4 py-24 space-y-10 bg-yellow-400">
         <div className="flex flex-col items-center space-y-8">
           <LogoIcon />
           <div className="flex flex-col items-center px-16 py-8 space-y-5 bg-white rounded-lg shadow-lg">
@@ -48,22 +48,28 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
           <p className="text-base text-center text-black">Waiting for Smileys to start</p>
         </div>
 
-        <div className="w-full h-32 max-w-2xl p-4 mx-auto bg-white rounded-lg shadow-lg">
-          <ul className="flex justify-center space-x-5">
-            {session?.participants.map((item) => (
-              <motion.li
-                drag
-                dragConstraints={dragConstraint}
-                className="flex flex-col items-center cursor-move"
-                key={item.id}
-              >
-                <div
-                  className="w-16 h-16 bg-center bg-contain rounded-full"
-                  style={{ backgroundImage: `url(${item.picture})` }}
-                />
-                <p className="text-sm text-black">{item.name}</p>
-              </motion.li>
-            ))}
+        <div className="w-full max-w-4xl p-4 mx-auto bg-white rounded-lg shadow-lg">
+          <ul className="grid grid-cols-4 gap-4 md:grid-cols-6 lg:grid-cols-8">
+            <AnimatePresence exitBeforeEnter>
+              {session?.participants.map((item) => (
+                <motion.li
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  drag
+                  dragConstraints={dragConstraint}
+                  className="flex flex-col items-center justify-center h-24 cursor-move"
+                  key={item.id}
+                >
+                  <div
+                    className="w-16 h-16 bg-center bg-contain rounded-full"
+                    style={{ backgroundImage: `url(${item.picture})` }}
+                  />
+                  <p className="text-sm text-black">{item.name}</p>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+            {session.participants.length === 0 && <li className="h-24"></li>}
           </ul>
         </div>
       </main>

@@ -18,7 +18,7 @@ const Ending: React.FC<{ session: Session; userId: string }> = ({ session, userI
 
   return (
     <div className="flex flex-col h-screen">
-      <main className="flex flex-col items-center justify-between flex-1 py-24 space-y-10 bg-green-400">
+      <main className="flex flex-col items-center justify-center flex-1 py-24 space-y-10 bg-green-400">
         <div className="flex flex-col items-center space-y-8">
           <LogoIcon />
           <div className="flex flex-col items-center px-16 py-8 space-y-5 bg-white rounded-lg shadow-lg">

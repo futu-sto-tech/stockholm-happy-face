@@ -16,7 +16,7 @@
 
 .primary,
 .primaryWhite {
-  @apply flex items-center h-10 px-6 text-base font-bold leading-none text-black transition-shadow duration-100 bg-yellow-400 rounded-lg;
+  @apply flex items-center h-10 px-10 text-base font-bold leading-none text-black transition-shadow duration-100 bg-yellow-400 rounded-lg;
 }
 
 .primary {
