@@ -213,6 +213,13 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
           </div>
         )}
       </div>
+      <div
+        style={{
+          backgroundImage: `url('/images/wobble-green.svg')`,
+          height: 141,
+          backgroundPosition: 'center',
+        }}
+      />
       <div className="py-16 bg-green-400">
         <div className="max-w-xl px-4 mx-auto">
           <p className="text-xl font-bold text-black">Previous GIFs</p>
