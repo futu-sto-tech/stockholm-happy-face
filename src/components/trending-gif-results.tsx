@@ -74,7 +74,7 @@ const TrendingGifResults: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <p className="flex items-center font-semibold text-black space-x-2">
+      <p className="flex items-center space-x-3 text-lg font-bold leading-none text-black">
         <MdTrendingUp size="24" />
         <span>Trending</span>
       </p>

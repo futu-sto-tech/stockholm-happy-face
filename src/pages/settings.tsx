@@ -122,7 +122,7 @@ const SettingsPage: React.FC = () => {
     <div>
       <FloatingHeader>
         <AppHeader>
-          <div className="flex items-center">
+          <div className="flex items-center w-full">
             <div className="flex items-center flex-1 flex-start">
               <button
                 className="flex items-center px-4 py-2 space-x-1 rounded hover:bg-gray-300"

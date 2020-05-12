@@ -7,6 +7,7 @@ import useUserEntriesQuery, { Entry, EntryUser } from '../graphql/queries/user-e
 
 import Layout from '../components/layout';
 import Link from 'next/link';
+import buttonStyles from '../styles/button.module.css';
 import { getCurrentWeek } from '../lib/utils';
 import useDeleteEntryMutation from '../graphql/mutations/delete-entry-mutation';
 import useUpdateTeamActiveMutation from '../graphql/mutations/update-team-active';
@@ -21,12 +22,12 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
 
   return (
     <motion.div positionTransition exit={{ opacity: 0, height: 0 }}>
-      <header className="flex items-center justify-between h-16 px-3 bg-black rounded-t">
+      <header className="flex items-center justify-between h-16 px-3 bg-black rounded-t-lg">
         <div className="flex items-center space-x-3">
           <img className="h-10 rounded-full" src={entry.user.picture} alt={entry.user.name} />
           <div className="space-y-1">
-            <p className="text-lg font-bold leading-none text-gray-100">{entry.user.name}</p>
-            <p className="text-sm leading-none text-gray-500">
+            <p className="text-base font-bold leading-none text-gray-100">{entry.user.name}</p>
+            <p className="text-sm leading-none text-white">
               Posted {fromNow} in {entry.team.name}
             </p>
           </div>
@@ -43,7 +44,7 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
                 onClick={(): void => setShowMenu(false)}
               />
               <motion.div
-                className="absolute right-0 w-48 py-1 bg-white rounded shadow-xl"
+                className="absolute right-0 w-48 py-1 bg-white rounded-lg shadow-xl"
                 initial={{ opacity: 0, scale: 0.4, translateX: 32, translateY: -16 }}
                 animate={{ opacity: 1, scale: 1, translateX: 0, translateY: 0 }}
                 transition={{ duration: 0.1 }}
@@ -60,26 +61,29 @@ const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
           )}
         </div>
       </header>
-      <img src={entry.image.original_url} className="w-full h-auto rounded-b" loading="lazy" />
+      <img src={entry.image.original_url} className="w-full h-auto rounded-b-lg" loading="lazy" />
     </motion.div>
   );
 };
 
 const ActiveNotification: React.FC<{ team: { id: number; name: string } }> = ({ team }) => (
-  <div className="flex items-center justify-between p-6 bg-yellow-400 rounded shadow-stereoscopic">
-    <div className="flex space-x-2">
-      <div className="w-4 h-4 mt-px border border-white rounded-full">
-        <div className="w-full h-full bg-green-400 rounded-full" />
+  <div className="flex items-center justify-between p-6 bg-yellow-400 rounded-lg shadow-stereoscopic">
+    <div className="flex items-center space-x-3">
+      <div className="relative">
+        <div className="w-4 h-4 bg-black rounded-full" />
+        <motion.div
+          animate={{ scale: [1, 2.2], opacity: [0.4, 0] }}
+          transition={{ loop: Infinity, duration: 1.5 }}
+          className="absolute top-0 left-0 w-4 h-4 border-2 border-black rounded-full"
+        />
       </div>
-      <div className="space-y-1">
-        <p className="-mt-px text-xl font-semibold leading-none text-gray-900">
-          {team.name} Smileys is live
-        </p>
-        <p className="leading-none text-gray-900">Session began 2 min ago</p>
+      <div className="space-y-2">
+        <p className="text-xl font-bold leading-none text-black">{team.name} Smileys is live</p>
+        <p className="text-base leading-none text-black">Session began 2 min ago</p>
       </div>
     </div>
     <Link href="/teams/[id]" as={`/teams/${team.id}`}>
-      <a className="stereoscopic-button-white">Join</a>
+      <a className={buttonStyles.primaryWhite}>Join</a>
     </Link>
   </div>
 );
@@ -89,17 +93,17 @@ const InactiveNotification: React.FC<{
   onClickActivate: () => void;
   user: EntryUser;
 }> = ({ team, onClickActivate, user }) => (
-  <div className="flex items-center justify-between px-6 py-4 border-2 border-gray-900 rounded">
+  <div className="flex items-center justify-between px-6 py-4 border-2 border-gray-900 rounded-lg">
     <div className="flex items-center space-x-2">
-      <span className="w-4 h-4 bg-gray-400 rounded-full"></span>
-      <p className="text-lg font-semibold ">{team.name} Smileys is offline</p>
+      <span className="w-4 h-4 border border-black rounded-full"></span>
+      <p className="text-lg font-bold ">{team.name} Smileys is offline</p>
     </div>
     {user.role === 'HOST' ? (
-      <button className="flat-button-secondary" onClick={onClickActivate}>
+      <button className={buttonStyles.secondary} onClick={onClickActivate}>
         Start
       </button>
     ) : (
-      <button disabled className="flat-button">
+      <button disabled className={buttonStyles.secondary}>
         Join
       </button>
     )}
@@ -137,9 +141,9 @@ const ThisWeekGif: React.FC<{ peopleCount?: number }> = ({ peopleCount }) => {
   }
 
   return (
-    <div className="space-y-1">
-      <p className="text-3xl font-bold text-gray-900">This week’s session</p>
-      <p className="text-base font-semibold leading-none text-gray-700">{sentence}</p>
+    <div>
+      <p className="text-2xl font-bold text-black">Your GIF this week</p>
+      <p className="text-base leading-none text-gray-700">{sentence}</p>
     </div>
   );
 };
@@ -173,9 +177,8 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
   );
 
   return (
-    <>
-      <div className="max-w-xl p-4 mx-auto">
-        <div className="h-10" />
+    <div>
+      <div className="max-w-xl px-4 py-16 mx-auto">
         {data?.user_by_pk && <TeamSection user={data.user_by_pk} />}
         <div className="h-5" />
         {currentEntry ? (
@@ -185,7 +188,7 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
           />
         ) : (
           <div className="bg-white">
-            <header className="flex items-center h-16 px-3 bg-black rounded-t">
+            <header className="flex items-center h-16 px-3 bg-black rounded-t-lg">
               <div className="flex items-center space-x-3">
                 <img
                   className="h-10 rounded-full"
@@ -193,40 +196,43 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
                   alt={data?.user_by_pk?.name}
                 />
                 <div>
-                  <p className="text-base font-semibold leading-none text-gray-100">
+                  <p className="text-base font-bold leading-none text-white">
                     {data?.user_by_pk?.name}
                   </p>
-                  <p className="text-sm text-gray-400">This week</p>
+                  <p className="text-sm text-white">This week</p>
                 </div>
               </div>
             </header>
             <div className="flex flex-col items-center justify-center h-64 border-b-2 border-l-2 border-r-2 border-black border-dashed rounded-b-lg">
-              <p className="text-sm text-center text-gray-700">No GIF for this week yet</p>
+              <p className="text-sm text-center text-black">No GIF for this week yet</p>
               <div className="h-2" />
               <Link href="/entries/new">
-                <a className="flat-button">Pick GIF</a>
+                <a className={buttonStyles.primary}>Pick GIF</a>
               </Link>
             </div>
           </div>
         )}
-        <div className="h-10" />
-        <p className="text-xl font-bold text-gray-900">Previous GIFs</p>
-        <div className="h-2" />
-        <div className="space-y-4">
-          <AnimatePresence>
-            {data?.user_by_pk?.entries
-              .filter((item) => item.id !== currentEntry?.id)
-              .map((item) => (
-                <EntryItem
-                  key={item.id}
-                  entry={item}
-                  onDelete={(): Promise<void> => handleRemoveItem(item.id)}
-                />
-              ))}
-          </AnimatePresence>
+      </div>
+      <div className="py-16 bg-green-400">
+        <div className="max-w-xl px-4 mx-auto">
+          <p className="text-xl font-bold text-black">Previous GIFs</p>
+          <div className="h-2" />
+          <div className="space-y-4">
+            <AnimatePresence>
+              {data?.user_by_pk?.entries
+                .filter((item) => item.id !== currentEntry?.id)
+                .map((item) => (
+                  <EntryItem
+                    key={item.id}
+                    entry={item}
+                    onDelete={(): Promise<void> => handleRemoveItem(item.id)}
+                  />
+                ))}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

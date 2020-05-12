@@ -3,6 +3,7 @@ import { useInsertEntryWithImage, useInsertEntryWithUrl } from '../graphql/mutat
 
 import Link from 'next/link';
 import { MdArrowBack } from 'react-icons/md';
+import buttonStyles from '../styles/button.module.css';
 import { useManualQuery } from 'graphql-hooks';
 import { useRouter } from 'next/router';
 import useTeamsQuery from '../graphql/queries/teams';
@@ -78,14 +79,14 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
     <div className="p-6 space-y-10 bg-white border border-black rounded-sm">
       <header className="space-y-6">
         <div>
-          <p className="text-lg font-semibold text-center">Select this one?</p>
-          <p className="text-center text-gray-700">
+          <p className="text-xl font-bold text-center">Select this one?</p>
+          <p className="text-base text-center text-gray-700">
             Pick this GIF to share with your team during this weeks Smiley-session
           </p>
         </div>
         <div className="w-40 mx-auto">
-          <div className="h-px bg-gray-600" />
-          <div className="h-px bg-gray-600" />
+          <div className="h-px bg-black" />
+          <div className="h-px bg-black" />
         </div>
       </header>
       <main>
@@ -94,7 +95,7 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
       <form onSubmit={handleSubmit}>
         <div className="flex justify-center space-x-4">
           <Link href="/entries/new">
-            <a className="flex items-center px-6 py-2 space-x-2 text-gray-700 transition-colors duration-150 bg-white border border-gray-400 rounded hover:text-black hover:border-black">
+            <a className={`${buttonStyles.tertiary} space-x-2`} style={{ height: 'auto' }}>
               <MdArrowBack size="20" />
               <p className="text-base leading-none">Back</p>
             </a>
@@ -102,7 +103,7 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
 
           <div className="flex">
             <select
-              className="border-r-0 border-black rounded-l rounded-r-none form-select"
+              className="border-2 border-r-0 border-black rounded-l-lg rounded-r-none form-select"
               value={team}
               onChange={({ target: { value } }): void => setTeam(parseInt(value))}
               required
@@ -115,7 +116,8 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
               ))}
             </select>
             <button
-              className="px-6 py-2 text-white transition-colors duration-150 bg-black border border-black rounded-r hover:bg-white hover:text-black"
+              className={buttonStyles.secondary}
+              style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, height: 'auto' }}
               type="submit"
             >
               Pick GIF

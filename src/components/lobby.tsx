@@ -32,16 +32,16 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
           ref={dragConstraint}
         ></div>
       </div>
-      <main className="flex flex-col items-center justify-center flex-1 space-y-10 bg-black">
-        <div className="w-full max-w-xl py-24 bg-gray-100 rounded shadow-stereoscopic">
+      <main className="flex flex-col items-center justify-center flex-1 space-y-10 bg-yellow-400">
+        <div className="py-24 bg-white rounded-lg">
+          <LogoIcon />
           <div className="flex flex-col items-center space-y-5">
-            <LogoIcon />
             <div className="space-y-1">
               <p className="text-lg text-center">
                 Team: <span className="font-semibold">{session?.name}</span>
               </p>
-              <p className="text-sm text-center text-gray-600">Waiting for Smileys to start...</p>
             </div>
+            <p className="text-sm text-center text-gray-600">Waiting for Smileys to start...</p>
           </div>
         </div>
 

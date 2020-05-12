@@ -21,7 +21,7 @@ const IndexPage: React.FC = () => {
 
   if (state.matches(AppMachineState.loggedIn)) {
     return <UserEntryFeed />;
-  } else if (state.matches(AppMachineState.loggedOut)) {
+  } else {
     return (
       <div>
         <div className="flex flex-col min-h-screen">
@@ -51,12 +51,6 @@ const IndexPage: React.FC = () => {
             </a>
           </div>
         </footer>
-      </div>
-    );
-  } else {
-    return (
-      <div className="flex items-center justify-center h-screen text-white bg-gray-500">
-        <LogoIcon />
       </div>
     );
   }

@@ -92,7 +92,7 @@ const SearchResults: React.FC<{
         ))}
       </MasonryGrid>
       {data?.search_gif.length && (
-        <p className="font-semibold text-center" ref={scrollRef}>
+        <p className="text-center" ref={scrollRef}>
           Loading more...
         </p>
       )}
@@ -112,8 +112,8 @@ const SearchGif: React.FC<{
     <div className="space-y-10">
       <header className="max-w-2xl mx-auto space-y-4">
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-black">How was your week?</h2>
-          <p className="text-gray-700">
+          <h2 className="text-xl font-bold text-black">How was your week?</h2>
+          <p className="text-base text-gray-700">
             Pick a GIF to share your experience this week with your team.
           </p>
         </div>
@@ -126,7 +126,7 @@ const SearchGif: React.FC<{
             onChange={({ target: { value } }): void => setQuery(value)}
           />
           <Link href={{ href: '/entries/new', query: { manual: 'on' } }}>
-            <a className="block text-sm text-gray-700 underline">Or paste a link</a>
+            <a className="block text-base text-black underline">Or paste a link</a>
           </Link>
         </div>
       </header>

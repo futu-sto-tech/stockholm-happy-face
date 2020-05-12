@@ -11,8 +11,8 @@ import useUserQuery from '../graphql/queries/user';
 const UserSettings: React.FC<{ name: string; picture?: string }> = ({ name, picture }) => (
   <Link href="/settings">
     <a className="flex items-center px-4 py-2 space-x-2 rounded hover:bg-gray-300">
-      <img className="w-6 h-auto rounded-full" src={picture} alt={`${name} avatar`} />
       <p className="text-lg font-semibold text-gray-900">{name}</p>
+      <img className="w-6 h-auto rounded-full" src={picture} alt={`${name} avatar`} />
     </a>
   </Link>
 );
@@ -30,7 +30,7 @@ const UserNav: React.FC<{ userId: string }> = ({ userId }) => {
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <div className="flex items-center justify-start flex-1">
         {userData.data && (
           <UserSettings
