@@ -103,7 +103,7 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
 
           <div className="flex">
             <select
-              className="border-2 border-r-0 border-black rounded-l-lg rounded-r-none form-select"
+              className="border border-r-0 border-black rounded-l-lg rounded-r-none form-select"
               value={team}
               onChange={({ target: { value } }): void => setTeam(parseInt(value))}
               required

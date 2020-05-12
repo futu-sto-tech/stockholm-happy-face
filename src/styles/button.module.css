@@ -1,5 +1,5 @@
 .secondary {
-  @apply flex items-center h-10 px-6 text-base font-bold leading-none text-white transition-colors duration-100 bg-black border-2 border-transparent rounded-lg;
+  @apply flex items-center h-10 px-6 text-base font-bold leading-none text-white transition-colors duration-100 bg-black border border-transparent rounded-lg;
 }
 
 .secondary:hover {
@@ -11,7 +11,7 @@
 }
 
 .tertiary {
-  @apply flex items-center h-10 px-6 text-base leading-none text-black border-2 border-black rounded-lg;
+  @apply flex items-center h-10 px-6 text-base leading-none text-black border border-black rounded-lg;
 }
 
 .primary,

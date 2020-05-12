@@ -6,6 +6,7 @@ import { AppMachineEvent } from '../machines/app-machine';
 import FloatingHeader from '../components/floating-header';
 import LogoIcon from '../components/logo-icon';
 import { MdArrowBack } from 'react-icons/md';
+import buttonStyles from '../styles/button.module.css';
 import { useRouter } from 'next/router';
 import useTeamsQuery from '../graphql/queries/teams';
 import useUpdateUserNameMutation from '../graphql/mutations/update-user-name';
@@ -21,7 +22,7 @@ const EditUserTeam: React.FC<{
   <div className="flex items-center justify-between">
     <p className="text-lg">Your team</p>
 
-    <select className="border-gray-800 rounded form-select" value={value} onChange={onChange}>
+    <select className="border-black rounded-lg form-select" value={value} onChange={onChange}>
       <option disabled>Choose team</option>
       {teams?.map((item) => (
         <option key={item.id} value={item.id}>
@@ -46,13 +47,17 @@ const EditUserName: React.FC<{
     <form onSubmit={(event): void => onSubmit(event, name)}>
       <div className="flex">
         <input
-          className="flex-1 border-r-0 border-black rounded-l rounded-r-none form-input"
+          className="flex-1 border-r-0 border-black rounded-l-lg rounded-r-none form-input"
           value={name}
           onChange={({ target: { value } }): void => setName(value)}
           required
         />
 
-        <button className="border border-black rounded-l-none rounded-r flat-button" type="submit">
+        <button
+          className={buttonStyles.secondary}
+          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, height: 'auto' }}
+          type="submit"
+        >
           update
         </button>
       </div>
@@ -143,14 +148,16 @@ const SettingsPage: React.FC = () => {
       <div className="max-w-lg p-4 mx-auto space-y-10">
         <EditUserData />
 
-        <button
-          className="mx-auto flat-button-secondary"
-          onClick={(): void => {
-            send(AppMachineEvent.LOG_OUT);
-          }}
-        >
-          Log out
-        </button>
+        <div className="flex justify-center">
+          <button
+            className={buttonStyles.tertiary}
+            onClick={(): void => {
+              send(AppMachineEvent.LOG_OUT);
+            }}
+          >
+            Log out
+          </button>
+        </div>
       </div>
     </div>
   );

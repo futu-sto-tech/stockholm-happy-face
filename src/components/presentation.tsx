@@ -10,7 +10,7 @@ import useUpdateTeamEntry from '../graphql/mutations/update-team-entry';
 
 const ActiveParticipant: React.FC<{ name: string }> = ({ name }) => (
   <div className="p-3 bg-white rounded">
-    <p className="font-semibold text-black">{name}</p>
+    <p className="font-bold text-black">{name}</p>
   </div>
 );
 
@@ -65,8 +65,8 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
     <div className="flex flex-col h-full p-6 bg-black">
       <main className="flex-1 space-y-10">
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-white">Participants</h3>
-          <div className="h-px bg-gray-600" />
+          <h3 className="text-xl font-bold text-white">Participants</h3>
+          <div className="h-px bg-white bg-opacity-50" />
           <ul>
             {session.entries.map((item) => (
               <li key={item.id}>
@@ -85,7 +85,7 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
                     {item.id !== session.entry?.id && (
                       <button
                         onClick={(): Promise<void> => handleClickShowUserEntry(item.id)}
-                        className="font-semibold transition-opacity duration-100 opacity-0 group-hover:opacity-100"
+                        className="font-bold transition-opacity duration-100 opacity-0 group-hover:opacity-100"
                       >
                         Show
                       </button>
@@ -132,7 +132,7 @@ const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, e
 
   return (
     <div
-      className="flex h-screen transition-colors duration-300 bg-gray-800"
+      className="flex h-screen transition-colors duration-300 bg-black"
       style={{ backgroundColor: entry.image.color }}
     >
       <div className="flex flex-col flex-1 h-full">
@@ -158,12 +158,12 @@ const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, e
         <main className="flex flex-col items-center flex-1 p-4">
           <div className="flex flex-col justify-center flex-1 space-y-6">
             <header className="flex items-center justify-center">
-              <p className="text-2xl font-semibold leading-none text-white">{entry.user.name}</p>
+              <p className="text-2xl font-bold leading-none text-white">{entry.user.name}</p>
             </header>
             <img className="w-full rounded shadow-xl" src={entry.image.original_url} alt="GIF" />
           </div>
         </main>
-        <footer className="flex justify-center p-4 space-x-4 bg-gray-100 bg-opacity-25">
+        <footer className="flex justify-center p-4 space-x-4 bg-white bg-opacity-25">
           {session.participants.map((item) => (
             <motion.img
               key={item.id}
