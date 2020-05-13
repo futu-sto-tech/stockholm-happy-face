@@ -10,8 +10,8 @@ import useUserQuery from '../graphql/queries/user';
 
 const UserSettings: React.FC<{ name: string; picture?: string }> = ({ name, picture }) => (
   <Link href="/settings">
-    <a className="flex items-center px-4 py-2 space-x-2 rounded hover:bg-gray-300">
-      <p className="text-lg font-semibold text-gray-900">{name}</p>
+    <a className="flex items-center px-4 py-2 space-x-2 rounded-lg hover:bg-gray-300">
+      <p className="text-lg text-black">{name}</p>
       <img className="w-6 h-auto rounded-full" src={picture} alt={`${name} avatar`} />
     </a>
   </Link>
@@ -46,7 +46,7 @@ const UserNav: React.FC<{ userId: string }> = ({ userId }) => {
       </Link>
       <div className="flex items-center justify-end flex-1">
         <select
-          className="block py-2 text-lg font-semibold border-none rounded form-select hover:bg-gray-300"
+          className="block py-2 text-lg text-black border-none rounded-lg form-select hover:bg-gray-300"
           value={userData.data?.user_by_pk.team?.id}
           onChange={handleChange}
         >

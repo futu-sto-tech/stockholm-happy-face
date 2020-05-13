@@ -73,7 +73,7 @@ const EditUserRole: React.FC<{
     <p className="text-lg">Session host</p>
     <input
       type="checkbox"
-      className="text-black form-checkbox"
+      className="w-6 h-6 text-black form-checkbox"
       checked={checked}
       onChange={onChange}
     />
@@ -130,7 +130,7 @@ const SettingsPage: React.FC = () => {
           <div className="flex items-center w-full">
             <div className="flex items-center flex-1 flex-start">
               <button
-                className="flex items-center px-4 py-2 space-x-1 rounded hover:bg-gray-300"
+                className="flex items-center px-4 py-2 space-x-1 text-black rounded hover:bg-gray-300"
                 onClick={(): void => router.back()}
               >
                 <MdArrowBack size="20" />

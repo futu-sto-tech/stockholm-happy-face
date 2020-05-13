@@ -1,17 +1,22 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useCallback, useRef } from 'react';
+import { DialogContent, DialogOverlay } from '@reach/dialog';
+import React, { useCallback, useRef, useState } from 'react';
 
 import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { Session } from '../graphql/subscriptions/session';
 import buttonStyles from '../styles/button.module.css';
+import useDeleteEntryMutation from 'graphql/mutations/delete-entry-mutation';
+import { useRouter } from 'next/router';
 import useUpdateTeamEntry from '../graphql/mutations/update-team-entry';
 import useUserQuery from '../graphql/queries/user';
 
 const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId }) => {
+  const router = useRouter();
   const dragConstraint = useRef(null);
   const userData = useUserQuery(userId);
+  const [showModal, setShowModal] = useState(false);
 
   const [updateTeamEntry] = useUpdateTeamEntry();
   const handleClickStart = useCallback(async () => {
@@ -20,6 +25,17 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
       variables: { team: session.id, entry: entryId, time: new Date().toISOString() },
     });
   }, [session, updateTeamEntry]);
+
+  const userEntry = session.entries.find((item) => item.user.id === userId);
+
+  const [deleteEntry] = useDeleteEntryMutation();
+  const handleClickChangeGIF = useCallback(
+    async (entryId: number) => {
+      router.push('/entries/new');
+      await deleteEntry({ variables: { id: entryId } });
+    },
+    [deleteEntry, router],
+  );
 
   return (
     <div className="flex flex-col h-screen">
@@ -74,7 +90,7 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
         </div>
       </main>
 
-      <footer className="p-4 bg-gray-100">
+      <footer className="p-4 bg-white">
         <div className="flex items-center w-full max-w-6xl mx-auto">
           <div className="flex items-center flex-1">
             <Link href="/profile">
@@ -86,7 +102,18 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-center space-x-2">
-              <button className={buttonStyles.tertiary}>Preview my GIF</button>
+              {userEntry ? (
+                <button onClick={(): void => setShowModal(true)} className={buttonStyles.tertiary}>
+                  Preview my GIF
+                </button>
+              ) : (
+                <button
+                  onClick={(): any => router.push('/entries/new')}
+                  className={buttonStyles.primary}
+                >
+                  Pick a GIF
+                </button>
+              )}
             </div>
           </div>
           <div className="flex items-center justify-end flex-1">
@@ -98,6 +125,56 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
           </div>
         </div>
       </footer>
+
+      {userEntry && (
+        <AnimatePresence>
+          <DialogOverlay
+            isOpen={showModal}
+            onDismiss={(): void => setShowModal(false)}
+            style={{ background: 'rgba(0, 0, 0, 0.75)' }}
+          >
+            <DialogContent
+              style={{ background: 'transparent', width: '100%' }}
+              className="max-w-4xl"
+            >
+              <motion.div
+                initial={{ opacity: 0.5, scale: 0.9, translateY: 56 }}
+                animate={{ opacity: 1, scale: 1, translateY: 0 }}
+                className="w-full rounded-lg shadow-2xl"
+              >
+                <header className="flex items-center justify-between h-20 px-4 bg-black rounded-t-lg">
+                  <div className="flex items-center space-x-4">
+                    <img
+                      className="w-12 h-12 rounded-full"
+                      alt="User avatar"
+                      src={userEntry.user.picture}
+                    />
+                    <div className="space-y-2">
+                      <p className="text-xl font-bold leading-none text-white">
+                        {userEntry.user.name}
+                      </p>
+                      <p className="text-base leading-none text-white">This week</p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={(): any => handleClickChangeGIF(userEntry.id)}
+                    className="px-4 py-2 text-white border border-white rounded-lg"
+                  >
+                    Change GIF
+                  </button>
+                </header>
+                <main
+                  className="flex justify-center p-8 bg-black rounded-b-lg"
+                  style={{ backgroundColor: userEntry.image.color }}
+                >
+                  <img src={userEntry.image.original_url} alt="User GIF image" />
+                </main>
+              </motion.div>
+            </DialogContent>
+          </DialogOverlay>
+        </AnimatePresence>
+      )}
     </div>
   );
 };

@@ -220,7 +220,7 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
           backgroundPosition: 'center',
         }}
       />
-      <div className="py-16 bg-green-400">
+      <div className="min-h-screen py-16 bg-green-400">
         <div className="max-w-xl px-4 mx-auto">
           <p className="text-xl font-bold text-black">Previous GIFs</p>
           <div className="h-2" />

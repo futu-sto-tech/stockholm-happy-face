@@ -1,4 +1,5 @@
 import '../styles/index.css';
+import '@reach/dialog/styles.css';
 
 import { AppMachineState } from '../machines/app-machine';
 import { AppProps } from 'next/app';

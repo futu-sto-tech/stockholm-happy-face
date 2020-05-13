@@ -11,7 +11,11 @@
 }
 
 .tertiary {
-  @apply flex items-center h-10 px-6 text-base leading-none text-black border border-black rounded-lg;
+  @apply flex items-center h-10 px-6 text-base leading-none text-gray-800 transition-colors duration-100 border border-gray-500 rounded-lg;
+}
+
+.tertiary:hover {
+  @apply text-black border-black;
 }
 
 .primary,
