@@ -30,16 +30,9 @@ const newApiClient = axios.create({
   },
 });
 
-const INSERT_ENTRY_MUTATION = /* GraphQL */ `
-  mutation InsertEntry($userId: String, $createdAt: timestamptz, $url: String) {
-    insert_entry(
-      objects: {
-        user_id: $userId
-        team_id: 1
-        created_at: $createdAt
-        image: { data: { original_url: $url } }
-      }
-    ) {
+const INSERT_OLD_ENTRIES_MUTATION = /* GraphQL */ `
+  mutation InsertOldEntries($objects: [old_entry_insert_input!]!) {
+    insert_old_entry(objects: $objects) {
       returning {
         id
       }
@@ -47,28 +40,26 @@ const INSERT_ENTRY_MUTATION = /* GraphQL */ `
   }
 `;
 
-async function processEntry(userId: string, oldEntry: any): Promise<void> {
-  const response = await newApiClient.post('', {
-    query: INSERT_ENTRY_MUTATION,
-    variables: {
-      userId,
-      createdAt: new Date(oldEntry.createdAt).toISOString(),
-      url: oldEntry.images.original.url,
-    },
-  });
-  if (response.data.errors) {
-    console.warn(JSON.stringify(response.data.errors));
-  } else {
-    console.info(`Added new entry: ${JSON.stringify(response.data)}`);
-  }
-}
-
 async function processUser(userId: string, oldUserId: string): Promise<any> {
   const entries = await oldApiClient.get('/entries', { params: { user: oldUserId } });
 
-  for (const oldEntry of entries.data) {
-    console.info(`Found entry ${oldEntry.id}`);
-    await processEntry(userId, oldEntry);
+  const objects = entries.data.map((item: any) => ({
+    // eslint-disable-next-line
+    user_id: userId,
+    // eslint-disable-next-line
+    created_at: new Date(item.createdAt).toISOString(),
+    url: item.images.original.url,
+  }));
+
+  const response = await newApiClient.post('', {
+    query: INSERT_OLD_ENTRIES_MUTATION,
+    variables: { objects },
+  });
+
+  if (response.data.errors) {
+    console.warn(JSON.stringify(response.data.errors));
+  } else {
+    console.info(`Added new entries: ${JSON.stringify(response.data)}`);
   }
 }
 
@@ -77,7 +68,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
   const newUser = body.event.data.new;
   console.info(`Processing user: ${newUser.id} with email: ${newUser.email}`);
 
-  const users = await import('../../../data/users.json');
+  const users = await import('../../../../data/users.json');
   const oldUsers = users.default.filter((oldUser) => oldUser.email === newUser.email);
 
   try {
