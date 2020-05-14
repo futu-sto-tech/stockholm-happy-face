@@ -13,8 +13,9 @@ const TRENDING_GIF_QUERY = /* GraphQL */ `
       original {
         url
       }
-      preview {
+      fixed_width {
         url
+        webp
       }
       title
     }
@@ -26,8 +27,9 @@ interface GifResult {
   original: {
     url: string;
   };
-  preview: {
+  fixed_width: {
     url: string;
+    webp: string;
   };
   title: string;
 }
@@ -87,13 +89,17 @@ const TrendingGifResults: React.FC = () => {
               initial={{ opacity: 0, y: -32 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <img src={item.preview.url} alt={item.title} className="w-full h-auto" />
+              <picture>
+                <source srcSet={item.fixed_width.webp} type="image/webp" />
+                <source srcSet={item.fixed_width.url} type="image/gif" />
+                <img src={item.fixed_width.url} className="w-full h-auto" alt={item.title} />
+              </picture>
             </motion.a>
           </Link>
         ))}
       </MasonryGrid>
       {data?.trending_gif.length && (
-        <p className="font-semibold text-center" ref={scrollRef}>
+        <p className="font-bold text-center" ref={scrollRef}>
           Loading more...
         </p>
       )}

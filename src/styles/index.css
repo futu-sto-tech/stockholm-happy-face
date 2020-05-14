@@ -13,6 +13,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.h-screen-70 {
+  height: 70vh;
+}
+
 .flat-button {
   @apply block px-8 py-3 font-semibold text-black transition-colors duration-100 bg-yellow-400;
 }

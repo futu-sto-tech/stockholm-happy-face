@@ -14,8 +14,9 @@ const SEARCH_GIF_QUERY = /* GraphQL */ `
       original {
         url
       }
-      preview {
+      fixed_width {
         url
+        webp
       }
       title
     }
@@ -27,8 +28,9 @@ interface GifResult {
   original: {
     url: string;
   };
-  preview: {
+  fixed_width: {
     url: string;
+    webp: string;
   };
   title: string;
 }
@@ -82,11 +84,15 @@ const SearchResults: React.FC<{
         {data?.search_gif.map((item) => (
           <Link key={item.id} href={{ query: { url: item.original.url } }}>
             <motion.a
-              className="block w-full mb-1"
+              className="block w-full mb-1 cursor-pointer"
               initial={{ opacity: 0, y: -32 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <img src={item.preview.url} alt={item.title} className="w-full h-auto" />
+              <picture>
+                <source srcSet={item.fixed_width.webp} type="image/webp" />
+                <source srcSet={item.fixed_width.url} type="image/gif" />
+                <img src={item.fixed_width.url} className="w-full h-auto" alt={item.title} />
+              </picture>
             </motion.a>
           </Link>
         ))}
@@ -119,7 +125,7 @@ const SearchGif: React.FC<{
         </div>
         <div className="space-y-2">
           <input
-            className="block w-full border-black rounded-sm form-input"
+            className="block w-full border-gray-600 rounded form-input"
             placeholder="Happy, stressful, confusing..."
             type="search"
             value={query}

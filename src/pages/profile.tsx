@@ -110,6 +110,32 @@ const InactiveNotification: React.FC<{
   </div>
 );
 
+const PlaceholderNotification: React.FC = () => (
+  <div className="space-y-10">
+    <div className="flex items-center justify-between px-6 py-4 border border-gray-900 rounded-lg">
+      <div className="flex items-center space-x-2">
+        <span className="w-4 h-4 border border-black rounded-full"></span>
+        <div className="flex space-x-2">
+          <div className="w-12 h-5 bg-gray-300" />
+          <div className="w-4 h-5 bg-gray-300" />
+          <div className="w-8 h-5 bg-gray-300" />
+        </div>
+      </div>
+      <button disabled className={buttonStyles.secondary}>
+        Join
+      </button>
+    </div>
+    <div>
+      <p className="text-2xl font-bold text-black">Your GIF this week</p>
+      <div className="flex space-x-2">
+        <div className="w-32 h-4 bg-gray-300" />
+        <div className="w-12 h-4 bg-gray-300" />
+        <div className="w-16 h-4 bg-gray-300" />
+      </div>
+    </div>
+  </div>
+);
+
 const Notification: React.FC<{ data: TeamSubscriptionData; user: EntryUser }> = ({
   data,
   user,
@@ -156,7 +182,9 @@ const TeamSection: React.FC<{ user: EntryUser }> = ({ user }) => {
       <Notification data={data} user={user} />
       <ThisWeekGif peopleCount={data?.team_by_pk.entries_aggregate.aggregate.count} />
     </div>
-  ) : null;
+  ) : (
+    <PlaceholderNotification />
+  );
 };
 
 export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
@@ -186,7 +214,7 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
   return (
     <div>
       <div className="max-w-xl px-4 py-16 mx-auto">
-        {data?.user_by_pk && <TeamSection user={data.user_by_pk} />}
+        {data?.user_by_pk ? <TeamSection user={data.user_by_pk} /> : <PlaceholderNotification />}
         <div className="h-5" />
         {currentEntry ? (
           <EntryItem
