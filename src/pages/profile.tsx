@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { MdDelete, MdMoreHoriz } from 'react-icons/md';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { formatDistanceToNow, parseJSON } from 'date-fns';
 import useTeamSubscription, { TeamSubscriptionData } from '../graphql/subscriptions/team';
 import useUserEntriesQuery, { Entry, EntryUser } from '../graphql/queries/user-entries';
@@ -175,6 +175,13 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
     },
     [deleteEntry, refetch],
   );
+
+  useEffect(() => {
+    if (data?.user_by_pk?.entries.length === 0) {
+      const intervalId = setInterval(refetch, 10000);
+      return (): void => clearInterval(intervalId);
+    }
+  }, [refetch, data]);
 
   return (
     <div>
