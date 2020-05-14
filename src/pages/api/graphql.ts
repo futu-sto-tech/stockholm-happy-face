@@ -9,12 +9,19 @@ const schema = buildSchema(`
     url: String!
   }
 
+  type FixedWidthGifImage {
+    width: String!
+    height: String!
+    url: String!
+    webp: String!
+  }
+
   type GifResult {
     id: String!
     title: String!
     preview: GifImage!
     original: GifImage!
-    fixed_width: GifImage!
+    fixed_width: FixedWidthGifImage!
   }
 
   type Query {
