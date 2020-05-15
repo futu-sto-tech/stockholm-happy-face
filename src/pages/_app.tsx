@@ -1,14 +1,18 @@
 import '../styles/index.css';
 import '@reach/dialog/styles.css';
 
+import * as gtag from 'lib/gtag';
+
 import { AppMachineState } from '../machines/app-machine';
 import { AppProps } from 'next/app';
 import GraphqlClientProvider from '../context/graphql-client';
 import LogoIcon from '../components/logo-icon';
 import React from 'react';
+import Router from 'next/router';
 import dynamic from 'next/dynamic';
 import { useAppMachine } from '../hooks';
-import { useRouter } from 'next/router';
+
+Router.events.on('routeChangeComplete', (url) => gtag.pageView(url));
 
 function SplashScreen(): JSX.Element {
   return (
@@ -21,7 +25,6 @@ function SplashScreen(): JSX.Element {
 type AuthWrapperProps = { children: JSX.Element };
 
 function AuthWrapper({ children }: AuthWrapperProps): JSX.Element {
-  const router = useRouter();
   const [state] = useAppMachine();
 
   if (
@@ -35,8 +38,8 @@ function AuthWrapper({ children }: AuthWrapperProps): JSX.Element {
     return (
       <GraphqlClientProvider token={state.context.auth.token}>{children}</GraphqlClientProvider>
     );
-  } else if (router.pathname !== '/') {
-    router.replace('/');
+  } else if (Router.pathname !== '/') {
+    Router.replace('/');
     return <SplashScreen />;
   }
 

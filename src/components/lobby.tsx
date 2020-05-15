@@ -1,3 +1,5 @@
+import * as gtag from 'lib/gtag';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import React, { useCallback, useRef, useState } from 'react';
@@ -103,16 +105,19 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
           <div className="flex-1">
             <div className="flex items-center justify-center space-x-2">
               {userEntry ? (
-                <button onClick={(): void => setShowModal(true)} className={buttonStyles.tertiary}>
+                <button
+                  onClick={(): void => {
+                    setShowModal(true);
+                    gtag.event({ name: 'showGifPreview' });
+                  }}
+                  className={buttonStyles.tertiary}
+                >
                   Preview my GIF
                 </button>
               ) : (
-                <button
-                  onClick={(): any => router.push('/entries/new')}
-                  className={buttonStyles.primary}
-                >
-                  Pick a GIF
-                </button>
+                <Link href="/entries/new">
+                  <a className={buttonStyles.primary}>Pick a GIF</a>
+                </Link>
               )}
             </div>
           </div>
@@ -158,7 +163,10 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
                   </div>
 
                   <button
-                    onClick={(): any => handleClickChangeGIF(userEntry.id)}
+                    onClick={(): any => {
+                      handleClickChangeGIF(userEntry.id);
+                      gtag.event({ name: 'changeGifFromLobby' });
+                    }}
                     className="px-4 py-2 text-white border border-white rounded-lg"
                   >
                     Change GIF

@@ -10,13 +10,13 @@ type HeadersFunction = () => Promise<{ headers: { Authorization: string } }>;
 
 export function createGraphqlClient(headers: HeadersFunction): GraphQLClient {
   const graphqlClient = new GraphQLClient({
-    url: `https://${process.env.HASURA_GRAPHQL_ENDPOINT}`,
+    url: `https://${process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT}`,
     cache: memCache(),
     fetch: buildAxiosFetch(gqlAxios),
     subscriptionClient:
       typeof window === 'undefined'
         ? undefined
-        : new SubscriptionClient(`wss://${process.env.HASURA_GRAPHQL_ENDPOINT}`, {
+        : new SubscriptionClient(`wss://${process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT}`, {
             reconnect: true,
             connectionParams: headers,
           }),
@@ -27,12 +27,15 @@ export function createGraphqlClient(headers: HeadersFunction): GraphQLClient {
 
 export function createApiClient(token: string): GraphQLClient {
   return new GraphQLClient({
-    url: `https://${process.env.HASURA_GRAPHQL_ENDPOINT}`,
+    url: `https://${process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT}`,
     cache: memCache(),
     headers: { Authorization: `Bearer ${token}` },
-    subscriptionClient: new SubscriptionClient(`wss://${process.env.HASURA_GRAPHQL_ENDPOINT}`, {
-      reconnect: true,
-      connectionParams: { headers: { Authorization: `Bearer ${token}` } },
-    }),
+    subscriptionClient: new SubscriptionClient(
+      `wss://${process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT}`,
+      {
+        reconnect: true,
+        connectionParams: { headers: { Authorization: `Bearer ${token}` } },
+      },
+    ),
   });
 }

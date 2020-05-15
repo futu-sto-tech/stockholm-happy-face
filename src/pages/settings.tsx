@@ -1,3 +1,5 @@
+import * as gtag from 'lib/gtag';
+
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useAppMachine, useUserId } from '../hooks';
 
@@ -89,18 +91,21 @@ const EditUserData: React.FC = () => {
   const [updateUserName] = useUpdateUserNameMutation();
 
   const handleChangeTeam = async (event: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
+    gtag.event({ name: 'changeTeam' });
     await updateUserTeam({ variables: { id: userId, team: parseInt(event.target.value) } });
     await refetch();
   };
 
   const handleChangeRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const role = event.target.checked ? 'HOST' : 'PARTICIPANT';
+    gtag.event({ name: 'changeRole', label: role });
     await updateUserRole({ variables: { id: userId, role } });
     await refetch();
   };
 
   const handleChangeName = async (event: FormEvent, name: string): Promise<void> => {
     event.preventDefault();
+    gtag.event({ name: 'changeUserName' });
     await updateUserName({ variables: { id: userId, name } });
     await refetch();
   };
@@ -152,6 +157,7 @@ const SettingsPage: React.FC = () => {
           <button
             className={buttonStyles.tertiary}
             onClick={(): void => {
+              gtag.event({ name: 'logOut' });
               send(AppMachineEvent.LOG_OUT);
             }}
           >

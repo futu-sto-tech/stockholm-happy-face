@@ -24,9 +24,9 @@ export const AppMachineContext = createContext<AppMachine | undefined>(undefined
 export default function AppProvider({ children }: AppProverProps): JSX.Element {
   const client = useRef(
     new Auth0Client({
-      domain: process.env.AUTH0_DOMAIN as string,
+      domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string,
       // eslint-disable-next-line @typescript-eslint/camelcase
-      client_id: process.env.AUTH0_CLIENT_ID as string,
+      client_id: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID as string,
       // eslint-disable-next-line @typescript-eslint/camelcase
       redirect_uri: window.location.origin,
     }),
