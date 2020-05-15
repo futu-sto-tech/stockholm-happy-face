@@ -1,68 +1,12 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Router, { useRouter } from 'next/router';
 
 import Ending from '../../components/ending';
 import Lobby from '../../components/lobby';
 import Presentation from '../../components/presentation';
-import { useMutation } from 'graphql-hooks';
 import useSessionSubscription from '../../graphql/subscriptions/session';
 import useUpdateUserSessionMutation from '../../graphql/mutations/update-user-session';
 import { useUserId } from '../../hooks';
-
-const mutation = /* GraphQL */ `
-  mutation InsertSession($team: Int!, $user: String!) {
-    insert_session(objects: { team_id: $team, user_id: $user }) {
-      returning {
-        id
-      }
-    }
-  }
-`;
-
-interface MutationData {
-  insert_session: {
-    returning: Array<{
-      id: number;
-    }>;
-  };
-}
-
-interface MutationVariables {
-  team: number;
-  user: string;
-}
-
-interface NewSessionButtonProps {
-  userId: string;
-  teamId: number;
-}
-
-const NewSessionButton: React.FC<NewSessionButtonProps> = ({ userId, teamId }) => {
-  const router = useRouter();
-  const [insertSession, { data }] = useMutation<MutationData | undefined, MutationVariables>(
-    mutation,
-  );
-
-  const handleClick = useCallback(async (): Promise<void> => {
-    await insertSession({ variables: { team: teamId, user: userId } });
-  }, [teamId, userId, insertSession]);
-
-  useEffect(() => {
-    if (data?.insert_session.returning.length) {
-      console.log('new session', data);
-      router.push('/sessions/[id]', `/sessions/${data.insert_session.returning[0].id}`);
-    }
-  }, [router, data]);
-
-  return (
-    <button
-      className="block p-2 mb-4 text-center bg-gray-400 rounded shadow hover:bg-gray-300"
-      onClick={handleClick}
-    >
-      Start Smileys
-    </button>
-  );
-};
 
 const TeamPage: React.FC = () => {
   const router = useRouter();
