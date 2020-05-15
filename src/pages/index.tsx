@@ -45,47 +45,48 @@ const IndexPage: React.FC = () => {
             </div>
           </div>
         </header>
-        <main className="h-screen bg-green-400">
-          <div
-            style={{
-              backgroundImage: `url('/images/wobble.svg')`,
-              height: 159,
-              backgroundPosition: 'center',
-            }}
-          />
-          <div className="flex flex-col justify-center h-screen-70">
-            <Lottie
-              options={{
-                loop: true,
-                autoplay: true,
-                animationData: mascotAnimation,
-              }}
-              isClickToPauseDisabled={true}
-              width={400}
-            />
+        <div
+          className="bg-green-400"
+          style={{
+            backgroundImage: `url('/images/wobble.svg')`,
+            height: 159,
+            backgroundPosition: 'center',
+          }}
+        />
+        <main className="flex items-center justify-center bg-green-400 h-screen-70">
+          <div className="grid items-center grid-cols-1 lg:grid-cols-2 lg:gap-16">
+            <div className="-mt-32 lg:mt-0">
+              <Lottie
+                options={{
+                  loop: true,
+                  autoplay: true,
+                  animationData: mascotAnimation,
+                }}
+                isClickToPauseDisabled={true}
+                width={400}
+              />
+            </div>
 
-            <div className="-mt-16">
-              <div className="flex flex-col items-center -mt-64 space-y-10">
-                <ul className="space-y-3">
-                  <li className="text-xl font-bold">
-                    <span className="text-4xl">1.</span> Log in
-                  </li>
-                  <li className="text-xl font-bold">
-                    <span className="text-4xl">2.</span> Select a GIF
-                  </li>
-                  <li className="text-xl font-bold">
-                    <span className="text-4xl">3.</span> Share with your team
-                  </li>
-                </ul>
-                <button
-                  className={buttonStyles.primaryWhite}
-                  onClick={(): void => {
-                    send(AppMachineEvent.LOG_IN);
-                  }}
-                >
-                  Log in
-                </button>
-              </div>
+            <div className="flex flex-col items-center -mt-12 space-y-10">
+              <ul className="space-y-3">
+                <li className="text-xl font-bold">
+                  <span className="text-4xl">1.</span> Log in
+                </li>
+                <li className="text-xl font-bold">
+                  <span className="text-4xl">2.</span> Select a GIF
+                </li>
+                <li className="text-xl font-bold">
+                  <span className="text-4xl">3.</span> Share with your team
+                </li>
+              </ul>
+              <button
+                className={buttonStyles.primaryWhite}
+                onClick={(): void => {
+                  send(AppMachineEvent.LOG_IN);
+                }}
+              >
+                Log in
+              </button>
             </div>
           </div>
         </main>
