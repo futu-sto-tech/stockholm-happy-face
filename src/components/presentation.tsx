@@ -122,25 +122,12 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
 };
 
 const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, entry }) => {
-  const timeLeft = useMemo(() => {
-    const changedAt = new Date(session.changed_entry_at);
-    const secondsAgo = (new Date().getTime() - changedAt.getTime()) / 1000;
-    return Math.max(60 - secondsAgo, 0);
-  }, [session]);
-
-  const percentagePassed = useMemo(() => 100 * (1 - timeLeft / 60), [timeLeft]);
-
   return (
     <div
       className="flex h-screen transition-colors duration-300 bg-black"
       style={{ backgroundColor: entry.image.color }}
     >
       <div className="flex flex-col flex-1 h-full">
-        <motion.div
-          animate={{ width: [`${percentagePassed}%`, '100%'] }}
-          transition={{ duration: timeLeft }}
-          className="h-2 bg-white bg-opacity-25"
-        />
         <header className="flex items-center justify-between w-full max-w-6xl p-4 mx-auto">
           <Link href="/profile">
             <a className="flex items-center justify-center px-3 py-2 space-x-1 text-white border border-white rounded hover:bg-white hover:bg-opacity-10">
@@ -156,28 +143,31 @@ const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, e
           <div className="w-24" />
         </header>
         <main className="flex flex-col items-center justify-center flex-1 p-4 space-y-6">
-          <p className="flex-shrink-0 text-2xl font-bold leading-none text-center text-white">
-            {entry.user.name}
-          </p>
           <img
-            className="max-h-full rounded-lg shadow-xl"
+            className="object-contain w-full max-h-full rounded-lg shadow-xl"
             src={entry.image.original_url}
             alt="GIF"
           />
         </main>
         <footer className="flex justify-center flex-shrink-0 p-4 space-x-4 bg-white bg-opacity-25">
           {session.participants.map((item) => (
-            <motion.img
-              key={item.id}
-              initial={{ scale: 1, translateY: 0 }}
-              animate={{
-                scale: item.id === session.entry?.user.id ? 1.2 : 1,
-                translateY: item.id === session.entry?.user.id ? -16 : 0,
-              }}
-              className="w-16 h-auto rounded-full"
-              src={item.picture}
-              alt={item.name}
-            />
+            <div key={item.id} className="relative">
+              {item.id === session.entry?.user.id && (
+                <p className="absolute flex justify-center flex-shrink-0 w-full text-lg font-bold leading-none text-white transform -translate-y-12">
+                  {entry.user.name}
+                </p>
+              )}
+              <motion.img
+                initial={{ scale: 1, translateY: 0 }}
+                animate={{
+                  scale: item.id === session.entry?.user.id ? 1.2 : 1,
+                  translateY: item.id === session.entry?.user.id ? -16 : 0,
+                }}
+                className="w-16 h-auto rounded-full"
+                src={item.picture}
+                alt={item.name}
+              />
+            </div>
           ))}
         </footer>
       </div>

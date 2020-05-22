@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import Router, { useRouter } from 'next/router';
 
-import Ending from '../../components/ending';
 import Lobby from '../../components/lobby';
 import Presentation from '../../components/presentation';
 import useSessionSubscription from '../../graphql/subscriptions/session';
@@ -34,14 +33,10 @@ const TeamPage: React.FC = () => {
   }, [userId, updateUserSession]);
 
   return data ? (
-    data.team_by_pk.active ? (
-      data.team_by_pk.entry ? (
-        <Presentation session={data.team_by_pk} entry={data.team_by_pk.entry} />
-      ) : (
-        <Lobby session={data.team_by_pk} userId={userId} />
-      )
+    data.team_by_pk.entry ? (
+      <Presentation session={data.team_by_pk} entry={data.team_by_pk.entry} />
     ) : (
-      <Ending session={data.team_by_pk} userId={userId} />
+      <Lobby session={data.team_by_pk} userId={userId} />
     )
   ) : null;
 };

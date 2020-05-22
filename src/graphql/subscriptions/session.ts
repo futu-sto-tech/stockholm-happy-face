@@ -8,7 +8,6 @@ const SESSION_SUBSCRIPTION = /* GraphQL */ `
     team_by_pk(id: $team) {
       id
       name
-      active
       changed_entry_at
       entries(where: { created_at: { _gte: $after, _lte: $before } }) {
         id
@@ -61,7 +60,6 @@ export interface Entry {
 export interface Session {
   id: number;
   name: string;
-  active: boolean;
   changed_entry_at: string;
   entries: Array<Entry>;
   participants: User[];

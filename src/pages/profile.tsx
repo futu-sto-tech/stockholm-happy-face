@@ -10,7 +10,6 @@ import Link from 'next/link';
 import buttonStyles from '../styles/button.module.css';
 import { getCurrentWeek } from '../lib/utils';
 import useDeleteEntryMutation from '../graphql/mutations/delete-entry-mutation';
-import useUpdateTeamActiveMutation from '../graphql/mutations/update-team-active';
 import { useUserId } from '../hooks';
 
 const EntryItem: React.FC<{ entry: Entry; onDelete: () => Promise<void> }> = ({
@@ -89,24 +88,16 @@ const ActiveNotification: React.FC<{ team: { id: number; name: string } }> = ({ 
 );
 
 const InactiveNotification: React.FC<{
-  team: { name: string };
-  onClickActivate: () => void;
-  user: EntryUser;
-}> = ({ team, onClickActivate, user }) => (
+  team: { id: number; name: string };
+}> = ({ team }) => (
   <div className="flex items-center justify-between px-6 py-4 border border-gray-900 rounded-lg">
     <div className="flex items-center space-x-2">
       <span className="w-4 h-4 border border-black rounded-full"></span>
       <p className="text-lg font-bold ">{team.name} Smileys is offline</p>
     </div>
-    {user.role === 'HOST' ? (
-      <button className={buttonStyles.secondary} onClick={onClickActivate}>
-        Start
-      </button>
-    ) : (
-      <button disabled className={buttonStyles.secondary}>
-        Join
-      </button>
-    )}
+    <Link href="/teams/[id]" as={`/teams/${team.id}`}>
+      <a className={buttonStyles.secondary}>Join</a>
+    </Link>
   </div>
 );
 
@@ -136,23 +127,11 @@ const PlaceholderNotification: React.FC = () => (
   </div>
 );
 
-const Notification: React.FC<{ data: TeamSubscriptionData; user: EntryUser }> = ({
-  data,
-  user,
-}) => {
-  const [updateTeamActive] = useUpdateTeamActiveMutation();
-  const handleClickActivate = async (): Promise<void> => {
-    await updateTeamActive({ variables: { id: data.team_by_pk.id, active: true } });
-  };
-
-  return data.team_by_pk.active ? (
+const Notification: React.FC<{ data: TeamSubscriptionData }> = ({ data }) => {
+  return data.team_by_pk.entry_id !== null ? (
     <ActiveNotification team={data.team_by_pk} />
   ) : (
-    <InactiveNotification
-      team={data.team_by_pk}
-      onClickActivate={handleClickActivate}
-      user={user}
-    />
+    <InactiveNotification team={data.team_by_pk} />
   );
 };
 
@@ -179,7 +158,7 @@ const TeamSection: React.FC<{ user: EntryUser }> = ({ user }) => {
 
   return data ? (
     <div className="space-y-10">
-      <Notification data={data} user={user} />
+      <Notification data={data} />
       <ThisWeekGif peopleCount={data?.team_by_pk.entries_aggregate.aggregate.count} />
     </div>
   ) : (
@@ -209,7 +188,7 @@ export const EntryFeed: React.FC<{ userId: string }> = ({ userId }) => {
       const intervalId = setInterval(refetch, 10000);
       return (): void => clearInterval(intervalId);
     }
-  }, [refetch, data]);
+  }, [refetch, data?.user_by_pk?.entries.length]);
 
   return (
     <div>

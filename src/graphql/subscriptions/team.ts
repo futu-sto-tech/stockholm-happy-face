@@ -10,7 +10,7 @@ const TEAM_SUBSCRIPTION = /* GraphQL */ `
     team_by_pk(id: $id) {
       id
       name
-      active
+      entry_id
       entries_aggregate(where: { created_at: { _gte: $after, _lte: $before } }) {
         aggregate {
           count
@@ -23,7 +23,7 @@ const TEAM_SUBSCRIPTION = /* GraphQL */ `
 interface Team {
   id: number;
   name: string;
-  active: boolean;
+  entry_id: number | null;
   entries_aggregate: {
     aggregate: {
       count: number;
