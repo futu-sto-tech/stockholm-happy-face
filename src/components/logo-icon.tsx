@@ -1,10 +1,10 @@
 import { IconType } from 'react-icons/lib/cjs';
 import React from 'react';
 
-const LogoIcon: IconType = ({ size = 182, color = 'currentColor' }) => (
+const LogoIcon: IconType = ({ width = 182, color = 'currentColor' }) => (
   <svg
-    width={size}
-    height={parseFloat(size.toString()) / (182 / 71)}
+    width={width}
+    height={parseFloat(width.toString()) / (182 / 71)}
     viewBox="0 0 182 71"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
