@@ -1,0 +1,70 @@
+/* purgecss start ignore */
+
+@tailwind base;
+@tailwind components;
+
+/* purgecss end ignore */
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap');
+
+body {
+  font-family: 'Quicksand', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.h-screen-70 {
+  height: 70vh;
+}
+
+.flat-button {
+  @apply block px-8 py-3 font-semibold text-black transition-colors duration-100 bg-yellow-400;
+}
+
+.flat-button:hover {
+  @apply bg-yellow-300;
+}
+
+.flat-button-secondary {
+  @apply block px-8 py-3 text-lg font-semibold text-gray-900 transition-colors duration-100 bg-gray-300;
+}
+
+.flat-button-secondary:hover {
+  @apply bg-gray-200;
+}
+
+.shadow-stereoscopic {
+  @apply transition-shadow duration-150;
+
+  box-shadow: 5px 5px 0 theme('colors.orange.400');
+}
+
+.text-shadow-stereoscopic {
+  text-shadow: 2px 2px 0 theme('colors.orange.400'), -2px -2px 0 theme('colors.blue.400');
+}
+
+.stereoscopic-button {
+  @apply block px-4 py-2 text-white transition-shadow duration-150 bg-black rounded;
+
+  box-shadow: 4px 4px 0 theme('colors.orange.400');
+}
+
+.stereoscopic-button-white {
+  @apply block px-6 py-2 text-base font-bold transition-shadow duration-100 bg-white rounded;
+
+  box-shadow: 3px 3px 0 theme('colors.orange.400');
+}
+
+.stereoscopic-button-white:hover {
+  box-shadow: 4px 4px 0 theme('colors.orange.400');
+}
+
+.stereoscopic-button-white:active {
+  box-shadow: 2px 2px 0 theme('colors.orange.400');
+}
+
+.stereoscopic-button:hover {
+  box-shadow: 3px 3px 0 theme('colors.orange.400');
+}
+
+@tailwind utilities;

@@ -1,0 +1,52 @@
+.secondary {
+  @apply flex items-center h-10 px-6 text-base font-bold leading-none text-white transition-colors duration-100 bg-black border border-transparent rounded-lg;
+}
+
+.secondary:hover {
+  @apply text-black bg-transparent border-black;
+}
+
+.secondary:disabled {
+  @apply text-black bg-transparent border-black opacity-50;
+}
+
+.tertiary {
+  @apply flex items-center h-10 px-6 text-base leading-none text-gray-800 transition-colors duration-100 border border-gray-500 rounded-lg;
+}
+
+.tertiary:hover {
+  @apply text-black border-black;
+}
+
+.primary,
+.primaryWhite {
+  @apply flex items-center h-10 px-10 text-base font-bold leading-none text-black transition-shadow duration-100 bg-yellow-400 rounded-lg;
+}
+
+.primary {
+  @apply bg-yellow-400;
+
+  box-shadow: 5px 5px 0 theme('colors.orange.400');
+}
+
+.primary:hover {
+  box-shadow: 6px 6px 0 theme('colors.orange.400');
+}
+
+.primary:active {
+  box-shadow: 2px 2px 0 theme('colors.orange.400');
+}
+
+.primaryWhite {
+  @apply bg-white;
+
+  box-shadow: 2px 2px 0 theme('colors.black'), 4px 4px 0 theme('colors.orange.400');
+}
+
+.primaryWhite:hover {
+  box-shadow: 3px 3px 0 theme('colors.black'), 6px 6px 0 theme('colors.orange.400');
+}
+
+.primaryWhite:active {
+  box-shadow: 1px 1px 0 theme('colors.black'), 2px 2px 0 theme('colors.orange.400');
+}

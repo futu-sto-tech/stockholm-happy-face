@@ -1,11 +1,13 @@
 {
   "cSpell.words": [
     "Checkmark",
+    "HASURA",
     "camelcase",
     "dayjs",
     "debounced",
     "giphy",
     "gtag",
-    "minmax"
+    "minmax",
+    "xstate"
   ]
 }
