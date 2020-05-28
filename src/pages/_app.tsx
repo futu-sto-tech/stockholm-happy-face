@@ -1,5 +1,5 @@
-import '../styles/index.css';
 import '@reach/dialog/styles.css';
+import '../styles/index.css';
 
 import * as gtag from 'lib/gtag';
 

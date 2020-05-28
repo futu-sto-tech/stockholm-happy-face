@@ -1,29 +1,18 @@
 import { AppMachineEvent, AppMachineState } from 'machines/app-machine';
-import { useAppMachine, useUserId } from 'hooks';
 
-import { EntryFeed } from './profile';
-import Layout from 'components/layout';
 import LogoIcon from 'components/logo-icon';
 import Lottie from 'react-lottie';
 import React from 'react';
+import TeamSwitch from 'components/team-switch';
 import buttonStyles from 'styles/button.module.css';
 import mascotAnimation from 'animations/mascot.json';
-
-function UserEntryFeed(): JSX.Element {
-  const userId = useUserId();
-
-  return (
-    <Layout>
-      <EntryFeed userId={userId} />
-    </Layout>
-  );
-}
+import { useAppMachine } from 'hooks';
 
 const IndexPage: React.FC = () => {
   const [state, send] = useAppMachine();
 
   if (state.matches(AppMachineState.loggedIn)) {
-    return <UserEntryFeed />;
+    return <TeamSwitch />;
   } else {
     return (
       <div>

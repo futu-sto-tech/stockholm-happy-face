@@ -3,37 +3,15 @@ import * as gtag from 'lib/gtag';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useAppMachine, useUserId } from '../hooks';
 
-import AppHeader from '../components/app-header';
 import { AppMachineEvent } from '../machines/app-machine';
-import FloatingHeader from '../components/floating-header';
-import LogoIcon from '../components/logo-icon';
+import { BaseHeader } from 'components/header/component';
 import { MdArrowBack } from 'react-icons/md';
+import TeamPicker from 'components/team-picker';
 import buttonStyles from '../styles/button.module.css';
 import { useRouter } from 'next/router';
-import useTeamsQuery from '../graphql/queries/teams';
 import useUpdateUserNameMutation from '../graphql/mutations/update-user-name';
 import useUpdateUserRoleMutation from '../graphql/mutations/update-user-role';
-import useUpdateUserTeamMutation from '../graphql/mutations/update-user-team';
 import useUserEntriesQuery from '../graphql/queries/user-entries';
-
-const EditUserTeam: React.FC<{
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  value?: number;
-  teams?: Array<{ id: number; name: string }>;
-}> = ({ onChange, value, teams }) => (
-  <div className="flex items-center justify-between">
-    <p className="text-lg">Your team</p>
-
-    <select className="border-black rounded-lg form-select" value={value} onChange={onChange}>
-      <option disabled>Choose team</option>
-      {teams?.map((item) => (
-        <option key={item.id} value={item.id}>
-          {item.name}
-        </option>
-      ))}
-    </select>
-  </div>
-);
 
 const EditUserName: React.FC<{
   value?: string;
@@ -85,16 +63,8 @@ const EditUserRole: React.FC<{
 const EditUserData: React.FC = () => {
   const userId = useUserId();
   const { data, refetch } = useUserEntriesQuery(userId);
-  const teamsData = useTeamsQuery();
-  const [updateUserTeam] = useUpdateUserTeamMutation();
   const [updateUserRole] = useUpdateUserRoleMutation();
   const [updateUserName] = useUpdateUserNameMutation();
-
-  const handleChangeTeam = async (event: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
-    gtag.event({ name: 'changeTeam' });
-    await updateUserTeam({ variables: { id: userId, team: parseInt(event.target.value) } });
-    await refetch();
-  };
 
   const handleChangeRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const role = event.target.checked ? 'HOST' : 'PARTICIPANT';
@@ -114,11 +84,13 @@ const EditUserData: React.FC = () => {
     <>
       <img src={data?.user_by_pk?.picture} className="w-32 h-32 mx-auto rounded-full" />
       <EditUserName value={data?.user_by_pk?.name} onSubmit={handleChangeName} />
-      <EditUserTeam
-        teams={teamsData.data?.team}
-        value={data?.user_by_pk?.team?.id}
-        onChange={handleChangeTeam}
-      />
+
+      <div className="flex items-center justify-between">
+        <p className="text-lg">Your team</p>
+
+        <TeamPicker />
+      </div>
+
       <EditUserRole checked={data?.user_by_pk?.role === 'HOST'} onChange={handleChangeRole} />
     </>
   );
@@ -130,25 +102,15 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div>
-      <FloatingHeader>
-        <AppHeader>
-          <div className="flex items-center w-full">
-            <div className="flex items-center flex-1 flex-start">
-              <button
-                className="flex items-center px-4 py-2 space-x-1 text-black rounded hover:bg-gray-300"
-                onClick={(): void => router.back()}
-              >
-                <MdArrowBack size="20" />
-                <p>Back</p>
-              </button>
-            </div>
-            <div className="flex items-center justify-center flex-1">
-              <LogoIcon size="100" />
-            </div>
-            <div className="flex-1"></div>
-          </div>
-        </AppHeader>
-      </FloatingHeader>
+      <BaseHeader>
+        <button
+          className="flex items-center h-12 px-4 space-x-1 text-black rounded-lg hover:bg-black hover:text-white"
+          onClick={(): void => router.back()}
+        >
+          <MdArrowBack size="24" />
+          <p className="text-lg leading-none">Back</p>
+        </button>
+      </BaseHeader>
       <div className="h-10" />
       <div className="max-w-lg p-4 mx-auto space-y-10">
         <EditUserData />

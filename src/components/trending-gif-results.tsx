@@ -72,7 +72,7 @@ const TrendingGifResults: React.FC = () => {
 
       return (): void => scrollObserver.unobserve(node);
     }
-  }, [data, setOffset]);
+  }, [data, setOffset, data?.trending_gif.length]);
 
   return (
     <div className="space-y-4">
@@ -80,9 +80,9 @@ const TrendingGifResults: React.FC = () => {
         <MdTrendingUp size="24" />
         <span>Trending</span>
       </p>
-      <MasonryGrid>
-        {data?.trending_gif.map((item) => (
-          <Link key={item.id} href={{ query: { url: item.original.url } }} passHref>
+      <MasonryGrid items={data?.trending_gif || []} columns={3}>
+        {(item): React.ReactElement => (
+          <Link href={{ query: { url: item.original.url } }} passHref>
             <motion.a
               key={item.id}
               className="block w-full mb-1"
@@ -96,7 +96,7 @@ const TrendingGifResults: React.FC = () => {
               </picture>
             </motion.a>
           </Link>
-        ))}
+        )}
       </MasonryGrid>
       {data?.trending_gif.length && (
         <p className="font-bold text-center" ref={scrollRef}>
