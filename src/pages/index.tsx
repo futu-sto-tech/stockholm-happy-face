@@ -42,9 +42,10 @@ const IndexPage: React.FC = () => {
             backgroundPosition: 'center',
           }}
         />
-        <main className="flex items-center justify-center bg-green-400 h-screen-70">
-          <div className="grid items-center grid-cols-1 lg:grid-cols-2 lg:gap-16">
-            <div className="-mt-32 lg:mt-0">
+        <main className="flex flex-col justify-center bg-green-400">
+          <div className="md:h-48" />
+          <div className="grid items-center max-w-2xl grid-cols-1 mx-auto md:grid-cols-2 md:gap-16">
+            <div className="md:-ml-24">
               <Lottie
                 options={{
                   loop: true,
@@ -52,7 +53,7 @@ const IndexPage: React.FC = () => {
                   animationData: mascotAnimation,
                 }}
                 isClickToPauseDisabled={true}
-                width={400}
+                width={320}
               />
             </div>
 
@@ -77,6 +78,8 @@ const IndexPage: React.FC = () => {
                 Log in
               </button>
             </div>
+
+            <div className="h-40" />
           </div>
         </main>
         <footer className="bg-green-600">

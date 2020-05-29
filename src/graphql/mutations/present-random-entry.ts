@@ -11,7 +11,7 @@ const QUERY = /* GraphQL */ `
   query Entries($teamId: Int!, $before: timestamptz!, $after: timestamptz!) {
     team_by_pk(id: $teamId) {
       id
-      entries(where: { presented: { _eq: false }, created_at: { _gte: $after, _lte: $before } }) {
+      entries(where: { created_at: { _gte: $after, _lte: $before } }) {
         id
         presented
       }
@@ -41,10 +41,16 @@ export default function usePresentRandomEntry(teamId: number) {
     const { data } = await fetch({
       variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
     });
-    if (data) {
-      const randomEntry =
-        data.team_by_pk.entries[Math.floor(Math.random() * data.team_by_pk.entries.length)];
-      presentEntry(randomEntry.id);
+    if (data && data.team_by_pk.entries.length > 0) {
+      const notPresented = data.team_by_pk.entries.filter((item) => item.presented === false);
+      let randomEntryId: number;
+      if (notPresented.length > 0) {
+        randomEntryId = notPresented[Math.floor(Math.random() * notPresented.length)].id;
+      } else {
+        randomEntryId =
+          data.team_by_pk.entries[Math.floor(Math.random() * data.team_by_pk.entries.length)].id;
+      }
+      presentEntry(randomEntryId);
     } else {
       throw new Error('Unable to present random entry');
     }
