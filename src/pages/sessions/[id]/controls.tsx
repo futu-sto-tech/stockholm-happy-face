@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 
+import { FiCheck } from 'react-icons/fi';
 import { NextPage } from 'next';
 import useDeleteTeamEntry from 'graphql/mutations/delete-team-entry';
 import usePresentEntry from 'graphql/mutations/present-entry';
@@ -48,13 +49,16 @@ const SessionControlsPage: NextPage = () => {
             item.user.id === session?.user_by_pk.team.entry?.user.id ? (
               <li
                 key={item.id}
-                className="flex items-center h-12 px-4 my-2 text-lg font-bold text-black bg-white rounded-lg"
+                className="flex items-center h-12 px-4 my-2 space-x-1 text-lg font-bold text-black bg-white rounded-lg"
               >
-                <p>
-                  {item.user.name}{' '}
-                  {!usersInSession?.includes(item.user.id) && (
-                    <span className="text-black text-opacity-50">(not here)</span>
-                  )}
+                <p className="flex items-center space-x-2">
+                  <span>
+                    {item.user.name}{' '}
+                    {!usersInSession?.includes(item.user.id) && (
+                      <span className="text-black text-opacity-50">(not here)</span>
+                    )}
+                  </span>
+                  {item.presented && <FiCheck />}
                 </p>
               </li>
             ) : (
@@ -62,11 +66,14 @@ const SessionControlsPage: NextPage = () => {
                 key={item.id}
                 className="flex items-center justify-between h-12 px-4 text-lg font-bold text-white rounded-lg hover:bg-white hover:bg-opacity-25 group"
               >
-                <p>
-                  {item.user.name}{' '}
-                  {!usersInSession?.includes(item.user.id) && (
-                    <span className="text-white text-opacity-50">(not here)</span>
-                  )}
+                <p className="flex items-center space-x-2">
+                  <span>
+                    {item.user.name}{' '}
+                    {!usersInSession?.includes(item.user.id) && (
+                      <span className="text-white text-opacity-50">(not here)</span>
+                    )}
+                  </span>
+                  {item.presented && <FiCheck />}
                 </p>
                 <button
                   onClick={(): void => {

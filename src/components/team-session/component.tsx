@@ -1,8 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { FiExternalLink } from 'react-icons/fi';
 import LogoIcon from 'components/logo-icon';
 import useTeamSessionSubscription from 'graphql/subscriptions/team-session';
+import useUpdateUserSessionMutation from 'graphql/mutations/update-user-session';
+import { useUserId } from 'hooks';
 
 interface Props {
   team: number;
@@ -27,6 +29,24 @@ const TeamSession: React.FC<Props> = ({ team }) => {
     const params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=400,height=920`;
     window.open(`/sessions/${team}/controls`, 'test', params);
   };
+
+  const userId = useUserId();
+  const [updateUserSession] = useUpdateUserSessionMutation();
+  const participants = useMemo(() => teamSession?.team_by_pk.participants.map((item) => item.id), [
+    teamSession?.team_by_pk.participants.map,
+  ]);
+
+  useEffect(() => {
+    if (participants && participants.indexOf(userId) === -1) {
+      updateUserSession({ variables: { user: userId, team } });
+    }
+  }, [userId, participants, team, updateUserSession]);
+
+  useEffect(() => {
+    return (): void => {
+      updateUserSession({ variables: { user: userId } });
+    };
+  }, [updateUserSession, userId]);
 
   return (
     <div
