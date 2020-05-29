@@ -94,7 +94,7 @@ const TeamLobby: React.FC<Props> = ({ data: user }) => {
               image={{ url: currentUserEntry.image.original_url }}
             />
           ) : (
-            <div className="flex items-center justify-center w-full h-full border-2 border-black border-dashed">
+            <div className="flex items-center justify-center w-full h-64 border-2 border-black border-dashed rounded-lg">
               <p className="text-base">You haven't added a post for this week yet</p>
             </div>
           )}

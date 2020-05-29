@@ -48,7 +48,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
               <p className="text-sm text-center text-white">
                 {teamSession?.team_by_pk.entries.length} GIFs this time
               </p>
-              <div className="w-full h-3 bg-white rounded-full bg-opacity-10">
+              <div className="w-full h-2 bg-white rounded-full bg-opacity-10">
                 <div
                   className="h-full bg-white bg-opacity-25 rounded-full"
                   style={{ width: `${presentedEntriesProgress * 100}%` }}
