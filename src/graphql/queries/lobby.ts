@@ -12,6 +12,7 @@ const QUERY = /* GraphQL */ `
       team {
         id
         name
+        status
         entry {
           id
         }

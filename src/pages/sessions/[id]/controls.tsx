@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 
 import { FiCheck } from 'react-icons/fi';
 import { NextPage } from 'next';
-import useDeleteTeamEntry from 'graphql/mutations/delete-team-entry';
 import usePresentEntry from 'graphql/mutations/present-entry';
 import usePresentRandomEntry from 'graphql/mutations/present-random-entry';
 import { useRouter } from 'next/router';
 import useTeamLobbySubscription from 'graphql/subscriptions/team-lobby';
+import useUpdateTeamStatus from 'components/session-box/hooks/use-update-team-status';
 import { useUserId } from 'hooks';
 
 const SessionControlsPage: NextPage = () => {
@@ -14,7 +14,7 @@ const SessionControlsPage: NextPage = () => {
   const teamId = parseInt(router.query.id as string);
   const userId = useUserId();
   const session = useTeamLobbySubscription(userId);
-  const [deleteTeamEntry] = useDeleteTeamEntry();
+  const endSession = useUpdateTeamStatus(teamId, 'ENDED');
 
   const usersWithEntry = useMemo(
     () => session?.user_by_pk.team.entries.map((item) => item.user.id),
@@ -110,9 +110,7 @@ const SessionControlsPage: NextPage = () => {
           </button>
         </div>
         <button
-          onClick={(): void => {
-            deleteTeamEntry({ variables: { teamId } });
-          }}
+          onClick={endSession}
           className="w-full h-12 text-lg font-bold text-white rounded-lg hover:bg-white hover:bg-opacity-25"
         >
           End session

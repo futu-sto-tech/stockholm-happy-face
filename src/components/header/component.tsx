@@ -25,7 +25,11 @@ const Header: React.FC = () => {
       {data && (
         <Link href="/settings">
           <a className="flex items-center px-4 py-3 space-x-2 rounded-lg hover:bg-black group">
-            <img className="w-8 h-8 rounded-full" src={data.user_by_pk.picture} alt="Avatar" />
+            <img
+              className="w-8 h-8 bg-black rounded-full"
+              src={data.user_by_pk.picture}
+              alt="Avatar"
+            />
             <div className="space-y-1">
               <p className="text-base font-bold leading-none text-black group-hover:text-white">
                 {data.user_by_pk.name}

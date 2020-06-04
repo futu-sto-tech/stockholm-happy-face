@@ -17,6 +17,8 @@ const SUBSCRIPTION = /* GraphQL */ `
         id
         name
         changed_entry_at
+        active
+        status
         entries(where: { created_at: { _gte: $after, _lte: $before } }) {
           id
           week

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 
 import { FiExternalLink } from 'react-icons/fi';
+import Link from 'next/link';
 import LogoIcon from 'components/logo-icon';
 import useTeamSessionSubscription from 'graphql/subscriptions/team-session';
 import useUpdateUserSessionMutation from 'graphql/mutations/update-user-session';
@@ -54,9 +55,11 @@ const TeamSession: React.FC<Props> = ({ team }) => {
       style={{ backgroundColor: teamSession?.team_by_pk.entry?.image.color }}
     >
       <header className="flex items-center justify-center row-span-1">
-        <div className="text-white">
-          <LogoIcon width="120" />
-        </div>
+        <Link href="/">
+          <a className="text-white">
+            <LogoIcon width="120" />
+          </a>
+        </Link>
       </header>
       <main className="grid grid-cols-12 grid-rows-1 gap-4 px-12 row-span-10">
         <aside className="flex-col hidden col-span-3 overflow-auto bg-white rounded-lg shadow lg:flex bg-opacity-10">
@@ -76,14 +79,18 @@ const TeamSession: React.FC<Props> = ({ team }) => {
               </div>
             </div>
 
-            <div className="flex flex-col items-center flex-shrink-0 space-y-1">
-              <img
-                src={teamSession?.team_by_pk.entry?.user.picture}
-                alt="Avatar"
-                className="w-24 h-24 rounded-full shadow-sm"
-              />
-              <p className="text-lg text-white">{teamSession?.team_by_pk.entry?.user.name}</p>
-            </div>
+            {teamSession?.team_by_pk.entry ? (
+              <div className="flex flex-col items-center flex-shrink-0 space-y-1">
+                <img
+                  src={teamSession?.team_by_pk.entry?.user.picture}
+                  alt="Avatar"
+                  className="w-24 h-24 rounded-full shadow-sm"
+                />
+                <p className="text-lg text-white">{teamSession?.team_by_pk.entry?.user.name}</p>
+              </div>
+            ) : (
+              <p className="font-bold text-center text-white">Starting soon...</p>
+            )}
           </header>
 
           <ul className="flex-1 py-4 space-y-4 overflow-auto scrolling-touch">
@@ -113,7 +120,10 @@ const TeamSession: React.FC<Props> = ({ team }) => {
         <section className="col-span-12 space-y-6 lg:col-span-9">
           <img
             className="object-contain w-auto w-full h-auto max-w-full max-h-full bg-white rounded-lg shadow bg-opacity-10"
-            src={teamSession?.team_by_pk.entry?.image.original_url}
+            src={
+              teamSession?.team_by_pk.entry?.image.original_url ||
+              'https://media.giphy.com/media/brHaCdJqCXijm/giphy.gif'
+            }
             alt="GIF"
           />
 

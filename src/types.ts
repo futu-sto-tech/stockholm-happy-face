@@ -19,9 +19,12 @@ export interface Entry {
   presented?: boolean;
 }
 
+export type TeamStatus = 'DEFAULT' | 'STARTED' | 'ENDED';
+
 interface Team {
   id: number;
   name: string;
+  status: TeamStatus;
   entry?: { id: number };
   entries: Entry[];
 }
@@ -36,6 +39,8 @@ export type TeamLobby = User & {
   team: {
     id: number;
     name: string;
+    active: boolean;
+    status: TeamStatus;
     changed_entry_at: string;
     entries: Entry[];
     participants: User[];

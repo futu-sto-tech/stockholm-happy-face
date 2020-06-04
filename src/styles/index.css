@@ -67,4 +67,8 @@ body {
   box-shadow: 3px 3px 0 theme('colors.orange.400');
 }
 
+.stark-shadow {
+  box-shadow: 0px 6px 0px theme('colors.black');
+}
+
 @tailwind utilities;
