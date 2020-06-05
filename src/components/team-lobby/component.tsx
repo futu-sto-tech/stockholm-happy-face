@@ -112,15 +112,15 @@ const TeamLobby: React.FC<Props> = ({ data: user }) => {
                 </Link>
               </div>
             </div>
-            <div className="relative z-10 flex items-center h-64 p-4 my-6">
-              {currentUserEntry && (
+            {currentUserEntry && (
+              <div className="relative z-10 flex items-center h-64 p-4 my-6">
                 <img
                   src={currentUserEntry.image.original_url}
                   loading="lazy"
                   className="object-contain w-auto h-full mx-auto rounded-lg"
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </section>
 
