@@ -1,0 +1,23 @@
+.button {
+  @apply flex items-center h-12 pl-6 pr-4 text-lg font-bold text-black border-0 rounded-lg;
+}
+
+.button:hover {
+  @apply text-white bg-black;
+}
+
+.list {
+  @apply overflow-hidden bg-white border border-black rounded shadow-xl;
+}
+
+.listItem {
+  @apply flex items-center h-12 px-6 select-none;
+}
+
+.listItem:hover {
+  @apply font-bold text-white bg-black;
+}
+
+.listItem[data-current] {
+  @apply font-bold;
+}

@@ -18,9 +18,9 @@ const USER_QUERY = /* GraphQL */ `
 interface User {
   id: string;
   name: string;
-  picture?: string;
+  picture: string;
   role: 'PARTICIPANT' | 'HOST';
-  team?: {
+  team: {
     id: number;
     name: string;
   };
