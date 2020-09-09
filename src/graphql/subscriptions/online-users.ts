@@ -6,7 +6,11 @@ import { useSubscriptionWithCache } from '../../hooks';
 const ONLINE_USER_SUBSCRIPTION = `subscription OnlineUserSubscription($user_team_id: Int!) {
   online_team_users(
     args: {user_team_id: $user_team_id}
-  ) {
+    order_by: {
+      name: asc
+    }
+  )
+    {
     id
     name
     picture
