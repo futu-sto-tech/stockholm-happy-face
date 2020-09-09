@@ -80,11 +80,12 @@ const SearchResults: React.FC<{
 
   return (
     <div>
-      <MasonryGrid>
-        {data?.search_gif.map((item) => (
-          <Link key={item.id} href={{ query: { url: item.original.url } }}>
+      <MasonryGrid items={data?.search_gif || []} columns={3}>
+        {(item): React.ReactElement => (
+          <Link href={{ query: { url: item.original.url } }} passHref>
             <motion.a
-              className="block w-full mb-1 cursor-pointer"
+              key={item.id}
+              className="block w-full mb-1"
               initial={{ opacity: 0, y: -32 }}
               animate={{ opacity: 1, y: 0 }}
             >
@@ -95,7 +96,7 @@ const SearchResults: React.FC<{
               </picture>
             </motion.a>
           </Link>
-        ))}
+        )}
       </MasonryGrid>
       {data?.search_gif.length && (
         <p className="text-center" ref={scrollRef}>

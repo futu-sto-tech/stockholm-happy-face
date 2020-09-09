@@ -1,0 +1,15 @@
+.primary {
+  @apply inline-flex items-center h-12 px-6 text-lg font-bold text-white bg-black rounded-lg;
+}
+
+.primary:hover {
+  @apply bg-opacity-75;
+}
+
+.secondary {
+  @apply inline-flex items-center h-12 px-6 text-lg font-bold bg-white border border-black rounded-lg;
+}
+
+.secondary:hover {
+  @apply bg-yellow-500 border-yellow-500;
+}

@@ -7,7 +7,6 @@ import buttonStyles from '../styles/button.module.css';
 import { useManualQuery } from 'graphql-hooks';
 import { useRouter } from 'next/router';
 import useTeamsQuery from '../graphql/queries/teams';
-import useUserEntriesQuery from '../graphql/queries/user-entries';
 import useUserQuery from '../graphql/queries/user';
 
 const IMAGE_QUERY = /* GraphQL */ `
@@ -40,22 +39,8 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
 
   const [fetchImage] = useManualQuery<ImageQueryData | undefined, ImageQueryVariables>(IMAGE_QUERY);
 
-  const [insertEntryWithUrl, { data: dataWithUrl }] = useInsertEntryWithUrl();
-  const [insertEntryWithImage, { data: dataWithImage }] = useInsertEntryWithImage();
-
-  const { refetch } = useUserEntriesQuery(user);
-  useEffect(() => {
-    async function routeToProfile(): Promise<void> {
-      await refetch();
-      router.push('/profile');
-    }
-
-    const entryId =
-      dataWithUrl?.insert_entry.returning[0].id || dataWithImage?.insert_entry.returning[0].id;
-    if (entryId) {
-      routeToProfile();
-    }
-  }, [dataWithUrl, dataWithImage, router, refetch]);
+  const insertEntryWithUrl = useInsertEntryWithUrl(user);
+  const insertEntryWithImage = useInsertEntryWithImage(user);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent): Promise<void> => {
@@ -64,15 +49,14 @@ const ConfirmNewEntry: React.FC<{ url: string; user: string }> = ({ url, user })
       if (team) {
         const data = await fetchImage({ variables: { url } });
         if (data.data?.image.length === 1) {
-          await insertEntryWithImage({
-            variables: { image: data.data.image[0].id, team, user },
-          });
+          await insertEntryWithImage(team, data.data.image[0].id);
         } else {
-          await insertEntryWithUrl({ variables: { team, user, url } });
+          await insertEntryWithUrl(team, url);
         }
+        await router.push('/');
       }
     },
-    [insertEntryWithImage, insertEntryWithUrl, team, user, url, fetchImage],
+    [insertEntryWithImage, insertEntryWithUrl, team, url, fetchImage, router],
   );
 
   return (
