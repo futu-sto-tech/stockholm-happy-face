@@ -65,6 +65,8 @@ export default function useTeamSessionSubscription(teamId: number): Data | undef
   const startOfWeek = useMemo(() => getStartOfWeek().toISOString(), []);
   const endOfWeek = useMemo(() => getEndOfWeek().toISOString(), []);
 
+  console.log(startOfWeek, endOfWeek);
+
   return useSubscriptionWithCache({
     query: SUBSCRIPTION,
     variables: { teamId, after: startOfWeek, before: endOfWeek },

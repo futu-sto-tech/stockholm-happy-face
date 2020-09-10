@@ -157,7 +157,6 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             }
             alt="GIF"
           />
-
           <div className="flex flex-col items-center flex-shrink-0 space-y-1 lg:hidden">
             <img
               src={teamSession?.team_by_pk.entry?.user.picture}
