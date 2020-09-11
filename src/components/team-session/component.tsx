@@ -9,6 +9,7 @@ import useUpdateOnlineUserMutation from 'graphql/mutations/update-online-user';
 import useOnlineUsers from 'graphql/subscriptions/online-users';
 import { useUserId } from 'hooks';
 import { hexToHSL } from 'lib/utils';
+import { Picker } from 'emoji-mart';
 
 interface Props {
   team: number;
@@ -138,6 +139,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
           </ul>
 
           <footer className="flex items-end p-2 border-t border-white border-opacity-10">
+
             <button
               onClick={handleClickOpenAdminPopup}
               className="flex items-center justify-center w-full h-12 px-4 space-x-2 text-base text-white rounded-lg hover:bg-opacity-10 hover:bg-white"
@@ -145,6 +147,9 @@ const TeamSession: React.FC<Props> = ({ team }) => {
               <FiExternalLink size="20" />
               <p>Open admin controls</p>
             </button>
+            <div className="reactions">
+              <Picker />
+            </div>
           </footer>
         </aside>
 

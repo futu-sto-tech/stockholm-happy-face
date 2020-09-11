@@ -80,11 +80,11 @@ const SessionControlsPage: NextPage = () => {
                     presentEntry(item.id);
                   }}
                   className="text-base uppercase transition-opacity duration-150 opacity-0 group-hover:opacity-100"
-                >
-                  Show
+                  >
+                    Show
                 </button>
-              </li>
-            ),
+                </li>
+              ),
           )}
           {presentUsersWithoutEntry?.map((item) => (
             <li
