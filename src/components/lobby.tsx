@@ -8,13 +8,14 @@ import Link from 'next/link';
 import LogoIcon from './logo-icon';
 import { MdArrowBack } from 'react-icons/md';
 import { Session } from '../graphql/subscriptions/session';
+import { OnlineUser } from '../graphql/subscriptions/online-users';
 import buttonStyles from '../styles/button.module.css';
 import useDeleteEntryMutation from 'graphql/mutations/delete-entry-mutation';
 import { useRouter } from 'next/router';
 import useUpdateTeamEntry from '../graphql/mutations/update-team-entry';
 import useUserQuery from '../graphql/queries/user';
 
-const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId }) => {
+const Lobby: React.FC<{ session: Session; activeParticipants: OnlineUser[], userId: string }> = ({ session, activeParticipants, userId }) => {
   const router = useRouter();
   const dragConstraint = useRef(null);
   const userData = useUserQuery(userId);
@@ -69,7 +70,7 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
         <div className="w-full max-w-4xl p-4 mx-auto bg-white rounded-lg shadow-lg">
           <ul className="grid grid-cols-4 gap-4 md:grid-cols-6 lg:grid-cols-8">
             <AnimatePresence exitBeforeEnter>
-              {session?.participants.map((item) => (
+              {activeParticipants.map((item) => (
                 <motion.li
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
@@ -115,10 +116,10 @@ const Lobby: React.FC<{ session: Session; userId: string }> = ({ session, userId
                   Preview my GIF
                 </button>
               ) : (
-                <Link href="/entries/new">
-                  <a className={buttonStyles.primary}>Pick a GIF</a>
-                </Link>
-              )}
+                  <Link href="/entries/new">
+                    <a className={buttonStyles.primary}>Pick a GIF</a>
+                  </Link>
+                )}
             </div>
           </div>
           <div className="flex items-center justify-end flex-1">

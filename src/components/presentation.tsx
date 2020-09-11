@@ -1,4 +1,5 @@
 import { Entry, Session } from 'graphql/subscriptions/session';
+import { OnlineUser } from 'graphql/subscriptions/online-users';
 import React, { useCallback, useMemo } from 'react';
 
 import Link from 'next/link';
@@ -75,23 +76,23 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
                     <ActiveParticipant name={item.user.name} />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between p-3 pr-0 text-white transition-all duration-100 rounded hover:bg-white hover:bg-opacity-10 hover:pr-3 group">
-                    <div className="flex items-center space-x-2">
-                      {item.id === session.entry?.id && (
-                        <span className="w-3 h-3 bg-white rounded-full" />
+                    <div className="flex items-center justify-between p-3 pr-0 text-white transition-all duration-100 rounded hover:bg-white hover:bg-opacity-10 hover:pr-3 group">
+                      <div className="flex items-center space-x-2">
+                        {item.id === session.entry?.id && (
+                          <span className="w-3 h-3 bg-white rounded-full" />
+                        )}
+                        <p>{item.user.name}</p>
+                      </div>
+                      {item.id !== session.entry?.id && (
+                        <button
+                          onClick={(): Promise<void> => handleClickShowUserEntry(item.id)}
+                          className="font-bold transition-opacity duration-100 opacity-0 group-hover:opacity-100"
+                        >
+                          Show
+                        </button>
                       )}
-                      <p>{item.user.name}</p>
                     </div>
-                    {item.id !== session.entry?.id && (
-                      <button
-                        onClick={(): Promise<void> => handleClickShowUserEntry(item.id)}
-                        className="font-bold transition-opacity duration-100 opacity-0 group-hover:opacity-100"
-                      >
-                        Show
-                      </button>
-                    )}
-                  </div>
-                )}
+                  )}
               </li>
             ))}
           </ul>
@@ -121,7 +122,7 @@ const SidePanel: React.FC<{ session: Session; entry: Entry }> = ({ session, entr
   );
 };
 
-const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, entry }) => {
+const Presentation: React.FC<{ session: Session; activeParticipants: OnlineUser[], entry: Entry }> = ({ session, activeParticipants, entry }) => {
   return (
     <div
       className="flex h-screen transition-colors duration-300 bg-black"
@@ -150,7 +151,7 @@ const Presentation: React.FC<{ session: Session; entry: Entry }> = ({ session, e
           />
         </main>
         <footer className="flex justify-center flex-shrink-0 p-4 space-x-4 bg-white bg-opacity-25">
-          {session.participants.map((item) => (
+          {activeParticipants.map((item) => (
             <div key={item.id} className="relative">
               {item.id === session.entry?.user.id && (
                 <p className="absolute flex justify-center flex-shrink-0 w-full text-lg font-bold leading-none text-white transform -translate-y-12">

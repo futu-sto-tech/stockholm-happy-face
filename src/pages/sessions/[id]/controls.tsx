@@ -6,6 +6,7 @@ import usePresentEntry from 'graphql/mutations/present-entry';
 import usePresentRandomEntry from 'graphql/mutations/present-random-entry';
 import { useRouter } from 'next/router';
 import useTeamLobbySubscription from 'graphql/subscriptions/team-lobby';
+import useOnlineUsers from 'graphql/subscriptions/online-users';
 import useUpdateTeamStatus from 'components/session-box/hooks/use-update-team-status';
 import { useUserId } from 'hooks';
 
@@ -16,27 +17,30 @@ const SessionControlsPage: NextPage = () => {
   const session = useTeamLobbySubscription(userId);
   const endSession = useUpdateTeamStatus(teamId, 'ENDED');
 
-  const usersWithEntry = useMemo(
-    () => session?.user_by_pk.team.entries.map((item) => item.user.id),
-    [session?.user_by_pk.team.entries.map],
-  );
-  const usersInSession = useMemo(
-    () => session?.user_by_pk.team.participants.map((item) => item.id),
-    [session?.user_by_pk.team.participants.map],
+  const activeUsers = useOnlineUsers(teamId);
+  const onlineUsers = activeUsers ? activeUsers.online_team_users : [];
+
+  const usersIdsInSession = useMemo(
+    () => onlineUsers.map((item) => item.id),
+    [onlineUsers],
   );
 
+  const usersWithEntry = session ? session.user_by_pk.team.entries.map(e => e.user.id) : [];
+  const entries = session ? session.user_by_pk.team.entries : [];
+
   const entriesWithPresentUser = useMemo(
-    () => session?.user_by_pk.team.entries.filter((item) => usersWithEntry?.includes(item.user.id)),
-    [session?.user_by_pk.team.entries.filter, usersWithEntry?.includes],
+    () => entries.filter((item) => usersIdsInSession?.includes(item.user.id)),
+    [entries, usersIdsInSession],
   );
   const presentUsersWithoutEntry = useMemo(
-    () =>
-      session?.user_by_pk.team.participants.filter((item) => !usersWithEntry?.includes(item.id)),
-    [session?.user_by_pk.team.participants.filter, usersWithEntry?.includes],
+    () => onlineUsers.filter((user) => !usersWithEntry.includes(user.id)),
+    [onlineUsers, usersWithEntry],
   );
 
   const presentRandomEntry = usePresentRandomEntry(teamId);
   const presentEntry = usePresentEntry(teamId);
+
+  const currentSessionUser = session?.user_by_pk.team.entry?.user.id;
 
   return (
     <div className="flex flex-col h-screen p-4 bg-black">
@@ -46,7 +50,7 @@ const SessionControlsPage: NextPage = () => {
       <main className="flex-1 pt-4 overflow-auto scrolling-touch">
         <ul>
           {entriesWithPresentUser?.map((item) =>
-            item.user.id === session?.user_by_pk.team.entry?.user.id ? (
+            item.user.id === currentSessionUser ? (
               <li
                 key={item.id}
                 className="flex items-center h-12 px-4 my-2 space-x-1 text-lg font-bold text-black bg-white rounded-lg"
@@ -54,7 +58,7 @@ const SessionControlsPage: NextPage = () => {
                 <p className="flex items-center space-x-2">
                   <span>
                     {item.user.name}{' '}
-                    {!usersInSession?.includes(item.user.id) && (
+                    {!usersIdsInSession?.includes(item.user.id) && (
                       <span className="text-black text-opacity-50">(not here)</span>
                     )}
                   </span>
@@ -62,29 +66,29 @@ const SessionControlsPage: NextPage = () => {
                 </p>
               </li>
             ) : (
-              <li
-                key={item.id}
-                className="flex items-center justify-between h-12 px-4 text-lg font-bold text-white rounded-lg hover:bg-white hover:bg-opacity-25 group"
-              >
-                <p className="flex items-center space-x-2">
-                  <span>
-                    {item.user.name}{' '}
-                    {!usersInSession?.includes(item.user.id) && (
-                      <span className="text-white text-opacity-50">(not here)</span>
-                    )}
-                  </span>
-                  {item.presented && <FiCheck />}
-                </p>
-                <button
-                  onClick={(): void => {
-                    presentEntry(item.id);
-                  }}
-                  className="text-base uppercase transition-opacity duration-150 opacity-0 group-hover:opacity-100"
+                <li
+                  key={item.id}
+                  className="flex items-center justify-between h-12 px-4 text-lg font-bold text-white rounded-lg hover:bg-white hover:bg-opacity-25 group"
                 >
-                  Show
-                </button>
-              </li>
-            ),
+                  <p className="flex items-center space-x-2">
+                    <span>
+                      {item.user.name}{' '}
+                      {!usersIdsInSession?.includes(item.user.id) && (
+                        <span className="text-white text-opacity-50">(not here)</span>
+                      )}
+                    </span>
+                    {item.presented && <FiCheck />}
+                  </p>
+                  <button
+                    onClick={(): void => {
+                      presentEntry(item.id);
+                    }}
+                    className="text-base uppercase transition-opacity duration-150 opacity-0 group-hover:opacity-100"
+                  >
+                    Show
+                  </button>
+                </li>
+              ),
           )}
           {presentUsersWithoutEntry?.map((item) => (
             <li
