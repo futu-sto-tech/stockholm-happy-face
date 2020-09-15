@@ -3,6 +3,13 @@ export interface User {
   name: string;
   picture: string;
 }
+export interface Reaction {
+  id: number;
+  content: string;
+  created_at: string;
+  user_id: string;
+  entry_id: number;
+}
 
 export interface Entry {
   id: number;
@@ -17,6 +24,7 @@ export interface Entry {
   };
   user: User;
   presented?: boolean;
+  reactions: Reaction[];
 }
 
 export type TeamStatus = 'DEFAULT' | 'STARTED' | 'ENDED';

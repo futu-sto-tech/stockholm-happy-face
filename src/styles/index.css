@@ -8,7 +8,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap');
 
 body {
-  font-family: 'Quicksand', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  font-family: 'Quicksand', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -69,6 +70,27 @@ body {
 
 .stark-shadow {
   box-shadow: 0px 6px 0px theme('colors.black');
+}
+
+@keyframes float {
+  from {
+    opacity: 0;
+    transform: scale(1) rotate(0deg) translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.5) rotate(-20deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(2) rotate(-20deg) translateY(-100vh);
+  }
+}
+
+.reaction {
+  opacity: 0;
+  font-size: 64px;
+  animation: float linear 4s;
 }
 
 @tailwind utilities;

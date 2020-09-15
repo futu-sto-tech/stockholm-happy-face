@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { FiExternalLink } from 'react-icons/fi';
 import Link from 'next/link';
@@ -9,7 +9,8 @@ import useUpdateOnlineUserMutation from 'graphql/mutations/update-online-user';
 import useOnlineUsers from 'graphql/subscriptions/online-users';
 import { useUserId } from 'hooks';
 import { hexToHSL } from 'lib/utils';
-import { Picker } from 'emoji-mart';
+import { Picker, EmojiProps } from 'emoji-mart';
+import useInsertReactionMutation from 'graphql/mutations/insert-reaction';
 
 interface Props {
   team: number;
@@ -21,10 +22,12 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   const entriesCount = useMemo(() => teamSession?.team_by_pk.entries.length, [
     teamSession?.team_by_pk.entries.length,
   ]);
+
   const presentedEntriesCount = useMemo(
     () => teamSession?.team_by_pk.entries.filter((item) => item.presented === true).length,
     [teamSession?.team_by_pk.entries.filter],
   );
+
   const presentedEntriesProgress = useMemo(
     () => (presentedEntriesCount && entriesCount ? presentedEntriesCount / entriesCount : 0),
     [presentedEntriesCount, entriesCount],
@@ -77,6 +80,19 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   // Make variants 1 and 2 for gradient use
   const colorVariant1 = bgColor ? hexToHSL(bgColor, 0, 40, 5) : null;
   const colorVariant2 = bgColor ? hexToHSL(bgColor, 100, 40, 5) : null;
+  const [emojiPickerState, setEmojiPicker] = useState(false);
+  const [addReaction] = useInsertReactionMutation();
+
+  const handleEmojiPickerOpen = (event: React.MouseEvent<HTMLElement>): void => {
+    event.preventDefault();
+    setEmojiPicker(!emojiPickerState);
+  }
+
+  const handleAddReaction = (emoji: EmojiProps): void => {
+    if (teamSession?.team_by_pk.entry?.id && teamSession?.team_by_pk.entry?.user.id)
+      addReaction({ variables: { reaction: emoji.native, entryId: teamSession?.team_by_pk.entry?.id, user: teamSession?.team_by_pk.entry?.user.id } })
+    setEmojiPicker(false);
+  };
 
   return (
     <div
@@ -138,8 +154,22 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             <li />
           </ul>
 
-          <footer className="flex items-end p-2 border-t border-white border-opacity-10">
-
+          <footer className="flex flex-col items-end p-2 border-t border-white border-opacity-10">
+            {emojiPickerState && (
+              <Picker
+                theme="dark"
+                onSelect={handleAddReaction}
+                style={{ position: 'absolute', bottom: 0, left: "3rem", zIndex: 10 }}
+                title="Pick you emoji"
+              />
+            )}
+            <button
+              onClick={handleEmojiPickerOpen}
+              className="flex items-center justify-center w-full h-12 px-4 space-x-2 text-base text-white rounded-lg hover:bg-opacity-10 hover:bg-white"
+            >
+              <span role="img" aria-label="button">😁</span>
+              <p>Add an Emoji!</p>
+            </button>
             <button
               onClick={handleClickOpenAdminPopup}
               className="flex items-center justify-center w-full h-12 px-4 space-x-2 text-base text-white rounded-lg hover:bg-opacity-10 hover:bg-white"
@@ -147,13 +177,10 @@ const TeamSession: React.FC<Props> = ({ team }) => {
               <FiExternalLink size="20" />
               <p>Open admin controls</p>
             </button>
-            <div className="reactions">
-              <Picker />
-            </div>
           </footer>
         </aside>
 
-        <section className="col-span-12 space-y-6 lg:col-span-9">
+        <section className="col-span-12 space-y-6 lg:col-span-9 relative">
           <img
             className="object-contain w-auto w-full h-auto max-w-full max-h-full bg-white rounded-lg shadow bg-opacity-10"
             src={
@@ -170,6 +197,11 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             />
             <p className="text-lg text-white">{teamSession?.team_by_pk.entry?.user.name}</p>
           </div>
+          {teamSession?.team_by_pk.entry?.reactions.map((reaction) => {
+            return (
+              <div className="reaction absolute bottom-0 right-0 " key={reaction.id}>{reaction.content}</div>
+            )
+          })}
         </section>
       </main>
     </div>
