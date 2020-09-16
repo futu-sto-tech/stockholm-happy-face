@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 
 import { FiExternalLink } from 'react-icons/fi';
 import Link from 'next/link';
@@ -9,8 +9,9 @@ import useUpdateOnlineUserMutation from 'graphql/mutations/update-online-user';
 import useOnlineUsers from 'graphql/subscriptions/online-users';
 import { useUserId } from 'hooks';
 import { hexToHSL } from 'lib/utils';
-import { Picker, EmojiProps } from 'emoji-mart';
+import { Picker, EmojiData } from 'emoji-mart';
 import useInsertReactionMutation from 'graphql/mutations/insert-reaction';
+import { useClickOutside } from 'hooks';
 
 interface Props {
   team: number;
@@ -18,6 +19,7 @@ interface Props {
 
 const TeamSession: React.FC<Props> = ({ team }) => {
   const teamSession = useTeamSessionSubscription(team);
+  const pickerRef = useRef<HTMLDivElement>(null)
 
   const entriesCount = useMemo(() => teamSession?.team_by_pk.entries.length, [
     teamSession?.team_by_pk.entries.length,
@@ -81,18 +83,27 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   const colorVariant1 = bgColor ? hexToHSL(bgColor, 0, 40, 5) : null;
   const colorVariant2 = bgColor ? hexToHSL(bgColor, 100, 40, 5) : null;
   const [emojiPickerState, setEmojiPicker] = useState(false);
+
+
+  const [showPicker, setShowerPicker] = useState(false);
   const [addReaction] = useInsertReactionMutation();
 
   const handleEmojiPickerOpen = (event: React.MouseEvent<HTMLElement>): void => {
     event.preventDefault();
-    setEmojiPicker(!emojiPickerState);
+    setShowerPicker(!showPicker);
   }
 
-  const handleAddReaction = (emoji: EmojiProps): void => {
+  const handleAddReaction = (emoji: EmojiData): void => {
     if (teamSession?.team_by_pk.entry?.id && teamSession?.team_by_pk.entry?.user.id)
-      addReaction({ variables: { reaction: emoji.native, entryId: teamSession?.team_by_pk.entry?.id, user: teamSession?.team_by_pk.entry?.user.id } })
-    setEmojiPicker(false);
+      addReaction({ variables: { reaction: emoji.native, entryId: teamSession?.team_by_pk.entry?.id, user: teamSession?.team_by_pk.entry?.user.id.toString() } })
+    setShowerPicker(false);
   };
+
+  const onClickOutside = () => {
+    setShowerPicker(false);
+  }
+
+  useClickOutside(pickerRef, onClickOutside)
 
   return (
     <div
@@ -155,13 +166,15 @@ const TeamSession: React.FC<Props> = ({ team }) => {
           </ul>
 
           <footer className="flex flex-col items-end p-2 border-t border-white border-opacity-10">
-            {emojiPickerState && (
-              <Picker
-                theme="dark"
-                onSelect={handleAddReaction}
-                style={{ position: 'absolute', bottom: 0, left: "3rem", zIndex: 10 }}
-                title="Pick you emoji"
-              />
+            {showPicker && (
+              <div ref={pickerRef} className="absolute z-10 bottom-0">
+                <Picker
+                  theme="dark"
+                  onSelect={handleAddReaction}
+                  title="Pick you emoji"
+                />
+              </div>
+
             )}
             <button
               onClick={handleEmojiPickerOpen}
