@@ -58,7 +58,6 @@ export function useClickOutside(ref: any, callback: () => void) {
       if (!ref.current || ref.current.contains(event.target)) {
         return;
       }
-
       callback();
     };
 

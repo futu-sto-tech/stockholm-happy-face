@@ -12,6 +12,7 @@ import { hexToHSL } from 'lib/utils';
 import { Picker, EmojiData } from 'emoji-mart';
 import useInsertReactionMutation from 'graphql/mutations/insert-reaction';
 import { useClickOutside } from 'hooks';
+import styles from '../../styles/emojiPicker.module.css';
 
 interface Props {
   team: number;
@@ -85,22 +86,22 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   const [emojiPickerState, setEmojiPicker] = useState(false);
 
 
-  const [showPicker, setShowerPicker] = useState(false);
+  const [showEmojiPicker, setshowEmojiPicker] = useState(false);
   const [addReaction] = useInsertReactionMutation();
 
-  const handleEmojiPickerOpen = (event: React.MouseEvent<HTMLElement>): void => {
+  const toggleEmojiPicker = (event: React.MouseEvent<HTMLElement>): void => {
     event.preventDefault();
-    setShowerPicker(!showPicker);
+    setshowEmojiPicker(!showEmojiPicker);
   }
 
   const handleAddReaction = (emoji: EmojiData): void => {
     if (teamSession?.team_by_pk.entry?.id && teamSession?.team_by_pk.entry?.user.id)
       addReaction({ variables: { reaction: emoji.native, entryId: teamSession?.team_by_pk.entry?.id, user: teamSession?.team_by_pk.entry?.user.id.toString() } })
-    setShowerPicker(false);
+    setshowEmojiPicker(false);
   };
 
   const onClickOutside = () => {
-    setShowerPicker(false);
+    setshowEmojiPicker(false);
   }
 
   useClickOutside(pickerRef, onClickOutside)
@@ -165,19 +166,22 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             <li />
           </ul>
 
-          <footer className="flex flex-col items-end p-2 border-t border-white border-opacity-10">
-            {showPicker && (
-              <div ref={pickerRef} className="absolute z-10 bottom-0">
+          <footer className="flex flex-col items-end p-2 border-t border-white border-opacity-10 relative">
+            {showEmojiPicker && (
+              <div ref={pickerRef} className="absolute z-10 bottom-0 left-0">
                 <Picker
                   theme="dark"
                   onSelect={handleAddReaction}
                   title="Pick you emoji"
+                  style={{ width: "100%" }}
                 />
               </div>
 
             )}
             <button
-              onClick={handleEmojiPickerOpen}
+              type="button"
+              aria-pressed="false"
+              onClick={toggleEmojiPicker}
               className="flex items-center justify-center w-full h-12 px-4 space-x-2 text-base text-white rounded-lg hover:bg-opacity-10 hover:bg-white"
             >
               <span role="img" aria-label="button">😁</span>
@@ -212,7 +216,9 @@ const TeamSession: React.FC<Props> = ({ team }) => {
           </div>
           {teamSession?.team_by_pk.entry?.reactions.map((reaction) => {
             return (
-              <div className="reaction absolute bottom-0 right-0 " key={reaction.id}>{reaction.content}</div>
+              <div className={`${styles.reaction} absolute bottom-0 right-0`} key={reaction.id}>
+                {reaction.content}
+              </div>
             )
           })}
         </section>
