@@ -172,7 +172,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             {teamSession && onlineUsers
               .filter((item) => item.id !== teamSession.team_by_pk.entry?.user.id)
               .map((item) => (
-                <li key={item.id} className="flex items-center px-4 space-x-4">
+                <li key={item.id} className="inline-flex flex-col px-4">
                   <img src={item.picture} alt={item.name} className="w-12 h-12 rounded-full" />
                   <p className="text-base text-white">{item.name}</p>
                 </li>
