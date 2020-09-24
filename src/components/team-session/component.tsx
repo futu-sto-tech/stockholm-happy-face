@@ -100,11 +100,25 @@ const TeamSession: React.FC<Props> = ({ team }) => {
     setshowEmojiPicker(false);
   };
 
+  const handleAddStandardReaction = (reaction: string): void => {
+    const entryId = teamSession?.team_by_pk.entry?.id;
+    const user = teamSession?.team_by_pk.entry?.user.id.toString();
+    if (entryId && user) {
+      addReaction({ variables: { reaction, entryId, user } });
+    }
+  }
+
   const onClickOutside = () => {
     setshowEmojiPicker(false);
   }
 
   useClickOutside(pickerRef, onClickOutside)
+
+  const createReactionButton = (reaction: string, padding = "p-2") => (
+    <button className={padding} onClick={() => handleAddStandardReaction(reaction)}>
+      <span role="img" aria-label="button">{reaction}</span>
+    </button>
+  )
 
   return (
     <div
@@ -167,26 +181,6 @@ const TeamSession: React.FC<Props> = ({ team }) => {
           </ul>
 
           <footer className="flex flex-col items-end p-2 border-t border-white border-opacity-10 relative">
-            {showEmojiPicker && (
-              <div ref={pickerRef} className="absolute z-10 bottom-0 left-0">
-                <Picker
-                  theme="dark"
-                  onSelect={handleAddReaction}
-                  title="Pick you emoji"
-                  style={{ width: "100%" }}
-                />
-              </div>
-
-            )}
-            <button
-              type="button"
-              aria-pressed="false"
-              onClick={toggleEmojiPicker}
-              className="flex items-center justify-center w-full h-12 px-4 space-x-2 text-base text-white rounded-lg hover:bg-opacity-10 hover:bg-white"
-            >
-              <span role="img" aria-label="button">😁</span>
-              <p>Add an Emoji!</p>
-            </button>
             <button
               onClick={handleClickOpenAdminPopup}
               className="flex items-center justify-center w-full h-12 px-4 space-x-2 text-base text-white rounded-lg hover:bg-opacity-10 hover:bg-white"
@@ -214,6 +208,41 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             />
             <p className="text-lg text-white">{teamSession?.team_by_pk.entry?.user.name}</p>
           </div>
+          <div className="flex items-center justify-center">
+            <div className="absolute bottom-0 mb-10 flex items-center justify-center h-12 px-4 space-x-2 text-base bg-white text-white rounded-lg">
+              {createReactionButton("😊", "pr-2")}
+              {createReactionButton("😏")}
+              {createReactionButton("🙃")}
+              {createReactionButton("😔")}
+              {createReactionButton("👍")}
+              {createReactionButton("🤣")}
+              <button
+                type="button"
+                aria-pressed="false"
+                onClick={toggleEmojiPicker}
+                className="pl-2"
+              >
+                <span role="img" aria-label="button">
+                  <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="13" cy="13" r="13" fill="#C1C1C1" />
+                    <path d="M9.53335 13.4333C9.53335 14.6299 8.5633 15.6 7.36668 15.6C6.17006 15.6 5.20001 14.6299 5.20001 13.4333C5.20001 12.2367 6.17006 11.2667 7.36668 11.2667C8.5633 11.2667 9.53335 12.2367 9.53335 13.4333Z" fill="white" />
+                    <path d="M15.4197 13.4333C15.4197 14.6299 14.4497 15.6 13.2531 15.6C12.0565 15.6 11.0864 14.6299 11.0864 13.4333C11.0864 12.2367 12.0565 11.2667 13.2531 11.2667C14.4497 11.2667 15.4197 12.2367 15.4197 13.4333Z" fill="white" />
+                    <path d="M21.0531 13.4333C21.0531 14.6299 20.083 15.6 18.8864 15.6C17.6898 15.6 16.7197 14.6299 16.7197 13.4333C16.7197 12.2367 17.6898 11.2667 18.8864 11.2667C20.083 11.2667 21.0531 12.2367 21.0531 13.4333Z" fill="white" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            {showEmojiPicker && (
+              <div ref={pickerRef} className="absolute items-center w-1/3 z-10 bottom-0 left-1/2">
+                <Picker
+                  theme="dark"
+                  onSelect={handleAddReaction}
+                  title="Pick your emoji"
+                  style={{ width: "100%" }}
+                />
+              </div>
+            )}
+          </div>
           {teamSession?.team_by_pk.entry?.reactions.map((reaction) => {
             return (
               <div className={`${styles.reaction} absolute bottom-0 right-0`} key={reaction.id}>
@@ -223,7 +252,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
           })}
         </section>
       </main>
-    </div>
+    </div >
   );
 };
 
