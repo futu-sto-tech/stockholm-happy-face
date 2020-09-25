@@ -55,13 +55,13 @@ export function hexToHSL(hexColor: string, hueModifier: number, saturationModifi
   // Convert hex to RGB first
   let r = 0, g = 0, b = 0;
   if (hexColor.length == 4) {
-    r = ("0x" + hexColor[1] + hexColor[1]) / 255;
-    g = ("0x" + hexColor[2] + hexColor[2]) / 255;
-    b = ("0x" + hexColor[3] + hexColor[3]) / 255;
+    r = ("0x" + hexColor[1] + hexColor[1]) as any / 255;
+    g = ("0x" + hexColor[2] + hexColor[2]) as any / 255;
+    b = ("0x" + hexColor[3] + hexColor[3]) as any / 255;
   } else if (hexColor.length == 7) {
-    r = ("0x" + hexColor[1] + hexColor[2]) / 255;
-    g = ("0x" + hexColor[3] + hexColor[4]) / 255;
-    b = ("0x" + hexColor[5] + hexColor[6]) / 255;
+    r = ("0x" + hexColor[1] + hexColor[2]) as any / 255;
+    g = ("0x" + hexColor[3] + hexColor[4]) as any / 255;
+    b = ("0x" + hexColor[5] + hexColor[6]) as any / 255;
   }
   // Then to HSL
   let cmin = Math.min(r, g, b),
