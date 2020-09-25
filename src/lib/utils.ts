@@ -51,24 +51,24 @@ export function getEndOfWeek(): Date {
  * Convert a HEX color to HSL 
  * Use modifiers to modify the final % from the orginal color
  */
-export function hexToHSL(H, hueModifier, saturationModifier, lightModifier) {
+export function hexToHSL(hexColor: string, hueModifier: number, saturationModifier: number, lightModifier: number): string {
   // Convert hex to RGB first
   let r = 0, g = 0, b = 0;
-  if (H.length == 4) {
-    r = "0x" + H[1] + H[1];
-    g = "0x" + H[2] + H[2];
-    b = "0x" + H[3] + H[3];
-  } else if (H.length == 7) {
-    r = "0x" + H[1] + H[2];
-    g = "0x" + H[3] + H[4];
-    b = "0x" + H[5] + H[6];
+  if (hexColor.length == 4) {
+    r = "0x" + hexColor[1] + hexColor[1];
+    g = "0x" + hexColor[2] + hexColor[2];
+    b = "0x" + hexColor[3] + hexColor[3];
+  } else if (hexColor.length == 7) {
+    r = "0x" + hexColor[1] + hexColor[2];
+    g = "0x" + hexColor[3] + hexColor[4];
+    b = "0x" + hexColor[5] + hexColor[6];
   }
   // Then to HSL
   r /= 255;
   g /= 255;
   b /= 255;
-  let cmin = Math.min(r,g,b),
-      cmax = Math.max(r,g,b),
+  let cmin = Math.min(r, g, b),
+      cmax = Math.max(r, g, b),
       delta = cmax - cmin,
       h = 0,
       s = 0,
@@ -94,16 +94,15 @@ export function hexToHSL(H, hueModifier, saturationModifier, lightModifier) {
   l = +(l * 100).toFixed(1);
 
   // Add modified to hue, light and saturation
-  if(hueModifier) {
+  if (hueModifier) {
     h = h + hueModifier;
   }
-  if(saturationModifier) {
+  if (saturationModifier) {
     s = s + saturationModifier;
   }
-  if(lightModifier) {
+  if (lightModifier) {
     l = l + lightModifier;
   }
-  
 
-  return "hsl(" + h + "," + s + "%," + l + "%)";
+  return `hsl(${h},${s}%,${l}%)`;
 }
