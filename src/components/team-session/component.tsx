@@ -8,6 +8,7 @@ import useUpdateUserSessionMutation from 'graphql/mutations/update-user-session'
 import useUpdateOnlineUserMutation from 'graphql/mutations/update-online-user';
 import useOnlineUsers from 'graphql/subscriptions/online-users';
 import { useUserId } from 'hooks';
+import { hexToHSL } from 'lib/utils';
 
 interface Props {
   team: number;
@@ -68,11 +69,21 @@ const TeamSession: React.FC<Props> = ({ team }) => {
       clearInterval(emitOnlineInterval);
     }
   }, [updateOnlineUser, userId]);
+  
+  // Backgorund color
+  const bgColor = teamSession?.team_by_pk.entry?.image.color ? teamSession?.team_by_pk.entry?.image.color : '#000000' ;
+  
+  // Make variants 1 and 2 for gradient use
+  const colorVariant1 = bgColor ? hexToHSL(bgColor, 0, 40, 5) : null;
+  const colorVariant2 = bgColor ? hexToHSL(bgColor, 100, 40, 5) : null;
 
   return (
     <div
       className="grid h-screen bg-black grid-rows-12"
-      style={{ backgroundColor: teamSession?.team_by_pk.entry?.image.color }}
+      style={{ 
+        backgroundColor: bgColor, 
+        backgroundImage: colorVariant1 && colorVariant2 ? `linear-gradient(45deg, ${colorVariant1}, ${colorVariant2})` : '' 
+      }}
     >
       <header className="flex items-center justify-center row-span-1">
         <Link href="/">
