@@ -11,7 +11,7 @@ const QUERY = /* GraphQL */ `
   query Entries($teamId: Int!, $before: timestamptz!, $after: timestamptz!) {
     team_by_pk(id: $teamId) {
       id
-      entries(where: { created_at: { _gte: $after, _lte: $before } }) {
+      entries(where: { created_at: { _gte: $after, _lte: $before }, presented: { _eq: false } }) {
         id
         presented
       }
@@ -42,7 +42,7 @@ export default function usePresentRandomEntry(teamId: number) {
       variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
     });
     if (data && data.team_by_pk.entries.length > 0) {
-      const notPresented = data.team_by_pk.entries.filter((item) => item.presented === false);
+      const notPresented = data.team_by_pk.entries;
       let randomEntryId: number;
       if (notPresented.length > 0) {
         randomEntryId = notPresented[Math.floor(Math.random() * notPresented.length)].id;

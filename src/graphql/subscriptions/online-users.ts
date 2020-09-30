@@ -1,6 +1,3 @@
-import { getEndOfWeek, getStartOfWeek } from '../../lib/utils';
-
-import { useMemo } from 'react';
 import { useSubscriptionWithCache } from '../../hooks';
 
 const ONLINE_USER_SUBSCRIPTION = `subscription OnlineUserSubscription($user_team_id: Int!) {
@@ -16,7 +13,7 @@ const ONLINE_USER_SUBSCRIPTION = `subscription OnlineUserSubscription($user_team
     picture
     team_id
   }
-}`
+}`;
 
 export interface OnlineUser {
   id: string;
@@ -26,7 +23,7 @@ export interface OnlineUser {
 }
 
 export interface OnlineUsers {
-  online_team_users: OnlineUser[]
+  online_team_users: OnlineUser[];
 }
 
 export default function useSessionSubscription(user_team_id: number): OnlineUsers | undefined {
