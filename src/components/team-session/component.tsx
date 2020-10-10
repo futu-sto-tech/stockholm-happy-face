@@ -61,7 +61,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   }, [updateUserSession, userId]);
 
   const activeUsers = useOnlineUsers(team);
-  const onlineUsers = activeUsers ? activeUsers.online_team_users : [];
+  const onlineUsers = activeUsers ? [...activeUsers.online_team_users] : [];
 
   const [updateOnlineUser] = useUpdateOnlineUserMutation();
   useEffect(() => {
@@ -168,12 +168,28 @@ const TeamSession: React.FC<Props> = ({ team }) => {
               )}
           </header>
 
-          <ul className="flex-1 py-4 space-y-4 overflow-auto scrolling-touch">
+          <ul className="flex-1 py-4 space-y-4 scrolling-touch">
             {teamSession && onlineUsers
               .filter((item) => item.id !== teamSession.team_by_pk.entry?.user.id)
               .map((item) => (
                 <li key={item.id} className="inline-flex flex-col px-4">
-                  <img src={item.picture} alt={item.name} className="w-12 h-12 rounded-full" />
+                  <div className="relative">
+                    <div className="overflow-hidden">
+                      <img src={item.picture} alt={item.name} className="w-12 h-12 rounded-full" />
+                      {teamSession?.team_by_pk.entry?.reactions.filter(r => r.user_id === item.id).map((reaction) => {
+                        return (
+                          <>
+                            <div className={`absolute bottom-0 left-0`} key={reaction.id}>
+                              {reaction.content}
+                            </div>
+                            <div className={`${styles.reaction} absolute bottom-0 left-0`} key={reaction.id}>
+                              {reaction.content}
+                            </div>
+                          </>
+                        )
+                      })}
+                    </div>
+                  </div>
                   <p className="text-base text-white">{item.name}</p>
                 </li>
               ))}
@@ -239,13 +255,6 @@ const TeamSession: React.FC<Props> = ({ team }) => {
               </div>
             )}
           </div>
-          {teamSession?.team_by_pk.entry?.reactions.map((reaction) => {
-            return (
-              <div className={`${styles.reaction} absolute bottom-0 right-0`} key={reaction.id}>
-                {reaction.content}
-              </div>
-            )
-          })}
         </section>
       </main>
     </div >

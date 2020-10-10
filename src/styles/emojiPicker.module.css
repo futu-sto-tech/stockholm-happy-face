@@ -5,16 +5,16 @@
   }
   30% {
     opacity: 1;
-    transform: scale(1.5) rotate(-20deg);
+    transform: scale(1.5) rotate(20deg);
   }
   to {
     opacity: 1;
-    transform: scale(2) rotate(-20deg) translateY(-100vh);
+    transform: scale(2) rotate(20deg) translateY(-50vh);
   }
 }
 
 .reaction {
   opacity: 0;
-  font-size: 64px;
+  font-size: 32px;
   animation: float linear 4s;
 }
