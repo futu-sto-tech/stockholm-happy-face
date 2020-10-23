@@ -43,13 +43,7 @@ export default function usePresentRandomEntry(teamId: number) {
     });
     if (data && data.team_by_pk.entries.length > 0) {
       const notPresented = data.team_by_pk.entries;
-      let randomEntryId: number;
-      if (notPresented.length > 0) {
-        randomEntryId = notPresented[Math.floor(Math.random() * notPresented.length)].id;
-      } else {
-        randomEntryId =
-          data.team_by_pk.entries[Math.floor(Math.random() * data.team_by_pk.entries.length)].id;
-      }
+      const randomEntryId = notPresented[Math.floor(Math.random() * notPresented.length)].id;
       presentEntry(randomEntryId);
     } else {
       throw new Error('Unable to present random entry');
