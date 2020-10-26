@@ -61,7 +61,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   }, [updateUserSession, userId]);
 
   const activeUsers = useOnlineUsers(team);
-  const onlineUsers = activeUsers ? [...activeUsers.online_team_users] : [];
+  const onlineUsers = activeUsers ? activeUsers.online_team_users : [];
 
   const [updateOnlineUser] = useUpdateOnlineUserMutation();
   useEffect(() => {
@@ -84,8 +84,6 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   // Make variants 1 and 2 for gradient use
   const colorVariant1 = bgColor ? hexToHSL(bgColor, 0, 40, 5) : null;
   const colorVariant2 = bgColor ? hexToHSL(bgColor, 100, 40, 5) : null;
-  const [emojiPickerState, setEmojiPicker] = useState(false);
-
 
   const [showEmojiPicker, setshowEmojiPicker] = useState(false);
   const [addReaction] = useInsertReactionMutation();
@@ -97,13 +95,13 @@ const TeamSession: React.FC<Props> = ({ team }) => {
 
   const handleAddReaction = (emoji: EmojiData): void => {
     if (teamSession?.team_by_pk.entry?.id && teamSession?.team_by_pk.entry?.user.id)
-      addReaction({ variables: { reaction: emoji.native, entryId: teamSession?.team_by_pk.entry?.id, user: teamSession?.team_by_pk.entry?.user.id.toString() } })
+      addReaction({ variables: { reaction: emoji.native, entryId: teamSession?.team_by_pk.entry?.id, user: userId } })
     setshowEmojiPicker(false);
   };
 
   const handleAddStandardReaction = (reaction: string): void => {
     const entryId = teamSession?.team_by_pk.entry?.id;
-    const user = teamSession?.team_by_pk.entry?.user.id.toString();
+    const user = userId;
     if (entryId && user) {
       addReaction({ variables: { reaction, entryId, user } });
     }
@@ -178,14 +176,14 @@ const TeamSession: React.FC<Props> = ({ team }) => {
                       <img src={item.picture} alt={item.name} className="w-12 h-12 rounded-full" />
                       {teamSession?.team_by_pk.entry?.reactions.filter(r => r.user_id === item.id).map((reaction) => {
                         return (
-                          <>
-                            <div className={`absolute bottom-0 left-0`} key={reaction.id}>
+                          <div key={reaction.id}>
+                            <div className={`absolute bottom-0 left-0`}>
                               {reaction.content}
                             </div>
-                            <div className={`${styles.reaction} absolute bottom-0 left-0`} key={reaction.id}>
+                            <div className={`${styles.reaction} absolute bottom-0 left-0`}>
                               {reaction.content}
                             </div>
-                          </>
+                          </div>
                         )
                       })}
                     </div>
