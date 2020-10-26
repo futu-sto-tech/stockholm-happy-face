@@ -103,3 +103,10 @@ export function hexToHSL(hexColor: string, hueModifier: number, saturationModifi
 
   return `hsl(${h},${s}%,${l}%)`;
 }
+
+
+export function getTimestampTenSecondsPrior(): Date {
+  const time = new Date();
+  time.setSeconds(time.getSeconds() - 10);
+  return time;
+}

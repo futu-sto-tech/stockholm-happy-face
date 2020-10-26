@@ -1,11 +1,16 @@
 import { Entry, User } from 'types';
-import { getEndOfWeek, getStartOfWeek } from '../../lib/utils';
+import { getEndOfWeek, getStartOfWeek, getTimestampTenSecondsPrior } from '../../lib/utils';
 
 import { useMemo } from 'react';
 import { useSubscriptionWithCache } from '../../hooks';
 
 const SUBSCRIPTION = /* GraphQL */ `
-  subscription Team($teamId: Int!, $before: timestamptz!, $after: timestamptz!) {
+  subscription Team(
+    $teamId: Int!
+    $before: timestamptz!
+    $after: timestamptz!
+    $timeslot: timestamptz!
+  ) {
     team_by_pk(id: $teamId) {
       id
       name
@@ -45,6 +50,13 @@ const SUBSCRIPTION = /* GraphQL */ `
           name
           picture
         }
+        reactions(where: { created_at: { _gt: $timeslot } }) {
+          id
+          content
+          created_at
+          entry_id
+          user_id
+        }
       }
     }
   }
@@ -64,9 +76,10 @@ interface Data {
 export default function useTeamSessionSubscription(teamId: number): Data | undefined {
   const startOfWeek = useMemo(() => getStartOfWeek().toISOString(), []);
   const endOfWeek = useMemo(() => getEndOfWeek().toISOString(), []);
+  const pastTimestamp = useMemo(() => getTimestampTenSecondsPrior().toISOString(), []);
 
   return useSubscriptionWithCache({
     query: SUBSCRIPTION,
-    variables: { teamId, after: startOfWeek, before: endOfWeek },
+    variables: { teamId, after: startOfWeek, before: endOfWeek, timeslot: pastTimestamp },
   });
 }

@@ -11,6 +11,7 @@ import React from 'react';
 import Router from 'next/router';
 import dynamic from 'next/dynamic';
 import { useAppMachine } from '../hooks';
+import 'emoji-mart/css/emoji-mart.css';
 
 Router.events.on('routeChangeComplete', (url) => gtag.pageView(url));
 

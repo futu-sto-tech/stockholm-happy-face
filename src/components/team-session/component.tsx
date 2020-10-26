@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 
 import { FiExternalLink } from 'react-icons/fi';
 import Link from 'next/link';
@@ -9,6 +9,11 @@ import useUpdateOnlineUserMutation from 'graphql/mutations/update-online-user';
 import useOnlineUsers from 'graphql/subscriptions/online-users';
 import { useUserId } from 'hooks';
 import { hexToHSL } from 'lib/utils';
+import { Picker, EmojiData } from 'emoji-mart';
+import useInsertReactionMutation from 'graphql/mutations/insert-reaction';
+import { useClickOutside } from 'hooks';
+import styles from '../../styles/emojiPicker.module.css';
+import emojiPicker from './emoji-picker';
 
 interface Props {
   team: number;
@@ -16,14 +21,17 @@ interface Props {
 
 const TeamSession: React.FC<Props> = ({ team }) => {
   const teamSession = useTeamSessionSubscription(team);
+  const pickerRef = useRef<HTMLDivElement>(null)
 
   const entriesCount = useMemo(() => teamSession?.team_by_pk.entries.length, [
     teamSession?.team_by_pk.entries.length,
   ]);
+
   const presentedEntriesCount = useMemo(
     () => teamSession?.team_by_pk.entries.filter((item) => item.presented === true).length,
     [teamSession?.team_by_pk.entries.filter],
   );
+
   const presentedEntriesProgress = useMemo(
     () => (presentedEntriesCount && entriesCount ? presentedEntriesCount / entriesCount : 0),
     [presentedEntriesCount, entriesCount],
@@ -77,6 +85,40 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   const colorVariant1 = bgColor ? hexToHSL(bgColor, 0, 40, 5) : null;
   const colorVariant2 = bgColor ? hexToHSL(bgColor, 100, 40, 5) : null;
 
+  const [showEmojiPicker, setshowEmojiPicker] = useState(false);
+  const [addReaction] = useInsertReactionMutation();
+
+  const toggleEmojiPicker = (event: React.MouseEvent<HTMLElement>): void => {
+    event.preventDefault();
+    setshowEmojiPicker(!showEmojiPicker);
+  }
+
+  const handleAddReaction = (emoji: EmojiData): void => {
+    if (teamSession?.team_by_pk.entry?.id && teamSession?.team_by_pk.entry?.user.id)
+      addReaction({ variables: { reaction: emoji.native, entryId: teamSession?.team_by_pk.entry?.id, user: userId } })
+    setshowEmojiPicker(false);
+  };
+
+  const handleAddStandardReaction = (reaction: string): void => {
+    const entryId = teamSession?.team_by_pk.entry?.id;
+    const user = userId;
+    if (entryId && user) {
+      addReaction({ variables: { reaction, entryId, user } });
+    }
+  }
+
+  const onClickOutside = () => {
+    setshowEmojiPicker(false);
+  }
+
+  useClickOutside(pickerRef, onClickOutside)
+
+  const createReactionButton = (reaction: string, padding = "p-2") => (
+    <button className={padding} onClick={() => handleAddStandardReaction(reaction)}>
+      <span role="img" aria-label="button">{reaction}</span>
+    </button>
+  )
+
   return (
     <div
       className="grid h-screen bg-black grid-rows-12"
@@ -124,12 +166,28 @@ const TeamSession: React.FC<Props> = ({ team }) => {
               )}
           </header>
 
-          <ul className="flex-1 py-4 space-y-4 overflow-auto scrolling-touch">
+          <ul className="flex-1 py-4 space-y-4 scrolling-touch">
             {teamSession && onlineUsers
               .filter((item) => item.id !== teamSession.team_by_pk.entry?.user.id)
               .map((item) => (
-                <li key={item.id} className="flex items-center px-4 space-x-4">
-                  <img src={item.picture} alt={item.name} className="w-12 h-12 rounded-full" />
+                <li key={item.id} className="inline-flex flex-col px-4">
+                  <div className="relative">
+                    <div className="overflow-hidden">
+                      <img src={item.picture} alt={item.name} className="w-12 h-12 rounded-full" />
+                      {teamSession?.team_by_pk.entry?.reactions.filter(r => r.user_id === item.id).map((reaction) => {
+                        return (
+                          <div key={reaction.id}>
+                            <div className={`absolute bottom-0 left-0`}>
+                              {reaction.content}
+                            </div>
+                            <div className={`${styles.reaction} absolute bottom-0 left-0`}>
+                              {reaction.content}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
                   <p className="text-base text-white">{item.name}</p>
                 </li>
               ))}
@@ -137,7 +195,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             <li />
           </ul>
 
-          <footer className="flex items-end p-2 border-t border-white border-opacity-10">
+          <footer className="flex flex-col items-end p-2 border-t border-white border-opacity-10 relative">
             <button
               onClick={handleClickOpenAdminPopup}
               className="flex items-center justify-center w-full h-12 px-4 space-x-2 text-base text-white rounded-lg hover:bg-opacity-10 hover:bg-white"
@@ -148,7 +206,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
           </footer>
         </aside>
 
-        <section className="col-span-12 space-y-6 lg:col-span-9">
+        <section className="col-span-12 space-y-6 lg:col-span-9 relative">
           <img
             className="object-contain w-auto w-full h-auto max-w-full max-h-full bg-white rounded-lg shadow bg-opacity-10"
             src={
@@ -157,7 +215,6 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             }
             alt="GIF"
           />
-
           <div className="flex flex-col items-center flex-shrink-0 space-y-1 lg:hidden">
             <img
               src={teamSession?.team_by_pk.entry?.user.picture}
@@ -166,9 +223,39 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             />
             <p className="text-lg text-white">{teamSession?.team_by_pk.entry?.user.name}</p>
           </div>
+          <div className="flex items-center justify-center">
+            <div className="absolute bottom-0 mb-10 flex items-center justify-center h-12 px-4 space-x-2 text-base bg-white text-white rounded-lg">
+              {createReactionButton("😊", "pr-2")}
+              {createReactionButton("😏")}
+              {createReactionButton("🙃")}
+              {createReactionButton("😔")}
+              {createReactionButton("👍")}
+              {createReactionButton("🤣")}
+              <button
+                type="button"
+                aria-pressed="false"
+                onClick={toggleEmojiPicker}
+                className="pl-2"
+              >
+                <span role="img" aria-label="button">
+                  {emojiPicker}
+                </span>
+              </button>
+            </div>
+            {showEmojiPicker && (
+              <div ref={pickerRef} className="absolute items-center w-1/3 z-10 bottom-0 left-1/2">
+                <Picker
+                  theme="dark"
+                  onSelect={handleAddReaction}
+                  title="Pick your emoji"
+                  style={{ width: "100%" }}
+                />
+              </div>
+            )}
+          </div>
         </section>
       </main>
-    </div>
+    </div >
   );
 };
 
