@@ -1,0 +1,314 @@
+version: 2
+tables:
+- table:
+    schema: public
+    name: entry
+  object_relationships:
+  - name: image
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: image
+        column_mapping:
+          image_id: id
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  array_relationships:
+  - name: reactions
+    using:
+      foreign_key_constraint_on:
+        column: entry_id
+        table:
+          schema: public
+          name: reaction
+  computed_fields:
+  - name: week
+    definition:
+      function:
+        schema: public
+        name: week
+      table_argument: null
+    comment: ""
+  - name: year
+    definition:
+      function:
+        schema: public
+        name: year
+      table_argument: null
+    comment: ""
+  - name: month
+    definition:
+      function:
+        schema: public
+        name: month
+      table_argument: null
+    comment: ""
+  insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+      - image_id
+      - team_id
+      - user_id
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - id
+      - image_id
+      - presented
+      - team_id
+      - updated_at
+      - user_id
+      computed_fields:
+      - month
+      - week
+      - year
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - id
+      - image_id
+      - presented
+      - team_id
+      - updated_at
+      - user_id
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: image
+  object_relationships:
+  - name: entry
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: entry
+        column_mapping:
+          id: image_id
+  insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+      - giphy_id
+      - original_url
+      - preview_url
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - color
+      - created_at
+      - fixed_width_url
+      - fixed_width_webp_url
+      - giphy_id
+      - id
+      - original_url
+      - preview_url
+      - title
+      - updated_at
+      filter: {}
+  event_triggers:
+  - name: image-metadata
+    definition:
+      enable_manual: true
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: IMAGE_METADATA_WEBHOOK_URL
+- table:
+    schema: public
+    name: old_entry
+  event_triggers:
+  - name: migrate-entry
+    definition:
+      enable_manual: true
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: MIGRATE_ENTRY_WEBHOOK_URL
+- table:
+    schema: public
+    name: reaction
+  insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+      - content
+      - entry_id
+      - user_id
+      backend_only: false
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - content
+      - created_at
+      - entry_id
+      - id
+      - user_id
+      filter: {}
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - content
+      filter: {}
+      check: null
+- table:
+    schema: public
+    name: team
+  object_relationships:
+  - name: entry
+    using:
+      foreign_key_constraint_on: entry_id
+  array_relationships:
+  - name: entries
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          schema: public
+          name: entry
+  - name: participants
+    using:
+      foreign_key_constraint_on:
+        column: session_id
+        table:
+          schema: public
+          name: user
+  - name: users
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          schema: public
+          name: user
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - entry_id
+      - active
+      - changed_entry_at
+      - status
+      filter: {}
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - active
+      - changed_entry_at
+      - entry_id
+      - status
+      filter: {}
+      check: null
+- table:
+    schema: public
+    name: user
+  object_relationships:
+  - name: session
+    using:
+      foreign_key_constraint_on: session_id
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+  array_relationships:
+  - name: entries
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: entry
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - email
+      - id
+      - last_seen
+      - name
+      - order
+      - picture
+      - role
+      - session_id
+      - team_id
+      - timestamp
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - last_seen
+      - name
+      - role
+      - session_id
+      - team_id
+      - timestamp
+      filter: {}
+      check: null
+  event_triggers:
+  - name: migrate-user
+    definition:
+      enable_manual: true
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: MIGRATE_USER_WEBHOOK_URL
+- table:
+    schema: public
+    name: user_online
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - team_id
+      - id
+      - name
+      - picture
+      - last_seen
+      filter: {}
+functions:
+- function:
+    schema: public
+    name: online_team_users
+remote_schemas:
+- name: giphy
+  definition:
+    url_from_env: GIPHY_REMOTE_SCHEMA_ENDPOINT
+    timeout_seconds: 60
+    forward_client_headers: true
