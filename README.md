@@ -46,7 +46,7 @@ Follow these instructions to deploy the project. You will need to sign up for a 
 The first thing you need to do is to clone the project.
 
 ```bash
-git clone https://github.com/futurice/stockholm-happy-face
+git clone https://github.com/futu-sto-tech/stockholm-happy-face
 cd stockholm-happy-face
 yarn
 ```
