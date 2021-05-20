@@ -48,5 +48,5 @@ export default function usePresentRandomEntry(teamId: number) {
     } else {
       throw new Error('Unable to present random entry');
     }
-  }, [fetch, presentEntry, teamId]);
+  }, []);
 }
