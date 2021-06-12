@@ -1,6 +1,6 @@
 import { getEndOfWeek, getStartOfWeek } from 'lib/utils';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useManualQuery } from 'graphql-hooks';
 import usePresentEntry from './present-entry';
 
@@ -37,6 +37,9 @@ export default function usePresentRandomEntry(teamId: number) {
   const [fetch] = useManualQuery<QueryData | undefined, QueryVariables>(QUERY);
   const presentEntry = usePresentEntry(teamId);
 
+  // This state is only used to make sure the callback dependencies change.
+  const [presentedUsers, setPresentedUsers] = useState<number[]>([]);
+
   return useCallback(async () => {
     const { data } = await fetch({
       variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
@@ -44,9 +47,10 @@ export default function usePresentRandomEntry(teamId: number) {
     if (data && data.team_by_pk.entries.length > 0) {
       const notPresented = data.team_by_pk.entries;
       const randomEntryId = notPresented[Math.floor(Math.random() * notPresented.length)].id;
+      setPresentedUsers([...presentedUsers, randomEntryId]);
       presentEntry(randomEntryId);
     } else {
       throw new Error('Unable to present random entry');
     }
-  }, []);
+  }, [presentedUsers]);
 }
