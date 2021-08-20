@@ -6,6 +6,7 @@ import Link from 'next/link';
 import LogoIcon from 'components/logo-icon';
 import emojiPicker from './emoji-picker';
 import { hexToHSL } from 'lib/utils';
+import hideControls from './hide-controls';
 import styles from '../../styles/emojiPicker.module.css';
 import { useClickOutside } from 'hooks';
 import useInsertReactionMutation from 'graphql/mutations/insert-reaction';
@@ -21,7 +22,11 @@ interface Props {
 
 const TeamSession: React.FC<Props> = ({ team }) => {
   const teamSession = useTeamSessionSubscription(team);
+
   const pickerRef = useRef<HTMLDivElement>(null);
+
+  const [showControls, setShowControls] = useState(true);
+  const prevEntryId = useRef<null | number>(null);
 
   const entriesCount = useMemo(() => teamSession?.team_by_pk.entries.length, [
     teamSession?.team_by_pk.entries.length,
@@ -104,6 +109,14 @@ const TeamSession: React.FC<Props> = ({ team }) => {
     setshowEmojiPicker(false);
   };
 
+  useEffect(() => {
+    const entryId = teamSession?.team_by_pk.entry?.id || null;
+    if (entryId && entryId !== prevEntryId.current) {
+      prevEntryId.current = entryId;
+      setShowControls(true);
+    }
+  }, [teamSession?.team_by_pk.entry?.id]);
+
   const handleAddStandardReaction = (reaction: string): void => {
     const entryId = teamSession?.team_by_pk.entry?.id;
     const user = userId;
@@ -125,6 +138,9 @@ const TeamSession: React.FC<Props> = ({ team }) => {
       </span>
     </button>
   );
+
+  const handleHideClick = () => setShowControls(!showControls);
+  const fadeControlStyles = useMemo(() => (showControls ? '' : 'opacity-25'), [showControls]);
 
   return (
     <div
@@ -238,8 +254,10 @@ const TeamSession: React.FC<Props> = ({ team }) => {
             />
             <p className="text-lg text-white">{teamSession?.team_by_pk.entry?.user.name}</p>
           </div>
-          <div className="flex items-center justify-center">
-            <div className="absolute bottom-0 flex items-center justify-center h-12 px-4 mb-10 space-x-2 text-base text-white bg-white rounded-lg">
+          <div className="flex items-center justify-center opacity-10">
+            <div
+              className={`absolute bottom-0 flex items-center justify-center h-12 px-4 mb-10 space-x-2 text-base text-white bg-white ${fadeControlStyles} rounded-lg transition duration-500 ease-in-out`}
+            >
               {createReactionButton('😊', 'pr-2')}
               {createReactionButton('😏')}
               {createReactionButton('🙃')}
@@ -256,6 +274,10 @@ const TeamSession: React.FC<Props> = ({ team }) => {
                   {emojiPicker}
                 </span>
               </button>
+
+              <span className="pl-2 flex" role="img" aria-label="button">
+                <button onClick={handleHideClick}>{hideControls}</button>
+              </span>
             </div>
             {showEmojiPicker && (
               <div ref={pickerRef} className="absolute bottom-0 z-10 items-center w-1/3 left-1/2">
