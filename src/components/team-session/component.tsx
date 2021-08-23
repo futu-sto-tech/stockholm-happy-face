@@ -26,6 +26,9 @@ const TeamSession: React.FC<Props> = ({ team }) => {
   const pickerRef = useRef<HTMLDivElement>(null);
 
   const [showControls, setShowControls] = useState(true);
+  const handleHideClick = () => setShowControls(!showControls);
+  const fadeControlStyles = showControls ? '' : 'opacity-25';
+
   const prevEntryId = useRef<null | number>(null);
 
   const entriesCount = useMemo(() => teamSession?.team_by_pk.entries.length, [
@@ -138,9 +141,6 @@ const TeamSession: React.FC<Props> = ({ team }) => {
       </span>
     </button>
   );
-
-  const handleHideClick = () => setShowControls(!showControls);
-  const fadeControlStyles = useMemo(() => (showControls ? '' : 'opacity-25'), [showControls]);
 
   return (
     <div
@@ -256,7 +256,7 @@ const TeamSession: React.FC<Props> = ({ team }) => {
           </div>
           <div className="flex items-center justify-center opacity-10">
             <div
-              className={`absolute bottom-0 flex items-center justify-center h-12 px-4 mb-10 space-x-2 text-base text-white bg-white ${fadeControlStyles} rounded-lg transition duration-500 ease-in-out`}
+              className={`absolute bottom-0 flex items-center justify-center h-12 px-4 mb-10 space-x-2 text-base text-white bg-white ${fadeControlStyles} rounded-lg transition-opacity duration-500 ease-in-out`}
             >
               {createReactionButton('😊', 'pr-2')}
               {createReactionButton('😏')}
