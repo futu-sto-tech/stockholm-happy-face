@@ -37,7 +37,7 @@ export default function usePresentRandomEntry(teamId: number) {
   const [fetch] = useManualQuery<QueryData | undefined, QueryVariables>(QUERY);
   const presentEntry = usePresentEntry(teamId);
 
-  return useCallback(async () => {
+  return async () => {
     const { data } = await fetch({
       variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
     });
@@ -48,5 +48,5 @@ export default function usePresentRandomEntry(teamId: number) {
     } else {
       throw new Error('Unable to present random entry');
     }
-  }, []);
+  };
 }
