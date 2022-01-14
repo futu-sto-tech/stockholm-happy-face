@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-
 import { FiCheck } from 'react-icons/fi';
 import { NextPage } from 'next';
 import useOnlineUsers from 'graphql/subscriptions/online-users';
@@ -33,7 +32,7 @@ const SessionControlsPage: NextPage = () => {
     [activeUsers?.online_team_users, usersWithEntry],
   );
 
-  const presentRandomEntry = usePresentRandomEntry(teamId);
+  const { sessionIsFinished, presentRandomEntry } = usePresentRandomEntry(teamId);
   const presentEntry = usePresentEntry(teamId);
 
   const currentSessionUser = session?.user_by_pk.team.entry?.user.id;
@@ -102,11 +101,11 @@ const SessionControlsPage: NextPage = () => {
       <footer className="row-span-4 space-y-4">
         <div className="flex space-x-4">
           <button
-            disabled={session?.user_by_pk.team.entries.every((item) => item.presented === true)}
+            disabled={sessionIsFinished}
             onClick={presentRandomEntry}
             className="flex-1 h-12 text-lg font-bold text-black bg-white rounded-lg"
           >
-            Next (random)
+            {sessionIsFinished ? 'No more gifs left' : 'Next (random)'}
           </button>
         </div>
         <button
