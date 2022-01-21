@@ -1,8 +1,7 @@
 import { getEndOfWeek, getStartOfWeek } from 'lib/utils';
-
-import { useCallback } from 'react';
 import { useManualQuery } from 'graphql-hooks';
 import usePresentEntry from './present-entry';
+import { useState } from 'react';
 
 const START_OF_WEEK = getStartOfWeek().toISOString();
 const END_OF_WEEK = getEndOfWeek().toISOString();
@@ -36,17 +35,32 @@ interface QueryVariables {
 export default function usePresentRandomEntry(teamId: number) {
   const [fetch] = useManualQuery<QueryData | undefined, QueryVariables>(QUERY);
   const presentEntry = usePresentEntry(teamId);
+  const [sessionIsFinished, setSessionIsFinished] = useState(false);
 
-  return useCallback(async () => {
+  const presentRandomEntry = async () => {
     const { data } = await fetch({
       variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
+      skipCache: true,
     });
+
     if (data && data.team_by_pk.entries.length > 0) {
       const notPresented = data.team_by_pk.entries;
       const randomEntryId = notPresented[Math.floor(Math.random() * notPresented.length)].id;
-      presentEntry(randomEntryId);
-    } else {
-      throw new Error('Unable to present random entry');
+      await presentEntry(randomEntryId);
     }
-  }, []);
+
+    const { data: updatedData } = await fetch({
+      variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
+      skipCache: true,
+    });
+
+    if (updatedData && updatedData.team_by_pk.entries.length === 0) {
+      setSessionIsFinished(true);
+    }
+  };
+
+  return {
+    sessionIsFinished,
+    presentRandomEntry,
+  };
 }

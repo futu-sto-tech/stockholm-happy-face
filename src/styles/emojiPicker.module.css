@@ -16,5 +16,5 @@
 .reaction {
   opacity: 0;
   font-size: 32px;
-  animation: float linear 4s;
+  animation: float ease-in-out 4s;
 }
