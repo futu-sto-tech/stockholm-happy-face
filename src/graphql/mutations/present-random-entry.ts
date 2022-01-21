@@ -40,14 +40,22 @@ export default function usePresentRandomEntry(teamId: number) {
   const presentRandomEntry = async () => {
     const { data } = await fetch({
       variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
+      skipCache: true,
     });
-    if (data && data.team_by_pk.entries.length === 0) {
-      setSessionIsFinished(true);
-    }
+
     if (data && data.team_by_pk.entries.length > 0) {
       const notPresented = data.team_by_pk.entries;
       const randomEntryId = notPresented[Math.floor(Math.random() * notPresented.length)].id;
-      presentEntry(randomEntryId);
+      await presentEntry(randomEntryId);
+    }
+
+    const { data: updatedData } = await fetch({
+      variables: { teamId, after: START_OF_WEEK, before: END_OF_WEEK },
+      skipCache: true,
+    });
+
+    if (updatedData && updatedData.team_by_pk.entries.length === 0) {
+      setSessionIsFinished(true);
     }
   };
 

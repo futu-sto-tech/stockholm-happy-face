@@ -44,47 +44,49 @@ const SessionControlsPage: NextPage = () => {
       </header>
       <main className="flex-1 pt-4 overflow-auto scrolling-touch">
         <ul>
-          {session?.user_by_pk.team.entries.map((item) =>
-            item.user.id === currentSessionUser ? (
-              <li
-                key={item.id}
-                className="flex items-center h-12 px-4 my-2 space-x-1 text-lg font-bold text-black bg-white rounded-lg"
-              >
-                <p className="flex items-center space-x-2">
-                  <span>
-                    {item.user.name}{' '}
-                    {!usersIdsInSession?.includes(item.user.id) && (
-                      <span className="text-black text-opacity-50">(not here)</span>
-                    )}
-                  </span>
-                  {item.presented && <FiCheck />}
-                </p>
-              </li>
-            ) : (
-              <li
-                key={item.id}
-                className="flex items-center justify-between h-12 px-4 text-lg font-bold text-white rounded-lg hover:bg-white hover:bg-opacity-25 group"
-              >
-                <p className="flex items-center space-x-2">
-                  <span>
-                    {item.user.name}{' '}
-                    {!usersIdsInSession?.includes(item.user.id) && (
-                      <span className="text-white text-opacity-50">(not here)</span>
-                    )}
-                  </span>
-                  {item.presented && <FiCheck />}
-                </p>
-                <button
-                  onClick={(): void => {
-                    presentEntry(item.id);
-                  }}
-                  className="text-base uppercase transition-opacity duration-150 opacity-0 group-hover:opacity-100"
+          {session?.user_by_pk.team.entries
+            .sort((a, b) => a.id - b.id)
+            .map((item) =>
+              item.user.id === currentSessionUser ? (
+                <li
+                  key={item.id}
+                  className="flex items-center h-12 px-4 my-2 space-x-1 text-lg font-bold text-black bg-white rounded-lg"
                 >
-                  Show
-                </button>
-              </li>
-            ),
-          )}
+                  <p className="flex items-center space-x-2">
+                    <span>
+                      {item.user.name}{' '}
+                      {!usersIdsInSession?.includes(item.user.id) && (
+                        <span className="text-black text-opacity-50">(not here)</span>
+                      )}
+                    </span>
+                    {item.presented && <FiCheck />}
+                  </p>
+                </li>
+              ) : (
+                <li
+                  key={item.id}
+                  className="flex items-center justify-between h-12 px-4 text-lg font-bold text-white rounded-lg hover:bg-white hover:bg-opacity-25 group"
+                >
+                  <p className="flex items-center space-x-2">
+                    <span>
+                      {item.user.name}{' '}
+                      {!usersIdsInSession?.includes(item.user.id) && (
+                        <span className="text-white text-opacity-50">(not here)</span>
+                      )}
+                    </span>
+                    {item.presented && <FiCheck />}
+                  </p>
+                  <button
+                    onClick={(): void => {
+                      presentEntry(item.id);
+                    }}
+                    className="text-base uppercase transition-opacity duration-150 opacity-0 group-hover:opacity-100"
+                  >
+                    Show
+                  </button>
+                </li>
+              ),
+            )}
           {presentUsersWithoutEntry?.map((item) => (
             <li
               key={item.id}
