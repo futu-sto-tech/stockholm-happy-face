@@ -50,8 +50,9 @@ const EditUserRole: React.FC<{
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ checked, onChange }) => (
   <div className="flex items-center justify-between">
-    <p className="text-lg">Session host</p>
+    <label htmlFor="session-host" className="text-lg">Session host</label>
     <input
+      id="session-host"
       type="checkbox"
       className="w-6 h-6 text-black form-checkbox border-black"
       checked={checked}
