@@ -53,7 +53,7 @@ const EditUserRole: React.FC<{
     <p className="text-lg">Session host</p>
     <input
       type="checkbox"
-      className="w-6 h-6 text-black form-checkbox"
+      className="w-6 h-6 text-black form-checkbox border-black"
       checked={checked}
       onChange={onChange}
     />
