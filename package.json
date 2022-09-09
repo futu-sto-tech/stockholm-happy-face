@@ -13,7 +13,7 @@
     "@reach/listbox": "^0.10.3",
     "@types/emoji-mart": "^3.0.2",
     "@xstate/react": "^0.8.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "date-fns": "^2.14.0",
     "emoji-mart": "^3.0.0",
     "framer-motion": "^1.11.0",
