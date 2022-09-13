@@ -1,5 +1,5 @@
 .button {
-  @apply flex items-center h-12 pl-6 pr-4 text-lg font-bold text-black border-0 rounded-lg;
+  @apply flex items-center justify-end h-12 pl-6 pr-4 text-lg font-bold text-black border-0 rounded-lg;
 }
 
 .button:hover {
@@ -11,7 +11,7 @@
 }
 
 .listItem {
-  @apply flex items-center h-12 px-6 select-none;
+  @apply flex items-center px-2 py-1 select-none;
 }
 
 .listItem:hover {
