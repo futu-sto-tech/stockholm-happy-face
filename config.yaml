@@ -1,1 +1,6 @@
-# needed only to run hasura cli
+version: 2
+endpoint: ""
+metadata_directory: metadata
+actions:
+  kind: synchronous
+  handler_webhook_baseurl: http://localhost:3000

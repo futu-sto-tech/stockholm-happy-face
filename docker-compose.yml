@@ -5,11 +5,13 @@ services:
     image: postgres:12
     restart: always
     volumes:
-    - db_data:/var/lib/postgresql/data
+    - .postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - 5433:5432
   hasura-graphql-engine:
-    image: hasura/graphql-engine:v2.13.0
+    image: hasura/graphql-engine:v2.12.0
     ports:
     - 8080:8080
     depends_on:
