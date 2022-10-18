@@ -48,7 +48,7 @@ The first thing you need to do is to clone the project.
 ```bash
 git clone https://github.com/futu-sto-tech/stockholm-happy-face
 cd stockholm-happy-face
-yarn
+npm install
 ```
 
 Next, go and sign up for the required services:
@@ -164,13 +164,7 @@ Go back to "General" and click "Launch Console". Go to the "Data" tab. Click "Co
 
 > The easiest way to setup a PostgreSQL database is to use Heroku.
 
-Now you need to install the Hasura CLI. Please
-
-```bash
-yarn global add hasura-cli
-```
-
-Inside the repo, run the following command to build up the database:
+Now you need to install the Hasura CLI. Please run the following command to build up the database:
 
 > Replace `$HASURA_GRAPHQL_ENDPOINT` with your Hasura domain, including "https://".
 
@@ -191,5 +185,5 @@ That's it!
 Create a `.env` inside the root of the repo. You can copy `.env.sample` and fill in the required environment variables. Now you can start the dev server by running:
 
 ```bash
-yarn dev
+npm run dev
 ```
