@@ -12,11 +12,9 @@
         {
           devShell = pkgs.mkShell {
             buildInputs = with pkgs; [
-              nodejs
+              nodejs-16_x
               nodePackages.typescript-language-server
             ];
-
-            NODE_OPTIONS = "--openssl-legacy-provider";
 
             shellHook = ''
               export PATH="$(pwd)/node_modules/.bin:$PATH";
