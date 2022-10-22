@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  pg:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+  hasura:
+    image: hasura/graphql-engine:v1.3.3
+    ports:
+    - 8080:8080
+    depends_on:
+    - pg
+    restart: always
+    environment:
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@pg:5432/postgres
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@pg:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      MIGRATE_USER_WEBHOOK_URL: http://dev:3000/api/migrate/user
+      MIGRATE_ENTRY_WEBHOOK_URL: http://dev:3000/api/migrate/entry
+      IMAGE_METADATA_WEBHOOK_URL: http://dev:3000/api/filldata
+      GIPHY_REMOTE_SCHEMA_ENDPOINT: http://dev:3000/api/graphql
+
+  dev:
+    build:
+      context: ./.
+      target: dev
+    ports:
+      - 3000:3000
+    depends_on:
+      - hasura
+    restart: always
+    command:
+      - /app/scripts/start-dev.sh
+    environment:
+      # Next API variables
+      GIPHY_API_KEY: ${GIPHY_API_KEY}
+      HASURA_GRAPHQL_ENDPOINT: "hasura:8080/v1/graphql"
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      # Next Front-end variables
+      NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT: "localhost:8080/v1/graphql"
+      NEXT_PUBLIC_GA_TRACKING_ID: ${NEXT_PUBLIC_GA_TRACKING_ID}
+      NEXT_PUBLIC_AUTH0_DOMAIN: ${NEXT_PUBLIC_AUTH0_DOMAIN}
+      NEXT_PUBLIC_AUTH0_CLIENT_ID: ${NEXT_PUBLIC_AUTH0_CLIENT_ID}
+    volumes:
+      - ./src:/app/src
